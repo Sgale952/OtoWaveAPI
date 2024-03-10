@@ -1,6 +1,5 @@
 .gradle
 build/
-src/main/java/github/otowave/api/PrivateData.java
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
