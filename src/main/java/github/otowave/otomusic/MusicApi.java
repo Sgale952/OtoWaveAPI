@@ -1,19 +1,21 @@
 package github.otowave.otomusic;
 
+import spark.Request;
+
 public class MusicApi {
     public static String allData(String userId) {
         return "";
     }
 
-    public static String add() {
+    public static String add(Request request) {
         return "";
     }
 
-    public static String update() {
+    public static String update(Request request) {
         return "";
     }
 
-    public static String delete() {
+    public static String delete(Request request) {
         return "";
     }
 
@@ -21,35 +23,35 @@ public class MusicApi {
         return "";
     }
 
-    public static String search(String phrase) {
+    public static String search(Request request) {
         return "";
     }
 
-    public static String sortByGenre(String genre) {
+    public static String sortByGenre(Request request) {
         return "";
     }
 
-    public static String recentUploaded(int count) {
+    public static String recentUploaded(Request request) {
         return "";
     }
 
-    public static String mostListensPerMonth(int count) {
+    public static String mostListensPerMonth(Request request) {
         return "";
     }
 
-    public static String like() {
+    public static String like(Request request) {
         return "";
     }
 
-    public static String discard() {
+    public static String discard(Request request) {
         return "";
     }
 
-    public static String updateLikes() {
+    public static String updateLikes(Request request) {
         return "";
     }
 
-    public static String updateListens() {
+    public static String updateListens(Request request) {
         return "";
     }
 }
