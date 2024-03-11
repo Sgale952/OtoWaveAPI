@@ -6,6 +6,7 @@ import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
+        DatabaseManager.setupConnection();
 
         get("/daily", (request, response) -> MusicApi.dailyRandom(request));
         get("/search", ((request, response) -> MusicApi.search(request)));
