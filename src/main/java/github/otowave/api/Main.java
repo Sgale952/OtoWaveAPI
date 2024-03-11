@@ -7,7 +7,7 @@ import static spark.Spark.*;
 public class Main {
     public static void main(String[] args) {
 
-        get("/daily", (request, response) -> MusicApi.dailyRandom());
+        get("/daily", (request, response) -> MusicApi.dailyRandom(request));
         get("/search", ((request, response) -> MusicApi.search(request)));
         get("/navigator", ((request, response) -> MusicApi.sortByGenre(request)));
 

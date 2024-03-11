@@ -3,7 +3,7 @@ package github.otowave.otomusic;
 import spark.Request;
 
 public class MusicApi {
-    public static String allData(String userId) {
+    public static String allData(Request request) {
         return "";
     }
 
@@ -19,7 +19,7 @@ public class MusicApi {
         return "";
     }
 
-    public static String dailyRandom() {
+    public static String dailyRandom(Request request) {
         return "";
     }
 
