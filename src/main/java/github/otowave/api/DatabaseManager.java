@@ -1,25 +1,36 @@
 package github.otowave.api;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class DatabaseManager {
+    private static final HikariDataSource dataSource;
 
-    static void setupConnection() {
-        final HikariDataSource hds = new HikariDataSource();
-        hds.setDriverClassName("org.mariadb.jdbc.Driver");
-        hds.setJdbcUrl("jdbc:mariadb://localhost:3306/otowave");
-        hds.setUsername("user");
-        hds.setPassword("passwrd");
+    static {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
+        config.setJdbcUrl(UnsecureData.databaseUrl);
+        config.setUsername(UnsecureData.user);
+        config.setPassword(UnsecureData.password);
 
-        hds.addDataSourceProperty("cachePrepStmts", "true");
-        hds.addDataSourceProperty("prepStmtCacheSize", "250");
-        hds.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        hds.addDataSourceProperty("useServerPrepStmts", "true");
-        hds.addDataSourceProperty("useLocalSessionState", "true");
-        hds.addDataSourceProperty("rewriteBatchedStatements", "true");
-        hds.addDataSourceProperty("cacheResultSetMetadata", "true");
-        hds.addDataSourceProperty("cacheServerConfiguration", "true");
-        hds.addDataSourceProperty("elideSetAutoCommits", "true");
-        hds.addDataSourceProperty("maintainTimeStats", "false");
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("useLocalSessionState", "true");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
+        config.addDataSourceProperty("cacheResultSetMetadata", "true");
+        config.addDataSourceProperty("cacheServerConfiguration", "true");
+        config.addDataSourceProperty("elideSetAutoCommits", "true");
+        config.addDataSourceProperty("maintainTimeStats", "false");
+
+        dataSource = new HikariDataSource(config);
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 }
