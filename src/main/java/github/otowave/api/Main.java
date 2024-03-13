@@ -17,8 +17,8 @@ public class Main {
         });
 
         path("/:musicId", () -> {
-            patch("/update-likes", ((request, response) -> MusicApi.updateLikes(request)));
-            patch("/update-listens", ((request, response) -> MusicApi.updateListens(request)));
+            patch("/update-likes", (MusicApi::updateLikes));
+            patch("/update-listens", (MusicApi::updateListens));
         });
 
         path("/:userId", () -> {
@@ -32,8 +32,8 @@ public class Main {
             delete("/discard-user", ((request, response) -> ""));
 
             post("/new-song", ((request, response) -> MusicApi.add(request)));
-            post("/like-song", ((request, response) -> MusicApi.like(request)));
-            delete("/discard-song", ((request, response) -> MusicApi.discard(request)));
+            post("/like-song", (MusicApi::like));
+            delete("/discard-song", (MusicApi::discard));
 
             post("/new-playlist", ((request, response) -> PlaylistApi.add(request)));
             post("/add-playlist", ((request, response) -> PlaylistApi.addSong(request)));
