@@ -5,49 +5,64 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
+import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class MusicApi extends MusicHandler {
     private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
     private static final Gson gson = new Gson();
 
-    public static String allData(Request request) {
+    public static String allData(Request request, Response response) {
         return "";
     }
 
-    public static String add(Request request) {
+    public static String add(Request request, Response response) {
         return "";
     }
 
-    public static String update(Request request) {
+    public static String update(Request request, Response response) {
         return "";
     }
 
-    public static String delete(Request request) {
+    public static String delete(Request request, Response response) {
         return "";
     }
 
-    public static String dailyRandom(Request request) {
+    public static String dailyRandom(Request request, Response response) {
         return "";
     }
 
-    public static String search(Request request) {
+    public static String search(Request request, Response response) {
         return "";
     }
 
-    public static String sortByGenre(Request request) {
-        return "";
-    }
+    //TODO: need tests
+    public static String topPerMonth(Request request, Response response) {
+        Map<Integer, String> musicIds = new LinkedHashMap<>();
+        String sortBy = request.contextPath().equals("/recent") ? "uploaded" : "listens";
 
-    public static String recentUploaded(Request request) {
-        return "";
-    }
+        try(Connection conn = getConnection()) {
+            String sql = "SELECT music_id, genre FROM music WHERE MONTH(uploaded) = MONTH(CURRENT_DATE()) AND YEAR(uploaded) = YEAR(CURRENT_DATE()) ORDER BY " +
+                         sortBy + " DESC LIMIT 100";
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-    public static String mostListensPerMonth(Request request) {
-        return "";
+            ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    musicIds.put(rs.getInt("music_id"), rs.getString("genre"));
+                }
+
+            response.status(200);
+        }
+        catch (SQLException e) {
+            logger.error("Error in MusicApi.topPerMonth", e);
+            response.status(500);
+        }
+
+        return gson.toJson(musicIds);
     }
 
     //TODO: need tests
@@ -62,8 +77,8 @@ public class MusicApi extends MusicHandler {
 
             stmt.setInt(1, data.userId());
             stmt.setInt(2, data.musicId());
-
             stmt.executeUpdate();
+
             response.status(201);
         }
         catch (SQLException e) {
@@ -86,8 +101,8 @@ public class MusicApi extends MusicHandler {
 
             stmt.setInt(1, data.userId());
             stmt.setInt(2, data.musicId());
-
             stmt.executeUpdate();
+
             response.status(201);
         }
         catch (SQLException e) {
@@ -109,8 +124,8 @@ public class MusicApi extends MusicHandler {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.musicId());
-
             stmt.executeUpdate();
+
             response.status(201);
         }
         catch (SQLException e) {
@@ -132,8 +147,8 @@ public class MusicApi extends MusicHandler {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.musicId());
-
             stmt.executeUpdate();
+
             response.status(201);
         }
         catch (SQLException e) {

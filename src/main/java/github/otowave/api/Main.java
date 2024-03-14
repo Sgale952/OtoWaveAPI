@@ -7,16 +7,16 @@ import static spark.Spark.*;
 public class Main {
     public static void main(String[] args) {
 
-        get("/daily", (request, response) -> MusicApi.dailyRandom(request));
-        get("/search", ((request, response) -> MusicApi.search(request)));
-        get("/navigator", ((request, response) -> MusicApi.sortByGenre(request)));
+        get("/daily", MusicApi::dailyRandom);
+        get("/search", (MusicApi::search));
 
         path("/navigator", () -> {
-            get("/recent", ((request, response) -> MusicApi.recentUploaded(request)));
-            get("/top", ((request, response) -> MusicApi.mostListensPerMonth(request)));
+            get("/recent", (MusicApi::topPerMonth));
+            get("/top", (MusicApi::topPerMonth));
         });
 
         path("/:musicId", () -> {
+            //Try merging methods (updateInteraction)
             patch("/update-likes", (MusicApi::updateLikes));
             patch("/update-listens", (MusicApi::updateListens));
         });
@@ -31,7 +31,7 @@ public class Main {
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
 
-            post("/new-song", ((request, response) -> MusicApi.add(request)));
+            post("/new-song", (MusicApi::add));
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));
 
@@ -40,8 +40,8 @@ public class Main {
             post("/like-playlist", ((request, response) -> PlaylistApi.like(request)));
 
             path("/:musicId", () -> {
-                patch("/update-song", ((request, response) -> MusicApi.update(request)));
-                delete("/delete-song", ((request, response) -> MusicApi.delete(request)));
+                patch("/update-song", (MusicApi::update));
+                delete("/delete-song", (MusicApi::delete));
             });
 
             path("/:playlistId", () -> {
