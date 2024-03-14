@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,7 +21,34 @@ public class MusicApi extends MusicHandler {
         return "";
     }
 
-    public static String add(Request request, Response response) {
+    //Add and check audio duration
+    public static String upload(Request request, Response response) {
+        UploadData uploadData = gson.fromJson(request.body(), UploadData.class);
+        int musicId;
+
+        try(Connection conn = getConnection()) {
+            String sql = "INSERT INTO music (author, title, econtent, genre, cover_id) " +
+                    "VALUES (?, '?', ?, '?', ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            stmt.setInt(1, uploadData.authorId());
+            stmt.setString(2, uploadData.title());
+            stmt.setInt(3, uploadData.eContent());
+            stmt.setString(4, uploadData.genre());
+            stmt.setInt(5, uploadData.coverId());
+            stmt.executeUpdate();
+
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            musicId = generatedKeys.getInt(1);
+            saveAudioFile(request, musicId);
+
+            response.status(201);
+        }
+        catch (SQLException | IOException e) {
+            logger.error("Error in MusicApi.save", e);
+            response.status(500);
+        }
+
         return "";
     }
 
@@ -160,5 +188,5 @@ public class MusicApi extends MusicHandler {
     }
 }
 
-record UserMusicRelation(int userId, int musicId) {
-}
+record UserMusicRelation(int userId, int musicId) {}
+record UploadData(int authorId, String title, int eContent, String genre, int coverId) {}

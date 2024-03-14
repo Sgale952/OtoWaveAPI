@@ -31,7 +31,7 @@ public class Main {
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
 
-            post("/new-song", (MusicApi::add));
+            post("/new-song", (MusicApi::upload));
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));
 
