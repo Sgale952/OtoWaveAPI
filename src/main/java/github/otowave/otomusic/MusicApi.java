@@ -120,13 +120,15 @@ public class MusicApi extends MusicHandler {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
+                deleteAudioFile(musicId);
+                //deleteImageFile(musicId);
                 response.status(200);
             }
             else {
                 response.status(404);
             }
         }
-        catch (SQLException e) {
+        catch (SQLException | IOException e) {
             logger.error("Error in MusicApi.delete", e);
             response.status(500);
         }

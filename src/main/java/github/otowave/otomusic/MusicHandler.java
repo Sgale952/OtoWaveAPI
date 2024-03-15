@@ -9,11 +9,13 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 public class MusicHandler {
     private static final Logger logger = LoggerFactory.getLogger(MusicHandler.class);
@@ -30,6 +32,14 @@ public class MusicHandler {
         }
 
         return num;
+    }
+
+    protected static void deleteAudioFile(int musicId) throws IOException {
+        Path dir = Path.of("/home/otowave/data/songs/"+musicId);
+        Files.walk(dir)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
     }
 
     protected static void saveAudioFile(Request request, int musicId) throws IOException {
