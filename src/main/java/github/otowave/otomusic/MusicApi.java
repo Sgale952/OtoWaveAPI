@@ -54,7 +54,7 @@ public class MusicApi extends MusicHandler {
     //Add and check audio duration
     //TODO: need tests
     public static String upload(Request request, Response response) {
-        UploadData uploadData = gson.fromJson(request.body(), UploadData.class);
+        MusicData musicData = gson.fromJson(request.body(), MusicData.class);
         int musicId;
 
         try(Connection conn = getConnection()) {
@@ -62,11 +62,11 @@ public class MusicApi extends MusicHandler {
                     "VALUES (?, '?', ?, '?', ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, uploadData.authorId());
-            stmt.setString(2, uploadData.title());
-            stmt.setInt(3, uploadData.eContent());
-            stmt.setString(4, uploadData.genre());
-            stmt.setInt(5, uploadData.coverId());
+            stmt.setInt(1, musicData.authorId());
+            stmt.setString(2, musicData.title());
+            stmt.setInt(3, musicData.eContent());
+            stmt.setString(4, musicData.genre());
+            stmt.setInt(5, musicData.coverId());
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -76,18 +76,61 @@ public class MusicApi extends MusicHandler {
             response.status(201);
         }
         catch (SQLException | IOException e) {
-            logger.error("Error in MusicApi.save", e);
+            logger.error("Error in MusicApi.upload", e);
             response.status(500);
         }
 
         return "";
     }
 
+    //TODO: need tests
     public static String update(Request request, Response response) {
+        MusicData musicData = gson.fromJson(request.body(), MusicData.class);
+        int musicId = convertParamsToInt(response, request.queryParams("musicId"));
+
+        try(Connection conn = getConnection()) {
+            String sql = "UPDATE music SET author = ?, title = '?', econtent = ?, genre = '?', cover_id = ? WHERE music_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, musicData.authorId());
+            stmt.setString(2, musicData.title());
+            stmt.setInt(3, musicData.eContent());
+            stmt.setString(4, musicData.genre());
+            stmt.setInt(5, musicData.coverId());
+            stmt.setInt(6, musicId);
+            stmt.executeUpdate();
+
+            response.status(200);
+        }
+        catch (SQLException e) {
+            logger.error("Error in MusicApi.update", e);
+            response.status(500);
+        }
+
         return "";
     }
 
+    //TODO: need tests
     public static String delete(Request request, Response response) {
+        int musicId = convertParamsToInt(response, request.queryParams("musicId"));
+
+        try(Connection conn = getConnection()) {
+            String sql = "DELETE FROM music WHERE music_id = " + musicId;
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                response.status(200);
+            }
+            else {
+                response.status(404);
+            }
+        }
+        catch (SQLException e) {
+            logger.error("Error in MusicApi.delete", e);
+            response.status(500);
+        }
+
         return "";
     }
 
@@ -220,4 +263,4 @@ public class MusicApi extends MusicHandler {
 }
 
 record UserMusicRelation(int userId, int musicId) {}
-record UploadData(int authorId, String title, int eContent, String genre, int coverId) {}
+record MusicData(int authorId, String title, int eContent, String genre, int coverId) {}
