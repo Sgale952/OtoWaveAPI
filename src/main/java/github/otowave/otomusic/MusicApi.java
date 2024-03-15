@@ -136,12 +136,43 @@ public class MusicApi extends MusicHandler {
         return "";
     }
 
+
     public static String dailyRandom(Request request, Response response) {
         return "";
     }
 
+    //TODO: need tests
     public static String search(Request request, Response response) {
-        return "";
+        Map<String, Integer> resultIds = new LinkedHashMap<>();
+        String searchPhrase = request.queryParams("%"+"phrase"+"%");
+
+        try(Connection conn = getConnection()) {
+            //need null?
+            String sql = "SELECT music_id, null as playlist_id, null as user_id FROM songs WHERE title LIKE '?' " +
+                    "UNION SELECT null as music_id, playlist_id, null as user_id FROM playlists WHERE name LIKE '?' " +
+                    "UNION SELECT null as music_id, null as playlist_id, user_id FROM users WHERE username LIKE '?'";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, searchPhrase);
+            stmt.setString(2, searchPhrase);
+            stmt.setString(3, searchPhrase);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("music_id");
+                String table = rs.getString("type");
+
+                resultIds.put(table, id);
+
+                response.status(200);
+            }
+        }
+        catch (SQLException e) {
+            logger.error("Error in MusicApi.delete", e);
+            response.status(500);
+        }
+
+        return gson.toJson(resultIds);
     }
 
     //TODO: need tests
