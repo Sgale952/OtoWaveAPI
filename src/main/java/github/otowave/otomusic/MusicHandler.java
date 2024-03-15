@@ -7,7 +7,6 @@ import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
-import spark.Response;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,23 +14,23 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.Comparator;
 
 public class MusicHandler {
     private static final Logger logger = LoggerFactory.getLogger(MusicHandler.class);
 
-    protected static int convertParamsToInt(Response response, String str) {
-        int num = -1;
+    protected static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
+        int convertedYear = convertParamsToInt(year);
+        int convertedMonth = convertParamsToInt(year);
+        int convertedDay = convertParamsToInt(year);
 
-        try {
-            num = Integer.parseInt(str);
-        }
-        catch (NumberFormatException e) {
-            logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
-        }
+        return LocalDate.of(convertedYear, convertedMonth, convertedDay);
+    }
 
-        return num;
+    //Maybe delete this method
+    protected static int convertParamsToInt(String str) throws NumberFormatException{
+        return Integer.parseInt(str);
     }
 
     protected static void deleteAudioFile(int musicId) throws IOException {
@@ -79,5 +78,4 @@ public class MusicHandler {
     private static void trimAacFile() {
 
     }
-
 }
