@@ -1,5 +1,9 @@
 package github.otowave.otomusic;
 
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFmpegExecutor;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -39,14 +43,29 @@ public class MusicHandler {
         Path filePath = dirPath.resolve(fileName);
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        convertAudioFileToAac(filePath, fileName);
+        convertAudioFileToAac(musicId, request.queryParams("fileType"));
     }
 
-    //Use ffmpeg-wrapper?
-    private static void convertAudioFileToAac(Path filePath, String inputFile) {
-        String outputFile = inputFile + ".aac";
+    private static void convertAudioFileToAac( int musicId, String fileType) throws IOException {
+        FFmpeg ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
+        FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
+        String inputFile = musicId + fileType;
+        String outputFile = musicId + ".aac";
 
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(inputFile)
+                .overrideOutputFiles(true)
+                .addOutput(outputFile)
+                .setFormat(".aac")
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+        //Check performance. Can be replaced by executor.createJob(builder).run();
+        executor.createTwoPassJob(builder).run();
+
+        trimAacFile();
     }
+
     private static void trimAacFile() {
 
     }

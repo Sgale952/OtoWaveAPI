@@ -19,6 +19,7 @@ public class Main {
             //Try merging methods (updateInteraction)
             patch("/update-likes", (MusicApi::updateLikes));
             patch("/update-listens", (MusicApi::updateListens));
+            get("/song-data", (MusicApi::allData));
         });
 
         path("/:userId", () -> {

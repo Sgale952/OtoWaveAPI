@@ -1,6 +1,7 @@
 package github.otowave.otomusic;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -17,11 +18,41 @@ public class MusicApi extends MusicHandler {
     private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
     private static final Gson gson = new Gson();
 
+    //TODO: need tests
     public static String allData(Request request, Response response) {
-        return "";
+        JsonObject jsonOutput = new JsonObject();
+        String musicId = request.params(":musicId");
+
+        try(Connection conn = getConnection()) {
+            String sql = "SELECT * FROM music WHERE music_id = " + musicId;
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                jsonOutput.addProperty("music_id", rs.getInt("music_id"));
+                jsonOutput.addProperty("author", rs.getInt("author"));
+                jsonOutput.addProperty("title", rs.getString("title"));
+                jsonOutput.addProperty("econtent", rs.getInt("econtent"));
+                jsonOutput.addProperty("genre", rs.getString("genre"));
+                jsonOutput.addProperty("likes", rs.getInt("likes"));
+                jsonOutput.addProperty("listens", rs.getInt("listens"));
+                jsonOutput.addProperty("uploaded", String.valueOf(rs.getTimestamp("uploaded")));
+                jsonOutput.addProperty("duration", String.valueOf(rs.getTime("duration")));
+                jsonOutput.addProperty("cover_id", rs.getInt("cover_id"));
+            }
+
+            response.status(200);
+        }
+        catch (SQLException e) {
+            logger.error("Error in MusicApi.allData", e);
+            response.status(500);
+        }
+
+        return gson.toJson(jsonOutput);
     }
 
     //Add and check audio duration
+    //TODO: need tests
     public static String upload(Request request, Response response) {
         UploadData uploadData = gson.fromJson(request.body(), UploadData.class);
         int musicId;
