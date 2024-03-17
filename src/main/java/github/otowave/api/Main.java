@@ -7,18 +7,19 @@ import static spark.Spark.*;
 public class Main {
     public static void main(String[] args) {
 
-        get("/daily", (request, response) -> MusicApi.dailyRandom(request));
-        get("/search", ((request, response) -> MusicApi.search(request)));
-        get("/navigator", ((request, response) -> MusicApi.sortByGenre(request)));
+        get("/daily", MusicApi::dailyRandom);
+        get("/search", (MusicApi::search));
 
         path("/navigator", () -> {
-            get("/recent", ((request, response) -> MusicApi.recentUploaded(request)));
-            get("/top", ((request, response) -> MusicApi.mostListensPerMonth(request)));
+            get("/recent", (MusicApi::topPerMonth));
+            get("/top", (MusicApi::topPerMonth));
         });
 
         path("/:musicId", () -> {
-            patch("/update-likes", ((request, response) -> MusicApi.updateLikes(request)));
-            patch("/update-listens", ((request, response) -> MusicApi.updateListens(request)));
+            //Try merging methods (updateInteraction)
+            patch("/update-likes", (MusicApi::updateLikes));
+            patch("/update-listens", (MusicApi::updateListens));
+            get("/song-data", (MusicApi::allData));
         });
 
         path("/:userId", () -> {
@@ -31,17 +32,17 @@ public class Main {
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
 
-            post("/new-song", ((request, response) -> MusicApi.add(request)));
-            post("/like-song", ((request, response) -> MusicApi.like(request)));
-            delete("/discard-song", ((request, response) -> MusicApi.discard(request)));
+            post("/new-song", (MusicApi::upload));
+            post("/like-song", (MusicApi::like));
+            delete("/discard-song", (MusicApi::discard));
 
             post("/new-playlist", ((request, response) -> PlaylistApi.add(request)));
             post("/add-playlist", ((request, response) -> PlaylistApi.addSong(request)));
             post("/like-playlist", ((request, response) -> PlaylistApi.like(request)));
 
             path("/:musicId", () -> {
-                patch("/update-song", ((request, response) -> MusicApi.update(request)));
-                delete("/delete-song", ((request, response) -> MusicApi.delete(request)));
+                patch("/update-song", (MusicApi::update));
+                delete("/delete-song", (MusicApi::delete));
             });
 
             path("/:playlistId", () -> {
