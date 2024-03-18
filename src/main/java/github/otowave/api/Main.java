@@ -1,5 +1,6 @@
 package github.otowave.api;
 
+import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import static spark.Spark.*;
@@ -31,14 +32,18 @@ public class Main {
             patch("/change-name", ((request, response) -> ""));
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
+            //Try merging methods
+            post("/new-image", (ImagesApi::upload));
+            //Used if existing image != default
+            patch("/update-image", (ImagesApi::update));
 
             post("/new-song", (MusicApi::upload));
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));
 
-            post("/new-playlist", ((request, response) -> PlaylistApi.add(request)));
-            post("/add-playlist", ((request, response) -> PlaylistApi.addSong(request)));
-            post("/like-playlist", ((request, response) -> PlaylistApi.like(request)));
+            post("/new-playlist", (PlaylistApi::add));
+            post("/add-playlist", (PlaylistApi::addSong));
+            post("/like-playlist", (PlaylistApi::like));
 
             path("/:musicId", () -> {
                 patch("/update-song", (MusicApi::update));
@@ -46,8 +51,8 @@ public class Main {
             });
 
             path("/:playlistId", () -> {
-                patch("/update-playlist", ((request, response) -> PlaylistApi.update(request)));
-                delete("/delete-playlist", ((request, response) -> PlaylistApi.delete(request)));
+                patch("/update-playlist", (PlaylistApi::update));
+                delete("/delete-playlist", (PlaylistApi::delete));
             });
         });
     }

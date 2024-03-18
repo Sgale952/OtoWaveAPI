@@ -21,9 +21,9 @@ public class MusicApi extends MusicHandler {
     private static final Gson gson = new Gson();
 
     //TODO: need tests
-    public static String allData(Request request, Response response) {
+    public static String allData(Request req, Response res) {
         JsonObject jsonOutput = new JsonObject();
-        String musicId = request.params(":musicId");
+        String musicId = req.params(":musicId");
 
         try(Connection conn = getConnection()) {
             String sql = "SELECT * FROM music WHERE music_id = " + musicId;
@@ -43,11 +43,11 @@ public class MusicApi extends MusicHandler {
                 jsonOutput.addProperty("cover_id", rs.getInt("cover_id"));
             }
 
-            response.status(200);
+            res.status(200);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.allData", e);
-            response.status(500);
+            res.status(500);
         }
 
         return gson.toJson(jsonOutput);
@@ -55,8 +55,8 @@ public class MusicApi extends MusicHandler {
 
     //Add and check audio duration
     //TODO: need tests
-    public static String upload(Request request, Response response) {
-        MusicData musicData = gson.fromJson(request.body(), MusicData.class);
+    public static String upload(Request req, Response res) {
+        MusicData musicData = gson.fromJson(req.body(), MusicData.class);
         int musicId;
 
         try(Connection conn = getConnection()) {
@@ -73,22 +73,22 @@ public class MusicApi extends MusicHandler {
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             musicId = generatedKeys.getInt(1);
-            saveAudioFile(request, musicId);
+            saveAudioFile(req, musicId);
 
-            response.status(201);
+            res.status(201);
         }
         catch (SQLException | IOException e) {
             logger.error("Error in MusicApi.upload", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
     }
 
     //TODO: need tests
-    public static String update(Request request, Response response) {
-        MusicData musicData = gson.fromJson(request.body(), MusicData.class);
-        int musicId = convertParamsToInt(request.queryParams("musicId"));
+    public static String update(Request req, Response res) {
+        MusicData musicData = gson.fromJson(req.body(), MusicData.class);
+        int musicId = convertParamsToInt(req.queryParams("musicId"));
 
         try(Connection conn = getConnection()) {
             String sql = "UPDATE music SET author = ?, title = '?', econtent = ?, genre = '?', cover_id = ? WHERE music_id = ?";
@@ -102,23 +102,23 @@ public class MusicApi extends MusicHandler {
             stmt.setInt(6, musicId);
             stmt.executeUpdate();
 
-            response.status(200);
+            res.status(200);
         }
         catch (NumberFormatException e) {
             logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
+            res.status(400);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.update", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
     }
 
     //TODO: need tests
-    public static String delete(Request request, Response response) {
-        int musicId = convertParamsToInt(request.queryParams("musicId"));
+    public static String delete(Request req, Response res) {
+        int musicId = convertParamsToInt(req.queryParams("musicId"));
 
         try(Connection conn = getConnection()) {
             String sql = "DELETE FROM music WHERE music_id = " + musicId;
@@ -128,19 +128,19 @@ public class MusicApi extends MusicHandler {
             if (rowsAffected > 0) {
                 deleteAudioFile(musicId);
                 //deleteImageFile(musicId);
-                response.status(200);
+                res.status(200);
             }
             else {
-                response.status(404);
+                res.status(404);
             }
         }
         catch (NumberFormatException e) {
             logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
+            res.status(400);
         }
         catch (SQLException | IOException e) {
             logger.error("Error in MusicApi.delete", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
@@ -148,12 +148,12 @@ public class MusicApi extends MusicHandler {
 
     //Im just silly kitten don't blame me
     //TODO: need tests
-    public static String dailyRandom(Request request, Response response) {
-        LocalDate cookieDate = convertDailyRandomCookieToDate(request.cookie("year"), request.cookie("month"), request.cookie("day"));
+    public static String dailyRandom(Request req, Response res) {
+        LocalDate cookieDate = convertDailyRandomCookieToDate(req.cookie("year"), req.cookie("month"), req.cookie("day"));
         LocalDate currentDate = LocalDate.now();
 
         if (currentDate.isEqual(cookieDate)) {
-            response.status(200);
+            res.status(200);
             return "";
         }
 
@@ -167,22 +167,22 @@ public class MusicApi extends MusicHandler {
                 musicIds.add(rs.getInt("music_id"));
             }
 
-            response.status(205);
+            res.status(205);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.dailyRandom", e);
-            response.status(500);
+            res.status(500);
         }
 
         //Bruh
-        response.cookie("musicIds", musicIds.toString());
+        res.cookie("musicIds", musicIds.toString());
         return "";
     }
 
 
-    public static String search(Request request, Response response) {
+    public static String search(Request req, Response res) {
         Map<String, Integer> resultIds = new LinkedHashMap<>();
-        String searchPhrase = request.queryParams("%"+"phrase"+"%");
+        String searchPhrase = req.queryParams("%"+"phrase"+"%");
 
         try(Connection conn = getConnection()) {
             //need null?
@@ -203,20 +203,20 @@ public class MusicApi extends MusicHandler {
                 resultIds.put(table, id);
             }
 
-            response.status(200);
+            res.status(200);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.search", e);
-            response.status(500);
+            res.status(500);
         }
 
         return gson.toJson(resultIds);
     }
 
     //TODO: need tests
-    public static String topPerMonth(Request request, Response response) {
+    public static String topPerMonth(Request req, Response res) {
         Map<Integer, String> musicIds = new LinkedHashMap<>();
-        String sortBy = request.contextPath().equals("/recent") ? "uploaded" : "listens";
+        String sortBy = req.contextPath().equals("/recent") ? "uploaded" : "listens";
 
         try(Connection conn = getConnection()) {
             String sql = "SELECT music_id, genre FROM music WHERE MONTH(uploaded) = MONTH(CURRENT_DATE()) AND YEAR(uploaded) = YEAR(CURRENT_DATE()) ORDER BY " +
@@ -228,20 +228,20 @@ public class MusicApi extends MusicHandler {
                     musicIds.put(rs.getInt("music_id"), rs.getString("genre"));
                 }
 
-            response.status(200);
+            res.status(200);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.topPerMonth", e);
-            response.status(500);
+            res.status(500);
         }
 
         return gson.toJson(musicIds);
     }
 
     //TODO: need tests
-    public static String like(Request request, Response response) {
-        int userId = convertParamsToInt(request.params(":userId"));
-        int musicId = convertParamsToInt(request.queryParams("musicId"));
+    public static String like(Request req, Response res) {
+        int userId = convertParamsToInt(req.params(":userId"));
+        int musicId = convertParamsToInt(req.queryParams("musicId"));
         UserMusicRelation data = new UserMusicRelation(userId, musicId);
 
         try(Connection conn = getConnection()) {
@@ -252,24 +252,24 @@ public class MusicApi extends MusicHandler {
             stmt.setInt(2, data.musicId());
             stmt.executeUpdate();
 
-            response.status(201);
+            res.status(201);
         }
         catch (NumberFormatException e) {
             logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
+            res.status(400);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.like", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
     }
 
     //TODO: need tests
-    public static String discard(Request request, Response response) {
-        int userId = convertParamsToInt(request.params(":userId"));
-        int musicId = convertParamsToInt(request.queryParams("musicId"));
+    public static String discard(Request req, Response res) {
+        int userId = convertParamsToInt(req.params(":userId"));
+        int musicId = convertParamsToInt(req.queryParams("musicId"));
         UserMusicRelation data = new UserMusicRelation(userId, musicId);
 
         try(Connection conn = getConnection()) {
@@ -280,23 +280,23 @@ public class MusicApi extends MusicHandler {
             stmt.setInt(2, data.musicId());
             stmt.executeUpdate();
 
-            response.status(201);
+            res.status(201);
         }
         catch (NumberFormatException e) {
             logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
+            res.status(400);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.discard", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
     }
 
     //TODO: need tests
-    public static String updateLikes(Request request, Response response) {
-        int musicId = convertParamsToInt(request.params(":musicId"));
+    public static String updateLikes(Request req, Response res) {
+        int musicId = convertParamsToInt(req.params(":musicId"));
         UserMusicRelation data = new UserMusicRelation(-1, musicId);
 
 
@@ -307,23 +307,23 @@ public class MusicApi extends MusicHandler {
             stmt.setInt(1, data.musicId());
             stmt.executeUpdate();
 
-            response.status(201);
+            res.status(201);
         }
         catch (NumberFormatException e) {
             logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
+            res.status(400);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.updateLikes", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
     }
 
     //TODO: need tests
-    public static String updateListens(Request request, Response response) {
-        int musicId = convertParamsToInt(request.params(":musicId"));
+    public static String updateListens(Request req, Response res) {
+        int musicId = convertParamsToInt(req.params(":musicId"));
         UserMusicRelation data = new UserMusicRelation(-1, musicId);
 
 
@@ -334,15 +334,15 @@ public class MusicApi extends MusicHandler {
             stmt.setInt(1, data.musicId());
             stmt.executeUpdate();
 
-            response.status(201);
+            res.status(201);
         }
         catch (NumberFormatException e) {
             logger.error("Detected unconvertible String in id variable", e);
-            response.status(400);
+            res.status(400);
         }
         catch (SQLException e) {
             logger.error("Error in MusicApi.updateLikes", e);
-            response.status(500);
+            res.status(500);
         }
 
         return "";
