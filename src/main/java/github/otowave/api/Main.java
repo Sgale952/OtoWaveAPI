@@ -3,10 +3,14 @@ package github.otowave.api;
 import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
+import github.otowave.otousers.UsersApi;
+
 import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
+
+        get("/new-user", UsersApi::upload);
 
         get("/daily", MusicApi::dailyRandom);
         get("/search", (MusicApi::search));
