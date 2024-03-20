@@ -12,6 +12,7 @@ public class Main {
         get("/search", (MusicApi::search));
 
         path("/navigator", () -> {
+            get("/genres", (MusicApi::genres));
             get("/recent", (MusicApi::topPerMonth));
             get("/top", (MusicApi::topPerMonth));
         });
