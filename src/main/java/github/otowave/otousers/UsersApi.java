@@ -17,7 +17,7 @@ public class UsersApi {
 
     //Add sha256 encrypt
     public static String upload(Request req, Response res) {
-        UserData musicData = gson.fromJson(req.body(), UserData.class);
+        UserData userData = gson.fromJson(req.body(), UserData.class);
         int userId = 0;
 
         try(Connection conn = getConnection()) {
@@ -25,10 +25,10 @@ public class UsersApi {
                     "VALUES (?, '?', '?', '?')";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, musicData.access());
-            stmt.setString(2, musicData.nickname());
-            stmt.setString(3, musicData.email());
-            stmt.setString(4, musicData.password());
+            stmt.setInt(1, userData.access());
+            stmt.setString(2, userData.nickname());
+            stmt.setString(3, userData.email());
+            stmt.setString(4, userData.password());
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
