@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static github.otowave.api.CommonUtils.convertParamsToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class MusicApi extends MusicHandler {
