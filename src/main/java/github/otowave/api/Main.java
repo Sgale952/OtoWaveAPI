@@ -4,18 +4,21 @@ import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
+import java.sql.*;
 
+import static github.otowave.api.DatabaseManager.getConnection;
 import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
 
-        get("/new-user", UsersApi::upload);
-
+        post("/new-user", UsersApi::upload);
+        post("/authorization", UsersApi::authorization);
         get("/daily", MusicApi::dailyRandom);
         get("/search", (MusicApi::search));
 
         path("/navigator", () -> {
+            get("/genres", (MusicApi::genres));
             get("/recent", (MusicApi::topPerMonth));
             get("/top", (MusicApi::topPerMonth));
         });
@@ -26,6 +29,9 @@ public class Main {
             patch("/update-listens", (MusicApi::updateListens));
             get("/song-data", (MusicApi::allData));
         });
+
+
+
 
         path("/:userId", () -> {
             get("/history", ((request, response) -> ""));

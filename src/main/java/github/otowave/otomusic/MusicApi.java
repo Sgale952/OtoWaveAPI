@@ -212,6 +212,27 @@ public class MusicApi extends MusicHandler {
 
         return gson.toJson(resultIds);
     }
+    public static String genres(Request req, Response res) {
+        Map<Integer, String> genres = new LinkedHashMap<>();
+
+        try(Connection conn = getConnection()) {
+            String sql = "SELECT genre_id FROM genres";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+            for(int i = 0; rs.next(); i++) {
+                genres.put(i, rs.getString("genre_id"));
+            }
+
+            res.status(200);
+        }
+        catch(SQLException e) {
+            logger.error("Error in MusicApi.genres", e);
+            res.status(500);
+        }
+
+        return gson.toJson(genres);
+    }
 
     //TODO: need tests
     public static String topPerMonth(Request req, Response res) {
