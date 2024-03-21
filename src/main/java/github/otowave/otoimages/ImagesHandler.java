@@ -11,8 +11,8 @@ import java.nio.file.StandardCopyOption;
 public class ImagesHandler {
 
     //This is shit
-    protected static String applyImage(String imageType, int sourceId, int imageId) {
-        return switch (imageType) {
+    protected static String applyImage(String usage, int sourceId, int imageId) {
+        return switch (usage) {
             case "musicCover" -> applyToMusic(sourceId, imageId);
             case "playlistCover" -> applyToPlaylist(sourceId, imageId);
             case "userAvatar" -> applyToUserAvatar(sourceId, imageId);
