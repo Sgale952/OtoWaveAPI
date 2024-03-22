@@ -6,11 +6,12 @@ import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
 import java.sql.*;
 
-import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.api.CommonUtils.multipartConfig;
 import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
+        multipartConfig();
 
         post("/new-user", UsersApi::upload);
         post("/authorization", UsersApi::authorization);
@@ -42,11 +43,7 @@ public class Main {
             patch("/change-name", ((request, response) -> ""));
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
-            //Try merging methods
             post("/new-image", (ImagesApi::upload));
-            //Used if existing image != default
-            patch("/update-image", (ImagesApi::update));
-
             post("/new-song", (MusicApi::upload));
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));

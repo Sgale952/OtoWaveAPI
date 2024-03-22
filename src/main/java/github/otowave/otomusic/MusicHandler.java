@@ -17,20 +17,17 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Comparator;
 
+import static github.otowave.api.CommonUtils.convertToInt;
+
 public class MusicHandler {
     private static final Logger logger = LoggerFactory.getLogger(MusicHandler.class);
 
     protected static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
-        int convertedYear = convertParamsToInt(year);
-        int convertedMonth = convertParamsToInt(year);
-        int convertedDay = convertParamsToInt(year);
+        int convertedYear = convertToInt(year);
+        int convertedMonth = convertToInt(year);
+        int convertedDay = convertToInt(year);
 
         return LocalDate.of(convertedYear, convertedMonth, convertedDay);
-    }
-
-    //Maybe delete this method
-    protected static int convertParamsToInt(String str) throws NumberFormatException{
-        return Integer.parseInt(str);
     }
 
     protected static void deleteAudioFile(int musicId) throws IOException {
