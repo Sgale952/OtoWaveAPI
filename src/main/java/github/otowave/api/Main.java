@@ -4,7 +4,6 @@ import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
-import java.sql.*;
 
 import static github.otowave.api.CommonUtils.multipartConfig;
 import static spark.Spark.*;
