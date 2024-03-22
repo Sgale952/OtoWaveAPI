@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static github.otowave.api.CommonUtils.convertParamsToInt;
+import static github.otowave.api.CommonUtils.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class MusicApi extends MusicHandler {
@@ -89,7 +89,7 @@ public class MusicApi extends MusicHandler {
     //TODO: need tests
     public static String update(Request req, Response res) {
         MusicData musicData = gson.fromJson(req.body(), MusicData.class);
-        int musicId = convertParamsToInt(req.queryParams("musicId"));
+        int musicId = convertToInt(req.queryParams("musicId"));
 
         try(Connection conn = getConnection()) {
             String sql = "UPDATE music SET title = '?', econtent = ?, genre = '?', cover_id = ? WHERE music_id = ?";
@@ -118,7 +118,7 @@ public class MusicApi extends MusicHandler {
 
     //TODO: need tests
     public static String delete(Request req, Response res) {
-        int musicId = convertParamsToInt(req.queryParams("musicId"));
+        int musicId = convertToInt(req.queryParams("musicId"));
 
         try(Connection conn = getConnection()) {
             String sql = "DELETE FROM music WHERE music_id = " + musicId;
@@ -263,8 +263,8 @@ public class MusicApi extends MusicHandler {
 
     //TODO: need tests
     public static String like(Request req, Response res) {
-        int userId = convertParamsToInt(req.params(":userId"));
-        int musicId = convertParamsToInt(req.queryParams("musicId"));
+        int userId = convertToInt(req.params(":userId"));
+        int musicId = convertToInt(req.queryParams("musicId"));
         UserMusicRelation data = new UserMusicRelation(userId, musicId);
 
         try(Connection conn = getConnection()) {
@@ -291,8 +291,8 @@ public class MusicApi extends MusicHandler {
 
     //TODO: need tests
     public static String discard(Request req, Response res) {
-        int userId = convertParamsToInt(req.params(":userId"));
-        int musicId = convertParamsToInt(req.queryParams("musicId"));
+        int userId = convertToInt(req.params(":userId"));
+        int musicId = convertToInt(req.queryParams("musicId"));
         UserMusicRelation data = new UserMusicRelation(userId, musicId);
 
         try(Connection conn = getConnection()) {
@@ -319,7 +319,7 @@ public class MusicApi extends MusicHandler {
 
     //TODO: need tests
     public static String updateLikes(Request req, Response res) {
-        int musicId = convertParamsToInt(req.params(":musicId"));
+        int musicId = convertToInt(req.params(":musicId"));
         UserMusicRelation data = new UserMusicRelation(-1, musicId);
 
 
@@ -346,7 +346,7 @@ public class MusicApi extends MusicHandler {
 
     //TODO: need tests
     public static String updateListens(Request req, Response res) {
-        int musicId = convertParamsToInt(req.params(":musicId"));
+        int musicId = convertToInt(req.params(":musicId"));
         UserMusicRelation data = new UserMusicRelation(-1, musicId);
 
 
