@@ -1,7 +1,6 @@
 package github.otowave.otoimages;
 
 import com.google.gson.Gson;
-import github.otowave.otomusic.MusicApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -14,7 +13,7 @@ import static github.otowave.api.CommonUtils.convertParamsToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class ImagesApi extends ImagesHandler {
-    private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImagesApi.class);
     private static final Gson gson = new Gson();
 
     //TODO: need tests
@@ -27,14 +26,14 @@ public class ImagesApi extends ImagesHandler {
             String sql = "INSERT INTO images (uploader, file_type) VALUES (?, '?')";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, imagesData.uploader());
+            stmt.setInt(1, convertParamsToInt(imagesData.uploader()));
             stmt.setString(2, imagesData.fileType());
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             imageId = generatedKeys.getInt(1);
 
-            PreparedStatement stmt2 = conn.prepareStatement(applyImage(imagesData.fileType(), sourceId, imageId));
+            PreparedStatement stmt2 = conn.prepareStatement(applyImage(imagesData.usage(), sourceId, imageId));
             stmt2.executeUpdate();
             saveImageFile(req, imageId);
 
@@ -69,4 +68,4 @@ public class ImagesApi extends ImagesHandler {
     }
 }
 
-record ImagesData(int uploader, String fileType, String usage) {}
+record ImagesData(String uploader, String fileType, String usage) {}
