@@ -50,10 +50,23 @@ public class ImagesApi extends ImagesHandler {
         return String.valueOf(imageId);
     }
 
+    //TODO: need tests
     public static String update(Request req, Response res) {
-        //saveImageFile();
-        //Delete old file
-        deleteImageFile();
+        try {
+            int ImageId = convertParamsToInt(req.queryParams("sourceId"));
+            saveImageFile(req, ImageId);
+
+            res.status(200);
+        }
+        catch (IOException e) {
+            logger.error("Error in ImagesApi.update", e);
+            res.status(500);
+        }
+
+        return "";
+    }
+
+    public static String delete (Request req, Response res) {
         return "";
     }
 }

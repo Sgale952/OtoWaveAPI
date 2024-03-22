@@ -92,15 +92,14 @@ public class MusicApi extends MusicHandler {
         int musicId = convertToInt(req.queryParams("musicId"));
 
         try(Connection conn = getConnection()) {
-            String sql = "UPDATE music SET author = ?, title = '?', econtent = ?, genre = '?', cover_id = ? WHERE music_id = ?";
+            String sql = "UPDATE music SET title = '?', econtent = ?, genre = '?', cover_id = ? WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setInt(1, musicData.authorId());
-            stmt.setString(2, musicData.title());
-            stmt.setInt(3, musicData.eContent());
-            stmt.setString(4, musicData.genre());
-            stmt.setInt(5, musicData.coverId());
-            stmt.setInt(6, musicId);
+            stmt.setString(1, musicData.title());
+            stmt.setInt(2, musicData.eContent());
+            stmt.setString(3, musicData.genre());
+            stmt.setInt(4, musicData.coverId());
+            stmt.setInt(5, musicId);
             stmt.executeUpdate();
 
             res.status(200);
