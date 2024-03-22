@@ -39,6 +39,10 @@ public class Main {
             patch("/change-name", ((request, response) -> ""));
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
+            //Try merging methods
+            post("/new-image", (ImagesApi::upload));
+            patch("/update-image", (ImagesApi::update));
+            delete("/delete-image", (ImagesApi::delete));
 
             post("/new-song", (MusicApi::upload));
             post("/like-song", (MusicApi::like));
@@ -57,13 +61,6 @@ public class Main {
                 patch("/update-playlist", (PlaylistApi::update));
                 delete("/delete-playlist", (PlaylistApi::delete));
             });
-        });
-
-        path("/:sourseId", () -> {
-            //Try merging methods
-            post("/new-image", (ImagesApi::upload));
-            patch("/update-image", (ImagesApi::update));
-            delete("/delete-image", (ImagesApi::delete));
         });
     }
 }
