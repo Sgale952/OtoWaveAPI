@@ -1,46 +1,48 @@
 package github.otowave.otoimages;
 
 import com.google.gson.Gson;
-import github.otowave.otomusic.MusicApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
-import java.io.IOException;
 import java.sql.*;
 
-import static github.otowave.api.CommonUtils.convertParamsToInt;
+import static github.otowave.api.CommonUtils.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class ImagesApi extends ImagesHandler {
-    private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImagesApi.class);
     private static final Gson gson = new Gson();
 
     //TODO: need tests
     public static String upload(Request req, Response res) {
-        ImagesData imagesData = gson.fromJson(req.body(), ImagesData.class);
-        int sourceId = convertParamsToInt(req.queryParams("musicId"));
+        String imageType = req.queryParams("imageType");
+        int sourceId = convertToInt(req.queryParams("sourceId"));
+        int uploaderId = convertToInt(req.queryParams("uploaderId"));
         int imageId = 0;
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO images (uploader, file_type) VALUES (?, '?')";
+            String sql = "INSERT INTO images (uploader) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, imagesData.uploader());
-            stmt.setString(2, imagesData.fileType());
+            stmt.setInt(1, uploaderId);
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            imageId = generatedKeys.getInt(1);
+            if (generatedKeys.next()) {
+                imageId = generatedKeys.getInt(1);
+            }
 
-            PreparedStatement stmt2 = conn.prepareStatement(applyImage(imagesData.fileType(), sourceId, imageId));
+            String sql2 = applyImage(imageType, imageId, sourceId);
+            PreparedStatement stmt2 = conn.prepareStatement(sql2);
             stmt2.executeUpdate();
+
             saveImageFile(req, imageId);
 
             res.status(201);
         }
-        catch (SQLException | IOException e) {
+        catch (SQLException e) {
             logger.error("Error in ImagesApi.upload", e);
             res.status(500);
         }
@@ -55,5 +57,3 @@ public class ImagesApi extends ImagesHandler {
         return "";
     }
 }
-
-record ImagesData(int uploader, String fileType, String usage) {}
