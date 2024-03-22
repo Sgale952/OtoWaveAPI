@@ -18,8 +18,8 @@ public class ImagesApi extends ImagesHandler {
 
     //TODO: need tests
     public static String upload(Request req, Response res) {
-        ImagesData imagesData = new ImagesData(req.params("uploader"), req.params("fileType"), req.params("usage"));
-        int sourceId = convertParamsToInt(req.queryParams("musicId"));
+        ImagesData imagesData = gson.fromJson(req.body(), ImagesData.class);
+        int sourceId = convertParamsToInt(req.queryParams("sourceId"));
         int imageId = 0;
 
         try(Connection conn = getConnection()) {
@@ -47,10 +47,23 @@ public class ImagesApi extends ImagesHandler {
         return String.valueOf(imageId);
     }
 
+    //TODO: need tests
     public static String update(Request req, Response res) {
-        //saveImageFile();
-        //Delete old file
-        deleteImageFile();
+        try {
+            int ImageId = convertParamsToInt(req.queryParams("sourceId"));
+            saveImageFile(req, ImageId);
+
+            res.status(200);
+        }
+        catch (IOException e) {
+            logger.error("Error in ImagesApi.update", e);
+            res.status(500);
+        }
+
+        return "";
+    }
+
+    public static String delete (Request req, Response res) {
         return "";
     }
 }
