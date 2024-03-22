@@ -1,11 +1,13 @@
 package github.otowave.otoimages;
 
 import com.google.gson.Gson;
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import java.io.IOException;
 import java.sql.*;
 
 import static github.otowave.api.CommonUtils.convertToInt;
@@ -13,13 +15,13 @@ import static github.otowave.api.DatabaseManager.getConnection;
 
 public class ImagesApi extends ImagesHandler {
     private static final Logger logger = LoggerFactory.getLogger(ImagesApi.class);
-    private static final Gson gson = new Gson();
 
-    //TODO: need tests
+    /* Worked / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
         String imageType = req.queryParams("imageType");
-        int sourceId = convertToInt(req.queryParams("sourceId"));
-        int uploaderId = convertToInt(req.queryParams("uploaderId"));
+        String sourceId = req.queryParams("sourceId");
+        String prevImageId = req.queryParams("prevImageId");
+        int uploaderId = convertToInt(req.params(":userId"));
         int imageId = 0;
 
         try(Connection conn = getConnection()) {
@@ -30,7 +32,7 @@ public class ImagesApi extends ImagesHandler {
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
+            if(generatedKeys.next()) {
                 imageId = generatedKeys.getInt(1);
             }
 
@@ -40,21 +42,17 @@ public class ImagesApi extends ImagesHandler {
 
             saveImageFile(req, imageId);
 
+            if(prevImageId != null) {
+                deleteImageFile(prevImageId);
+            }
+
             res.status(201);
         }
-        catch (SQLException e) {
+        catch(SQLException | ServletException | IOException e) {
             logger.error("Error in ImagesApi.upload", e);
             res.status(500);
         }
 
         return String.valueOf(imageId);
-    }
-
-    public static String update(Request req, Response res) {
-        return "";
-    }
-
-    public static String delete(Request req, Response res) {
-        return "";
     }
 }
