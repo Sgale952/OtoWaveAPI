@@ -52,16 +52,10 @@ public class ImagesApi extends ImagesHandler {
 
     //TODO: need tests
     public static String update(Request req, Response res) {
-        try {
-            int ImageId = convertParamsToInt(req.queryParams("sourceId"));
-            saveImageFile(req, ImageId);
+        int ImageId = convertToInt(req.queryParams("sourceId"));
+        saveImageFile(req, ImageId);
 
-            res.status(200);
-        }
-        catch (IOException e) {
-            logger.error("Error in ImagesApi.update", e);
-            res.status(500);
-        }
+        res.status(200);
 
         return "";
     }
