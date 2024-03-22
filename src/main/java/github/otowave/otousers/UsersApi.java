@@ -10,18 +10,19 @@ import java.sql.*;
 
 import static github.otowave.api.DatabaseManager.getConnection;
 
+//Add sha256 encrypt
 public class UsersApi {
     private static final Logger logger = LoggerFactory.getLogger(UsersApi.class);
     private static final Gson gson = new Gson();
 
-    //Add sha256 encrypt
+    /* Worked / unstable / unsafe */
     public static String upload(Request req, Response res) {
         UserData userData = gson.fromJson(req.body(), UserData.class);
         int userId = 0;
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO users (access, nickname, email, password) " +
-                    "VALUES (?, '?', '?', '?')";
+            String sql = "INSERT INTO users (access, nickname, email, passwrd) " +
+                    "VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setInt(1, userData.access());
@@ -31,7 +32,9 @@ public class UsersApi {
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            userId = generatedKeys.getInt(1);
+            if(generatedKeys.next()) {
+                userId = generatedKeys.getInt(1);
+            }
 
             res.status(201);
         }
@@ -41,6 +44,43 @@ public class UsersApi {
         }
 
         return String.valueOf(userId);
+    }
+
+     public static String authorization (Request req, Response res){
+         try(Connection conn = getConnection()) {
+             String email = req.queryParams("email");
+             String password = req.queryParams("password");
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE email = ? AND passwrd = ?");
+             stmt.setString(1, email);
+             stmt.setString(2, password);
+             ResultSet rs = stmt.executeQuery();
+             if (rs.next()) {
+                 return "Успешная авторизация!";
+             } else {
+                 return "Неверное имя пользователя или пароль.";
+             }
+         }
+         catch (SQLException e){
+             logger.error("Error in UserApi.authorization", e);
+            res.status(500);
+         }
+
+         return "";
+     }
+
+    public static String changeName(Request req, Response res){
+        try(Connection conn = getConnection()) {
+            String changeName = req.queryParams("new_name");
+            String userid = req.queryParams(":userId");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE users * SET name = "+ changeName + "WHERE user_id =" + userid);
+            res.status(201);
+        }
+        catch (SQLException e){
+            logger.error("Error in UserApi.changename", e);
+            res.status(500);
+        }
+
+        return "";
     }
 }
 
