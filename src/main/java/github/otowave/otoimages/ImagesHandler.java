@@ -12,6 +12,9 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static github.otowave.api.UploadHelper.getFileExtension;
+import static github.otowave.api.UploadHelper.getStaticFilePart;
+
 public class ImagesHandler {
     private static final String IMAGES_DIR = "/home/otowave/data/images/";
 
@@ -23,7 +26,6 @@ public class ImagesHandler {
             case "userHeader" -> applyToUserHeader(imageId, sourceId);
             default -> "";
         };
-
     }
 
     private static String applyToMusic( int imageId, String sourceId) {
@@ -43,23 +45,12 @@ public class ImagesHandler {
     }
 
     protected static void saveImageFile(Request req, int imageId) throws ServletException, IOException {
-        Part imagePart = getImagePart(req);
-        String fileName = imageId+getImageExtension(imagePart);
+        Part imagePart = getStaticFilePart(req, "image");
+        String fileName = imageId+getFileExtension(imagePart);
 
         try(OutputStream outputStream = new FileOutputStream(IMAGES_DIR + fileName)) {
             IOUtils.copy(imagePart.getInputStream(), outputStream);
         }
-    }
-
-    private static Part getImagePart(Request req) throws IOException, ServletException {
-        Part imagePart;
-        imagePart = req.raw().getPart("image");
-        return imagePart;
-    }
-
-    private static String getImageExtension(Part imagePart) {
-        String fileName = imagePart.getSubmittedFileName();
-        return fileName.substring(fileName.lastIndexOf('.'));
     }
 
     protected static void deleteImageFile(String imageId) throws IOException {

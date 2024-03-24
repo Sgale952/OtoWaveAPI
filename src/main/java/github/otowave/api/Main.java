@@ -5,7 +5,7 @@ import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
 
-import static github.otowave.api.CommonUtils.multipartConfig;
+import static github.otowave.api.UploadHelper.multipartConfig;
 import static spark.Spark.*;
 
 public class Main {
@@ -29,9 +29,6 @@ public class Main {
             patch("/update-listens", (MusicApi::updateListens));
             get("/song-data", (MusicApi::allData));
         });
-
-
-
 
         path("/:userId", () -> {
             get("/history", ((request, response) -> ""));

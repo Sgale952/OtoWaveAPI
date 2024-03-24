@@ -9,7 +9,7 @@ import spark.Response;
 import java.io.IOException;
 import java.sql.*;
 
-import static github.otowave.api.CommonUtils.convertToInt;
+import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class ImagesApi extends ImagesHandler {
