@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
-import static github.otowave.api.CommonUtils.convertToInt;
+import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class PlaylistApi {
