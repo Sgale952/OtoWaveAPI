@@ -2,6 +2,7 @@ package github.otowave.otomusic;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -14,10 +15,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static github.otowave.api.CommonUtils.convertToInt;
+import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.otomusic.MusicHandler.*;
 
-public class MusicApi extends MusicHandler {
+public class MusicApi {
     private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
     private static final Gson gson = new Gson();
 
@@ -55,30 +57,36 @@ public class MusicApi extends MusicHandler {
     }
 
     //Add and check audio duration
-    //TODO: need tests
+    /* Worked (slow) / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
-        MusicData musicData = gson.fromJson(req.body(), MusicData.class);
+        String title = req.queryParams("title");
+        String genre = req.queryParams("genre");
+        int eContent = convertToInt(req.queryParams("eContent"));
+        int uploaderId = convertToInt(req.params(":userId"));
         int musicId = 0;
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO music (author, title, econtent, genre, cover_id) " +
-                    "VALUES (?, '?', ?, '?', ?)";
+            String sql = "INSERT INTO music (author, title, econtent, genre) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, musicData.authorId());
-            stmt.setString(2, musicData.title());
-            stmt.setInt(3, musicData.eContent());
-            stmt.setString(4, musicData.genre());
-            stmt.setInt(5, musicData.coverId());
+            stmt.setInt(1, uploaderId);
+            stmt.setString(2, title);
+            stmt.setInt(3, eContent);
+            stmt.setString(4, genre);
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            musicId = generatedKeys.getInt(1);
-            saveAudioFile(req, musicId);
+            if(generatedKeys.next()) {
+                musicId = generatedKeys.getInt(1);
+                saveAudioFile(req, musicId);
+            }
+            else {
+                throw new SQLException("musicId was not generated");
+            }
 
             res.status(201);
         }
-        catch(SQLException | IOException e) {
+        catch(SQLException | ServletException | IOException e) {
             logger.error("Error in MusicApi.upload", e);
             res.status(500);
         }
