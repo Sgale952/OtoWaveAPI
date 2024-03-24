@@ -1,28 +1,32 @@
 package github.otowave.otomusic;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Part;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.job.FFmpegJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
+import spark.utils.IOUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 
-import static github.otowave.api.CommonUtils.convertToInt;
+import static github.otowave.api.UploadHelper.*;
 
 public class MusicHandler {
+    private static final String MUSIC_DIR = "/home/otowave/data/songs/";
+    private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
     private static final Logger logger = LoggerFactory.getLogger(MusicHandler.class);
 
-    protected static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
+    static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
         int convertedYear = convertToInt(year);
         int convertedMonth = convertToInt(year);
         int convertedDay = convertToInt(year);
@@ -30,49 +34,73 @@ public class MusicHandler {
         return LocalDate.of(convertedYear, convertedMonth, convertedDay);
     }
 
-    protected static void deleteAudioFile(int musicId) throws IOException {
-        Path dir = Path.of("/home/otowave/data/songs/"+musicId);
+    static void deleteAudioFile(int musicId) throws IOException {
+        Path dir = Path.of(MUSIC_DIR+musicId);
         Files.walk(dir)
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
     }
 
-    protected static void saveAudioFile(Request request, int musicId) throws IOException {
-        InputStream inputStream = request.raw().getInputStream();
-        String fileName = musicId + request.queryParams("fileType");
-        String dir = "/home/otowave/data/songs/" + musicId;
+    static void saveAudioFile(Request req, int musicId) throws IOException, ServletException {
+        Part musicPart = getStaticFilePart(req, "audio");
+        String fileName = musicId+getFileExtension(musicPart);
+        String songDir = MUSIC_DIR + musicId;
 
-        Path dirPath = Path.of(dir);
+        Path dirPath = Path.of(songDir);
         Files.createDirectory(dirPath);
 
-        Path filePath = dirPath.resolve(fileName);
-        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        try(OutputStream outputStream = new FileOutputStream(songDir + "\\" + fileName)) {
+            IOUtils.copy(musicPart.getInputStream(), outputStream);
+        }
 
-        convertAudioFileToAac(musicId, request.queryParams("fileType"));
+        convertAudioFileToAac(musicId, getFileExtension(musicPart));
     }
 
-    private static void convertAudioFileToAac( int musicId, String fileType) throws IOException {
-        FFmpeg ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
-        FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
-        String inputFile = musicId + fileType;
-        String outputFile = musicId + ".aac";
+    private static void convertAudioFileToAac(int musicId, String fileType) throws IOException {
+        FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
+        String inputFile = MUSIC_DIR + musicId + "/" + musicId + fileType;
+        String outputFile = MUSIC_DIR + musicId + "/" + musicId + ".aac";
 
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(inputFile)
                 .overrideOutputFiles(true)
                 .addOutput(outputFile)
-                .setFormat(".aac")
+                .setAudioCodec("aac")
                 .done();
 
-        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-        //Check performance. Can be replaced by executor.createJob(builder).run();
-        executor.createTwoPassJob(builder).run();
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
+        executor.createJob(builder).run();
 
-        trimAacFile();
+        deleteOldAudioFile(inputFile);
+
+        //trimAacFile(musicId, outputFile);
     }
 
-    private static void trimAacFile() {
+    //Not worked
+    private static void trimAacFile(int musicId, String inputFile) throws IOException {
+        FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
+        String outputDir = MUSIC_DIR + musicId + "/";
 
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(inputFile)
+                .overrideOutputFiles(true)
+                .addOutput(outputDir+"output_%03d.ts")
+                .setFormat("mpegts")
+                .setAudioCodec("copy")
+                .setAudioBitRate(128000)
+                .setStartOffset(0, TimeUnit.SECONDS)
+                .addExtraArgs("-hls_time", "10")
+                .addExtraArgs("-hls_list_size", "0")
+                .addExtraArgs("-hls_segment_filename", "output_%03d.ts")
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
+        executor.createJob(builder).run();
+    }
+
+    private static void deleteOldAudioFile(String dir) {
+        File audioFile = new File(dir);
+        audioFile.delete();
     }
 }
