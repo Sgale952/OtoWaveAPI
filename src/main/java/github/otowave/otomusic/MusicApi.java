@@ -124,6 +124,7 @@ public class MusicApi {
         return "";
     }
 
+    //Delete image file
     //TODO: need tests
     public static String delete(Request req, Response res) {
         int musicId = convertToInt(req.queryParams("musicId"));
