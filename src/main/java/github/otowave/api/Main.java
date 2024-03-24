@@ -4,7 +4,6 @@ import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
-import java.sql.*;
 
 import static github.otowave.api.CommonUtils.multipartConfig;
 import static spark.Spark.*;
@@ -48,7 +47,7 @@ public class Main {
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));
 
-            post("/new-playlist", (PlaylistApi::add));
+            post("/new-playlist", (PlaylistApi::upload));
             post("/add-playlist", (PlaylistApi::addSong));
             post("/like-playlist", (PlaylistApi::like));
 

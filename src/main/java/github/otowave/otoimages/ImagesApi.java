@@ -1,6 +1,5 @@
 package github.otowave.otoimages;
 
-import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

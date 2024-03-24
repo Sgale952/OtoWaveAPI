@@ -2,41 +2,49 @@ package github.otowave.otoplaylists;
 import java.sql.*;
 
 import com.google.gson.Gson;
-import github.otowave.otomusic.MusicApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+import static github.otowave.api.CommonUtils.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class PlaylistApi {
-    private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlaylistApi.class);
     private static final Gson gson = new Gson();
 
 
-    public static String add(Request req, Response res) {
-        int palylistID = 0;
-        try(Connection conn = getConnection())
-        {
-            String sql =  "INSERT INTO playlists (title,creator, official, public)"+
-                    "VALUES(?, ?, ?, ?)";
+    /* Worked / Unstable / Unsafe */
+    public static String upload(Request req, Response res) {
+        PlayListData playListData = gson.fromJson(req.body(), PlayListData.class);
+        int creatorId = convertToInt(req.params(":userId"));
+        int palylistId = 0;
+
+        try(Connection conn = getConnection()) {
+            String sql =  "INSERT INTO playlists (official, access, creator, title)" +
+                          "VALUES(?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1,PlayListData.title());
-            stmt.setInt(2, PlayListData.creator());
-            stmt.setInt(3,PlayListData.official());
-            stmt.setInt(3,PlayListData.piblic());
+
+            stmt.setInt(1, playListData.official());
+            stmt.setInt(2, playListData.access());
+            stmt.setInt(3, creatorId);
+            stmt.setString(4, playListData.title());
             stmt.executeUpdate();
+
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            palylistID = generatedKeys.getInt(1);
+            if(generatedKeys.next()) {
+                palylistId = generatedKeys.getInt(1);
+            }
+
             res.status(201);
         }
-        catch (SQLException e)
-        {
-            logger.error("Error in PlaylistApi.add", e);
+        catch (SQLException e) {
+            logger.error("Error in PlaylistApi.upload", e);
             res.status(500);
         }
-        return "";
+
+        return String.valueOf(palylistId);
     }
 
     public static String addSong(Request req, Response res) {
@@ -55,4 +63,5 @@ public class PlaylistApi {
         return "";
     }
 }
-record PlayListData(int official, String title, int creator,int piblic) {}
+
+record PlayListData(int official, int access, String title) {}
