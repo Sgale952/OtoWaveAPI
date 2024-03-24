@@ -44,7 +44,7 @@ public class Main {
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));
 
-            post("/new-playlist", (PlaylistApi::add));
+            post("/new-playlist", (PlaylistApi::upload));
             post("/add-playlist", (PlaylistApi::addSong));
             post("/like-playlist", (PlaylistApi::like));
 

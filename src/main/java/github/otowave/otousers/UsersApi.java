@@ -1,40 +1,39 @@
 package github.otowave.otousers;
 
 import com.google.gson.Gson;
+import github.otowave.otomusic.MusicApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 
+
 import java.sql.*;
 
 import static github.otowave.api.DatabaseManager.getConnection;
 
-//Add sha256 encrypt
 public class UsersApi {
-    private static final Logger logger = LoggerFactory.getLogger(UsersApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
     private static final Gson gson = new Gson();
 
-    /* Worked / unstable / unsafe */
+    //Add sha256 encrypt
     public static String upload(Request req, Response res) {
-        UserData userData = gson.fromJson(req.body(), UserData.class);
+        UserData musicData = gson.fromJson(req.body(), UserData.class);
         int userId = 0;
 
         try(Connection conn = getConnection()) {
             String sql = "INSERT INTO users (access, nickname, email, passwrd) " +
-                    "VALUES (?, ?, ?, ?)";
+                    "VALUES (?, '?', '?', '?','?')";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, userData.access());
-            stmt.setString(2, userData.nickname());
-            stmt.setString(3, userData.email());
-            stmt.setString(4, userData.password());
+            stmt.setInt(1, musicData.access());
+            stmt.setString(2, musicData.nickname());
+            stmt.setString(3, musicData.email());
+            stmt.setString(4, musicData.password());
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if(generatedKeys.next()) {
-                userId = generatedKeys.getInt(1);
-            }
+            userId = generatedKeys.getInt(1);
 
             res.status(201);
         }
@@ -45,13 +44,12 @@ public class UsersApi {
 
         return String.valueOf(userId);
     }
-
      public static String authorization (Request req, Response res){
          try(Connection conn = getConnection()) {
-             String email = req.queryParams("email");
+             String username = req.queryParams("email");
              String password = req.queryParams("password");
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE email = ? AND passwrd = ?");
-             stmt.setString(1, email);
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE login = ? AND passwrd = ?");
+             stmt.setString(1, username);
              stmt.setString(2, password);
              ResultSet rs = stmt.executeQuery();
              if (rs.next()) {
@@ -63,25 +61,27 @@ public class UsersApi {
          catch (SQLException e){
              logger.error("Error in UserApi.authorization", e);
             res.status(500);
+            return null;
          }
 
-         return "";
      }
-
-    public static String changeName(Request req, Response res){
-        try(Connection conn = getConnection()) {
-            String changeName = req.queryParams("new_name");
+    public static String change_name (Request req, Response res){
+        try(Connection conn = getConnection()){
+            String chengename = req.queryParams("new_name");
             String userid = req.queryParams(":userId");
-            PreparedStatement stmt = conn.prepareStatement("UPDATE users * SET name = "+ changeName + "WHERE user_id =" + userid);
+            PreparedStatement stmt = conn.prepareStatement("UPDATE users * SET name = "+ chengename + "WHERE user_id =" + userid);
             res.status(201);
         }
         catch (SQLException e){
             logger.error("Error in UserApi.changename", e);
             res.status(500);
-        }
 
-        return "";
+        }
+        return null;
     }
+
+
+
 }
 
 record UserData(int access, String nickname, String email, String password) {}
