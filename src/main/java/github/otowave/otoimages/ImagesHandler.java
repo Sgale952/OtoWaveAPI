@@ -18,7 +18,7 @@ import static github.otowave.api.UploadHelper.getStaticFilePart;
 public class ImagesHandler {
     private static final String IMAGES_DIR = "/home/otowave/data/images/";
 
-    protected static String applyImage(String imageType, int imageId, String sourceId) {
+    protected static String applyImage(String imageType, String imageId, String sourceId) {
         return switch (imageType) {
             case "musicCover" -> applyToMusic(imageId, sourceId);
             case "playlistCover" -> applyToPlaylist(imageId, sourceId);
@@ -28,23 +28,23 @@ public class ImagesHandler {
         };
     }
 
-    private static String applyToMusic( int imageId, String sourceId) {
+    private static String applyToMusic( String imageId, String sourceId) {
         return "UPDATE music SET cover_id = "+imageId+" WHERE music_id = "+sourceId;
     }
 
-    private static String applyToPlaylist(int imageId, String sourceId) {
+    private static String applyToPlaylist(String imageId, String sourceId) {
         return "UPDATE playlists SET cover_id = "+imageId+" WHERE playlist_id = "+sourceId;
     }
 
-    private static String applyToUserAvatar(int imageId, String sourceId) {
+    private static String applyToUserAvatar(String imageId, String sourceId) {
         return "UPDATE users SET avatar_id = "+imageId+" WHERE user_id = "+sourceId;
     }
 
-    private static String applyToUserHeader(int imageId, String sourceId) {
+    private static String applyToUserHeader(String imageId, String sourceId) {
         return "UPDATE users SET header_id = "+imageId+" WHERE user_id = "+sourceId;
     }
 
-    protected static void saveImageFile(Request req, int imageId) throws ServletException, IOException {
+    protected static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
         Part imagePart = getStaticFilePart(req, "image");
         String fileName = imageId+getFileExtension(imagePart);
 

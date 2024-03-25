@@ -56,14 +56,13 @@ public class MusicApi {
         return gson.toJson(jsonOutput);
     }
 
-    //Add and check audio duration
     /* Worked (slow) / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
         String title = req.queryParams("title");
         String genre = req.queryParams("genre");
         int eContent = convertToInt(req.queryParams("eContent"));
         int uploaderId = convertToInt(req.params(":userId"));
-        int musicId = 0;
+        String musicId = "";
 
         try(Connection conn = getConnection()) {
             String sql = "INSERT INTO music (author, title, econtent, genre) VALUES (?, ?, ?, ?)";
@@ -77,7 +76,7 @@ public class MusicApi {
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if(generatedKeys.next()) {
-                musicId = generatedKeys.getInt(1);
+                musicId = generatedKeys.getString(1);
                 saveAudioFile(req, musicId);
             }
             else {
@@ -91,16 +90,16 @@ public class MusicApi {
             res.status(500);
         }
 
-        return Integer.toString(musicId);
+        return musicId;
     }
 
     //TODO: need tests
     public static String update(Request req, Response res) {
         MusicData musicData = gson.fromJson(req.body(), MusicData.class);
-        int musicId = convertToInt(req.queryParams("musicId"));
+        int musicId = convertToInt(req.params(":musicId"));
 
         try(Connection conn = getConnection()) {
-            String sql = "UPDATE music SET title = '?', econtent = ?, genre = '?', cover_id = ? WHERE music_id = ?";
+            String sql = "UPDATE music SET title = ?, econtent = ?, genre = ?, cover_id = ? WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, musicData.title());
@@ -127,7 +126,7 @@ public class MusicApi {
     //Delete image file
     //TODO: need tests
     public static String delete(Request req, Response res) {
-        int musicId = convertToInt(req.queryParams("musicId"));
+        int musicId = convertToInt(req.params(":musicId"));
 
         try(Connection conn = getConnection()) {
             String sql = "DELETE FROM music WHERE music_id = " + musicId;
@@ -191,13 +190,12 @@ public class MusicApi {
     //TODO: need tests
     public static String search(Request req, Response res) {
         Map<String, Integer> resultIds = new LinkedHashMap<>();
-        String searchPhrase = req.queryParams("%"+"phrase"+"%");
+        String searchPhrase = "%" + req.queryParams("phrase") + "%";
 
         try(Connection conn = getConnection()) {
-            //need null?
-            String sql = "SELECT music_id, null as playlist_id, null as user_id FROM music WHERE title LIKE '?' " +
-                         "UNION SELECT null as music_id, playlist_id, null as user_id FROM playlists WHERE name LIKE '?' " +
-                         "UNION SELECT null as music_id, null as playlist_id, user_id FROM users WHERE username LIKE '?'";
+            String sql = "SELECT music_id, null as playlist_id, null as user_id FROM music WHERE title LIKE ? " +
+                         "UNION SELECT null as music_id, playlist_id, null as user_id FROM playlists WHERE name LIKE ? " +
+                         "UNION SELECT null as music_id, null as playlist_id, user_id FROM users WHERE username LIKE ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, searchPhrase);
@@ -221,6 +219,7 @@ public class MusicApi {
 
         return gson.toJson(resultIds);
     }
+
     public static String genres(Request req, Response res) {
         Map<Integer, String> genres = new LinkedHashMap<>();
 
@@ -327,14 +326,12 @@ public class MusicApi {
     //TODO: need tests
     public static String updateLikes(Request req, Response res) {
         int musicId = convertToInt(req.params(":musicId"));
-        UserMusicRelation data = new UserMusicRelation(-1, musicId);
-
 
         try(Connection conn = getConnection()) {
             String sql = "UPDATE music SET likes = likes + 1 WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setInt(1, data.musicId());
+            stmt.setInt(1, musicId);
             stmt.executeUpdate();
 
             res.status(201);
@@ -354,14 +351,12 @@ public class MusicApi {
     //TODO: need tests
     public static String updateListens(Request req, Response res) {
         int musicId = convertToInt(req.params(":musicId"));
-        UserMusicRelation data = new UserMusicRelation(-1, musicId);
-
 
         try(Connection conn = getConnection()) {
             String sql = "UPDATE music SET listens = listens + 1 WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setInt(1, data.musicId());
+            stmt.setInt(1, musicId);
             stmt.executeUpdate();
 
             res.status(201);

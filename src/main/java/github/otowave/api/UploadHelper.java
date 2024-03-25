@@ -11,10 +11,10 @@ import static spark.Spark.before;
 import static spark.Spark.staticFiles;
 
 public class UploadHelper {
+    private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
-    //TODO: Change temp dir in Linux
     public static void multipartConfig() {
-        staticFiles.externalLocation(System.getProperty("java.io.tmpdir"));
+        staticFiles.externalLocation(TEMP_DIR);
 
         before((req, res) -> {
             req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
@@ -22,9 +22,7 @@ public class UploadHelper {
     }
 
     public static Part getStaticFilePart(Request req, String staticFileType) throws IOException, ServletException {
-        Part filePart;
-        filePart = req.raw().getPart(staticFileType);
-        return filePart;
+        return req.raw().getPart(staticFileType);
     }
 
     public static String getFileExtension(Part filePart) {
@@ -32,10 +30,7 @@ public class UploadHelper {
         return fileName.substring(fileName.lastIndexOf('.'));
     }
 
-    public static int convertToInt(String str) {
-        if(str == null) {
-            throw new NullPointerException("Value is null");
-        }
+    public static int convertToInt(String str) throws NumberFormatException {
         return Integer.parseInt(str);
     }
 }
