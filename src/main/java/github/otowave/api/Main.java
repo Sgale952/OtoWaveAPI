@@ -31,9 +31,6 @@ public class Main {
             get("/song-data", (MusicApi::allData));
         });
 
-
-
-
         path("/:userId", () -> {
             get("/history", ((request, response) -> ""));
             get("/liked", ((request, response) -> ""));
@@ -49,7 +46,6 @@ public class Main {
             delete("/discard-song", (MusicApi::discard));
 
             post("/new-playlist", (PlaylistApi::upload));
-            post("/add-playlist", (PlaylistApi::addSong));
             post("/like-playlist", (PlaylistApi::like));
 
             path("/:musicId", () -> {
@@ -58,6 +54,7 @@ public class Main {
             });
 
             path("/:playlistId", () -> {
+                post("/fill-playlist", (PlaylistApi::addSong));
                 patch("/update-playlist", (PlaylistApi::update));
                 delete("/delete-playlist", (PlaylistApi::delete));
             });

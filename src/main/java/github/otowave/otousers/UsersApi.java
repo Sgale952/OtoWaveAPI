@@ -19,10 +19,10 @@ public class UsersApi {
         UserData musicData = gson.fromJson(req.body(), UserData.class);
         String userId = "";
 
-        try (Connection conn = getConnection()) {
+        try(Connection conn = getConnection()) {
             String hashedPassword = BCrypt.hashpw(musicData.password(), BCrypt.gensalt());
             String sql = "INSERT INTO users (access, nickname, email, passwrd) " +
-                    "VALUES (?, '?', '?', '?','?')";
+                    "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setInt(1, musicData.access());
@@ -37,7 +37,8 @@ public class UsersApi {
             }
 
             res.status(201);
-        } catch (SQLException e) {
+        }
+        catch(SQLException e) {
             logger.error("Error in UserApi.upload", e);
             res.status(500);
         }
@@ -46,61 +47,62 @@ public class UsersApi {
     }
 
     public static String authorization(Request req, Response res) {
-        try (Connection conn = getConnection()) {
-            String username = req.queryParams("email");
-            String password = req.queryParams("password");
-            PreparedStatement stmt = conn.prepareStatement("SELECT passwrd FROM users WHERE email = ?");
-            stmt.setString(1, username);
+        String email = req.queryParams("email");
+        String password = req.queryParams("password");
+
+        try(Connection conn = getConnection()) {
+            String sql = "SELECT passwrd FROM users WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, email);
+
             ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
+            if(rs.next()) {
                 String hashedPasswordFromDB = rs.getString("passwrd");
-
-                // Проверяем введенный пароль с хешированным паролем из базы данных
-                if (BCrypt.checkpw(password, hashedPasswordFromDB)) {
-                    return "Успешная авторизация!";
-                } else {
-                    return "Неверное имя пользователя или пароль.";
+                if(BCrypt.checkpw(password, hashedPasswordFromDB)) {
+                    res.status(200);
                 }
-            } else {
-                return "Неверное имя пользователя или пароль.";
+                else {
+                 res.status(401);
+                }
             }
-        } catch (SQLException e) {
+            else {
+                res.status(404);
+            }
+
+        } catch(SQLException e) {
             logger.error("Error in UserApi.authorization", e);
             res.status(500);
-            return null;
         }
+
+        return "";
     }
 
+    public static String changeName(Request req, Response res) {
+        String new_name = req.queryParams("new_name");
+        String userId = req.params(":userId");
 
-    public static String change_name(Request req, Response res) {
-        try (Connection conn = getConnection()) {
-            String new_name = req.queryParams("new_name");
-            String user_id = req.params(":userId");
-
-            // Подготовленный запрос для обновления имени пользователя
+        try(Connection conn = getConnection()) {
             String sql = "UPDATE users SET name = ? WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            // Установка параметров запроса
             stmt.setString(1, new_name);
-            stmt.setString(2, user_id);
+            stmt.setString(2, userId);
 
-            // Выполнение запроса на обновление имени пользователя
             int rowsAffected = stmt.executeUpdate();
-
-            if (rowsAffected > 0) {
+            if(rowsAffected > 0) {
                 res.status(200);
-                return "Имя пользователя успешно изменено!";
-            } else {
-                res.status(404);
-                return "Пользователь с указанным ID не найден.";
             }
-        } catch (SQLException e) {
-            logger.error("Error in UserApi.change_name", e);
-            res.status(500);
-            return "Произошла ошибка при изменении имени пользователя.";
+            else {
+                res.status(404);
+            }
         }
+        catch(SQLException e) {
+            logger.error("Error in UserApi.changeName", e);
+            res.status(500);
+        }
+
+        return "";
     }
 }
 
