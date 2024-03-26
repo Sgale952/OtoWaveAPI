@@ -1,4 +1,5 @@
 package github.otowave.otoplaylists;
+
 import java.sql.*;
 
 import com.google.gson.Gson;
@@ -19,7 +20,7 @@ public class PlaylistApi {
     public static String upload(Request req, Response res) {
         PlayListData playListData = gson.fromJson(req.body(), PlayListData.class);
         int creatorId = convertToInt(req.params(":userId"));
-        int palylistId = 0;
+        String palylistId = "";
 
         try(Connection conn = getConnection()) {
             String sql =  "INSERT INTO playlists (official, access, creator, title)" +
@@ -34,7 +35,7 @@ public class PlaylistApi {
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if(generatedKeys.next()) {
-                palylistId = generatedKeys.getInt(1);
+                palylistId = generatedKeys.getString(1);
             }
 
             res.status(201);
@@ -44,7 +45,7 @@ public class PlaylistApi {
             res.status(500);
         }
 
-        return String.valueOf(palylistId);
+        return palylistId;
     }
 
     public static String addSong(Request req, Response res) {

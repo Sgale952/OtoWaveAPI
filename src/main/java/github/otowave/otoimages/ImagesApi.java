@@ -21,7 +21,7 @@ public class ImagesApi extends ImagesHandler {
         String sourceId = req.queryParams("sourceId");
         String prevImageId = req.queryParams("prevImageId");
         int uploaderId = convertToInt(req.params(":userId"));
-        int imageId = 0;
+        String imageId = "";
 
         try(Connection conn = getConnection()) {
             String sql = "INSERT INTO images (uploader) VALUES (?)";
@@ -32,7 +32,7 @@ public class ImagesApi extends ImagesHandler {
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if(generatedKeys.next()) {
-                imageId = generatedKeys.getInt(1);
+                imageId = generatedKeys.getString(1);
             }
 
             String sql2 = applyImage(imageType, imageId, sourceId);
@@ -52,6 +52,6 @@ public class ImagesApi extends ImagesHandler {
             res.status(500);
         }
 
-        return String.valueOf(imageId);
+        return imageId;
     }
 }

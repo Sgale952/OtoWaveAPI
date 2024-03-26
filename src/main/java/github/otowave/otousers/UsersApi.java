@@ -1,26 +1,23 @@
 package github.otowave.otousers;
 
 import com.google.gson.Gson;
-import github.otowave.otomusic.MusicApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import org.mindrot.jbcrypt.BCrypt;
 
-
 import java.sql.*;
 
 import static github.otowave.api.DatabaseManager.getConnection;
 
 public class UsersApi {
-    private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsersApi.class);
     private static final Gson gson = new Gson();
 
-    //Add sha256 encrypt
     public static String upload(Request req, Response res) {
         UserData musicData = gson.fromJson(req.body(), UserData.class);
-        int userId = 0;
+        String userId = "";
 
         try (Connection conn = getConnection()) {
             String hashedPassword = BCrypt.hashpw(musicData.password(), BCrypt.gensalt());
@@ -35,7 +32,9 @@ public class UsersApi {
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            userId = generatedKeys.getInt(1);
+            if(generatedKeys.next()) {
+                userId = generatedKeys.getString(1);
+            }
 
             res.status(201);
         } catch (SQLException e) {
@@ -43,7 +42,7 @@ public class UsersApi {
             res.status(500);
         }
 
-        return String.valueOf(userId);
+        return userId;
     }
 
     public static String authorization(Request req, Response res) {
@@ -104,8 +103,5 @@ public class UsersApi {
         }
     }
 }
-
-
-
 
 record UserData(int access, String nickname, String email, String password) {}
