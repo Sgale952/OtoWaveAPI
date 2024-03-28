@@ -11,13 +11,14 @@ import static spark.Spark.before;
 import static spark.Spark.staticFiles;
 
 public class UploadHelper {
-    private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
+    private static final String TEMP_DIR = "/home/otowave/data/temp";
 
     public static void multipartConfig() {
         staticFiles.externalLocation(TEMP_DIR);
 
         before((req, res) -> {
-            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement(TEMP_DIR));
+
         });
     }
 
