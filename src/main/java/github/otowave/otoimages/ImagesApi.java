@@ -1,5 +1,6 @@
 package github.otowave.otoimages;
 
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +15,10 @@ import static github.otowave.api.DatabaseManager.getConnection;
 
 public class ImagesApi extends ImagesHandler {
     private static final Logger logger = LoggerFactory.getLogger(ImagesApi.class);
+    private static final Gson gson = new Gson();
 
     /* Worked / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
-        String imageType = req.queryParams("imageType");
-        String sourceId = req.queryParams("sourceId");
-        String prevImageId = req.queryParams("prevImageId");
         int uploaderId = convertToInt(req.params(":userId"));
         String imageId = "";
 
@@ -35,15 +34,7 @@ public class ImagesApi extends ImagesHandler {
                 imageId = generatedKeys.getString(1);
             }
 
-            String sql2 = applyImage(imageType, imageId, sourceId);
-            PreparedStatement stmt2 = conn.prepareStatement(sql2);
-            stmt2.executeUpdate();
-
             saveImageFile(req, imageId);
-
-            if(prevImageId != null) {
-                deleteImageFile(prevImageId);
-            }
 
             res.status(201);
         }
@@ -54,4 +45,32 @@ public class ImagesApi extends ImagesHandler {
 
         return imageId;
     }
+
+    /* Worked / Unstable / Unsafe */
+    public static String apply(Request req, Response res) {
+        ImageData imageData = gson.fromJson(req.body(), ImageData.class);
+
+        try(Connection conn = getConnection()) {
+            String sql = applyImage(imageData.imageType());
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, imageData.imageId());
+            stmt.setString(2, imageData.sourceId());
+            stmt.executeUpdate();
+
+            if(imageData.prevImageId() > 4) {
+                deleteImageFile(imageData.prevImageId());
+            }
+
+            res.status(200);
+        }
+        catch (SQLException | IOException e) {
+            logger.error("Error in ImagesApi.upload", e);
+            res.status(500);
+        }
+
+        return "";
+    }
+
+    record ImageData(String imageType, String imageId, int prevImageId, String sourceId) {}
 }

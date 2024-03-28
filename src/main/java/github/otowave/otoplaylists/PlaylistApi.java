@@ -48,7 +48,27 @@ public class PlaylistApi {
         return palylistId;
     }
 
-    public static String addSong(Request req, Response res) {
+    /* Worked / Unstable / Unsafe */
+    public static String addMusic(Request req, Response res) {
+        int playlistId = convertToInt(req.params(":playlistId"));
+        MusicId musicId = gson.fromJson(req.body(), MusicId.class);
+
+        try(Connection conn = getConnection()) {
+            String sql =  "INSERT INTO fillingPlaylists (playlist_id, music_id)" +
+                    "VALUES(?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, playlistId);
+            stmt.setInt(2, musicId.musicId());
+            stmt.executeUpdate();
+
+            res.status(201);
+        }
+        catch (SQLException e) {
+            logger.error("Error in PlaylistApi.addMusic", e);
+            res.status(500);
+        }
+
         return "";
     }
 
@@ -66,3 +86,4 @@ public class PlaylistApi {
 }
 
 record PlayListData(String title, int official, int access) {}
+record MusicId(int musicId) {}
