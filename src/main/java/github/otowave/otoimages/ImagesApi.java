@@ -24,7 +24,7 @@ public class ImagesApi extends ImagesHandler {
         String imageId = "";
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO images (uploader) VALUES (?)";
+            String sql = "INSERT INTO images (uploader_id) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setInt(1, uploaderId);

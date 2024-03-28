@@ -23,14 +23,14 @@ public class PlaylistApi {
         String palylistId = "";
 
         try(Connection conn = getConnection()) {
-            String sql =  "INSERT INTO playlists (official, access, creator, title)" +
+            String sql =  "INSERT INTO playlists (creator_id, title, official, access)" +
                           "VALUES(?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, playListData.official());
-            stmt.setInt(2, playListData.access());
-            stmt.setInt(3, creatorId);
-            stmt.setString(4, playListData.title());
+            stmt.setInt(1, creatorId);
+            stmt.setString(2, playListData.title());
+            stmt.setInt(3, playListData.official());
+            stmt.setInt(4, playListData.access());
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -65,4 +65,4 @@ public class PlaylistApi {
     }
 }
 
-record PlayListData(int official, int access, String title) {}
+record PlayListData(String title, int official, int access) {}

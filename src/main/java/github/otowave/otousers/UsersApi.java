@@ -15,20 +15,21 @@ public class UsersApi {
     private static final Logger logger = LoggerFactory.getLogger(UsersApi.class);
     private static final Gson gson = new Gson();
 
+    /* Worked / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
-        UserData musicData = gson.fromJson(req.body(), UserData.class);
+        UserData userData = gson.fromJson(req.body(), UserData.class);
         String userId = "";
 
         try(Connection conn = getConnection()) {
-            String hashedPassword = BCrypt.hashpw(musicData.password(), BCrypt.gensalt());
-            String sql = "INSERT INTO users (access, nickname, email, passwrd) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+            String hashedPassword = BCrypt.hashpw(userData.password(), BCrypt.gensalt());
+            String sql = "INSERT INTO users (nickname, email, passwrd, access) " +
+                    "VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, musicData.access());
-            stmt.setString(2, musicData.nickname());
-            stmt.setString(3, musicData.email());
-            stmt.setString(4, hashedPassword);
+            stmt.setString(1, userData.nickname());
+            stmt.setString(2, userData.email());
+            stmt.setString(3, hashedPassword);
+            stmt.setInt(4, userData.access());
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -70,7 +71,8 @@ public class UsersApi {
                 res.status(404);
             }
 
-        } catch(SQLException e) {
+        }
+        catch(SQLException e) {
             logger.error("Error in UserApi.authorization", e);
             res.status(500);
         }
@@ -79,14 +81,14 @@ public class UsersApi {
     }
 
     public static String changeName(Request req, Response res) {
-        String new_name = req.queryParams("new_name");
+        String newName = req.queryParams("newName");
         String userId = req.params(":userId");
 
         try(Connection conn = getConnection()) {
-            String sql = "UPDATE users SET name = ? WHERE user_id = ?";
+            String sql = "UPDATE users SET nickname = ? WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setString(1, new_name);
+            stmt.setString(1, newName);
             stmt.setString(2, userId);
 
             int rowsAffected = stmt.executeUpdate();
@@ -106,4 +108,4 @@ public class UsersApi {
     }
 }
 
-record UserData(int access, String nickname, String email, String password) {}
+record UserData(String nickname, String email, String password, int access) {}

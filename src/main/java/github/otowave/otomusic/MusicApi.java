@@ -34,16 +34,15 @@ public class MusicApi {
 
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
-                jsonOutput.addProperty("music_id", rs.getInt("music_id"));
-                jsonOutput.addProperty("author", rs.getInt("author"));
+                jsonOutput.addProperty("musicId", rs.getInt("music_id"));
+                jsonOutput.addProperty("author", rs.getInt("author_id"));
+                jsonOutput.addProperty("coverId", rs.getInt("cover_id"));
                 jsonOutput.addProperty("title", rs.getString("title"));
-                jsonOutput.addProperty("econtent", rs.getInt("econtent"));
                 jsonOutput.addProperty("genre", rs.getString("genre"));
+                jsonOutput.addProperty("econtent", rs.getInt("econtent"));
                 jsonOutput.addProperty("likes", rs.getInt("likes"));
                 jsonOutput.addProperty("listens", rs.getInt("listens"));
                 jsonOutput.addProperty("uploaded", String.valueOf(rs.getTimestamp("uploaded")));
-                jsonOutput.addProperty("duration", String.valueOf(rs.getTime("duration")));
-                jsonOutput.addProperty("cover_id", rs.getInt("cover_id"));
             }
 
             res.status(200);
@@ -65,13 +64,13 @@ public class MusicApi {
         String musicId = "";
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO music (author, title, econtent, genre) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO music (author_id, title, genre, econtent) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setInt(1, uploaderId);
             stmt.setString(2, title);
-            stmt.setInt(3, eContent);
-            stmt.setString(4, genre);
+            stmt.setString(3, genre);
+            stmt.setInt(4, eContent);
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -99,13 +98,13 @@ public class MusicApi {
         int musicId = convertToInt(req.params(":musicId"));
 
         try(Connection conn = getConnection()) {
-            String sql = "UPDATE music SET title = ?, econtent = ?, genre = ?, cover_id = ? WHERE music_id = ?";
+            String sql = "UPDATE music SET cover_id = ?, title = ?, genre = ?, econtent = ?  WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setString(1, musicData.title());
-            stmt.setInt(2, musicData.eContent());
+            stmt.setInt(1, musicData.coverId());
+            stmt.setString(2, musicData.title());
             stmt.setString(3, musicData.genre());
-            stmt.setInt(4, musicData.coverId());
+            stmt.setInt(4, musicData.eContent());
             stmt.setInt(5, musicId);
             stmt.executeUpdate();
 
@@ -194,8 +193,8 @@ public class MusicApi {
 
         try(Connection conn = getConnection()) {
             String sql = "SELECT music_id, null as playlist_id, null as user_id FROM music WHERE title LIKE ? " +
-                         "UNION SELECT null as music_id, playlist_id, null as user_id FROM playlists WHERE name LIKE ? " +
-                         "UNION SELECT null as music_id, null as playlist_id, user_id FROM users WHERE username LIKE ?";
+                         "UNION SELECT null as music_id, playlist_id, null as user_id FROM playlists WHERE title LIKE ? " +
+                         "UNION SELECT null as music_id, null as playlist_id, user_id FROM users WHERE nickname LIKE ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, searchPhrase);
@@ -220,6 +219,7 @@ public class MusicApi {
         return gson.toJson(resultIds);
     }
 
+    /* Worked / Unstable / Unsafe */
     public static String genres(Request req, Response res) {
         Map<Integer, String> genres = new LinkedHashMap<>();
 
@@ -274,7 +274,7 @@ public class MusicApi {
         UserMusicRelation data = new UserMusicRelation(userId, musicId);
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO likedSongs (user_id, music_id) VALUES (?, ?)";
+            String sql = "INSERT INTO likedMusic (user_id, music_id) VALUES (?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.userId());
@@ -302,7 +302,7 @@ public class MusicApi {
         UserMusicRelation data = new UserMusicRelation(userId, musicId);
 
         try(Connection conn = getConnection()) {
-            String sql = "DELETE FROM likedSongs WHERE user_id = ? AND song_id = ?";
+            String sql = "DELETE FROM likedMusic WHERE user_id = ? AND music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.userId());
@@ -375,4 +375,4 @@ public class MusicApi {
 }
 
 record UserMusicRelation(int userId, int musicId) {}
-record MusicData(int authorId, String title, int eContent, String genre, int coverId) {}
+record MusicData(int authorId, int coverId, String title, String genre, int eContent) {}
