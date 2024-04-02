@@ -35,8 +35,11 @@ public class ImagesApi {
             if(generatedKeys.next()) {
                 imageId = generatedKeys.getString(1);
             }
+            else {
+                throw new NullPointerException("Image id not generated");
+            }
 
-            apply(imageData, conn);
+            apply(imageData, imageId, conn);
             saveImageFile(req, imageId);
 
             res.status(201);
@@ -49,5 +52,5 @@ public class ImagesApi {
         return imageId;
     }
 
-    record ImageData(String imageType, String imageId, int prevImageId, String sourceId) {}
+    record ImageData(String imageType, int prevImageId, String sourceId) {}
 }

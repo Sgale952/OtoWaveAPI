@@ -48,11 +48,11 @@ public class ImagesHandler {
         return "UPDATE users SET header_id = ? WHERE user_id = ?";
     }
 
-    static void apply(ImagesApi.ImageData imageData, Connection conn) throws SQLException, IOException {
+    static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
         String sql = applyImage(imageData.imageType());
         PreparedStatement stmt = conn.prepareStatement(sql);
 
-        stmt.setString(1, imageData.imageId());
+        stmt.setString(1, imageId);
         stmt.setString(2, imageData.sourceId());
         stmt.executeUpdate();
 
