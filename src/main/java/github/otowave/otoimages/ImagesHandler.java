@@ -15,14 +15,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static github.otowave.api.UploadHelper.getFileExtension;
-import static github.otowave.api.UploadHelper.getStaticFilePart;
+import static github.otowave.api.UploadHelper.*;
 
 public class ImagesHandler {
     //private static final String IMAGES_DIR = "/home/otowave/data/images/";
     private static final String IMAGES_DIR = "D:\\i\\";
 
     static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
+        int prevImageId = convertToInt(imageData.prevImageId());
         String sql = applySelector(imageData.imageType());
         PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -30,8 +30,8 @@ public class ImagesHandler {
         stmt.setString(2, imageData.sourceId());
         stmt.executeUpdate();
 
-        if(imageData.prevImageId() > 4) {
-            deleteImageFile(imageData.prevImageId());
+        if(prevImageId > 4) {
+            deleteImageFile(prevImageId);
         }
     }
 

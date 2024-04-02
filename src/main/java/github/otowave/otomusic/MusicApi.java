@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -186,9 +187,9 @@ public class MusicApi {
         return "";
     }
 
-    //TODO: need tests
+    /* Worked / Unstable / Unsafe */
     public static String search(Request req, Response res) {
-        Map<String, Integer> resultIds = new LinkedHashMap<>();
+        Map<String, ArrayList<Integer>> resultIds = new HashMap<>();
         String searchPhrase = "%" + req.queryParams("phrase") + "%";
 
         try(Connection conn = getConnection()) {
@@ -202,11 +203,20 @@ public class MusicApi {
             stmt.setString(3, searchPhrase);
 
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()) {
-                int id = rs.getInt("music_id");
-                String table = rs.getString("type");
+            while (rs.next()) {
+                int musicId = rs.getInt("music_id");
+                int playlistId = rs.getInt("playlist_id");
+                int userId = rs.getInt("user_id");
 
-                resultIds.put(table, id);
+                if (musicId != 0) {
+                    resultIds.computeIfAbsent("music", k -> new ArrayList<>()).add(musicId);
+                }
+                if (playlistId != 0) {
+                    resultIds.computeIfAbsent("playlists", k -> new ArrayList<>()).add(playlistId);
+                }
+                if (userId != 0) {
+                    resultIds.computeIfAbsent("users", k -> new ArrayList<>()).add(userId);
+                }
             }
 
             res.status(200);

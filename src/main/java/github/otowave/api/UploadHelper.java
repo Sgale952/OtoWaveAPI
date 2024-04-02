@@ -32,7 +32,7 @@ public class UploadHelper {
         return fileName.substring(fileName.lastIndexOf('.'));
     }
 
-    public static int convertToInt(String str) throws NumberFormatException {
+    public static int convertToInt(String str) {
         if(str == null) {
             return 0;
         }

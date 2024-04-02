@@ -20,7 +20,7 @@ public class ImagesApi {
 
     /* Worked / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
-        ImageData imageData = gson.fromJson(req.body(), ImageData.class);
+        ImageData imageData = new ImageData(req.queryParams("imageType"), req.queryParams("imageId"), req.queryParams("prevImageId"), req.queryParams("sourceId"));
         int uploaderId = convertToInt(req.params(":userId"));
         String imageId = "";
 
@@ -52,6 +52,7 @@ public class ImagesApi {
         return imageId;
     }
 
+    /* Worked / Unstable / Unsafe */
     public static String set(Request req, Response res) {
         ImageData imageData = gson.fromJson(req.body(), ImageData.class);
 
@@ -67,5 +68,5 @@ public class ImagesApi {
         return "";
     }
 
-    record ImageData(String imageType, String imageId, int prevImageId, String sourceId) {}
+    record ImageData(String imageType, String imageId, String prevImageId, String sourceId) {}
 }
