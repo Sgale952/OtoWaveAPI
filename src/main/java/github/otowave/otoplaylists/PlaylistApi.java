@@ -83,7 +83,7 @@ public class PlaylistApi {
     public static String like(Request req, Response res) {
         return "";
     }
-}
 
-record PlayListData(String title, int official, int access) {}
-record MusicId(int musicId) {}
+    record PlayListData(String title, int official, int access) {}
+    record MusicId(int musicId) {}
+}

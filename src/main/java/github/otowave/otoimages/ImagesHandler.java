@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import static github.otowave.api.UploadHelper.getFileExtension;
 import static github.otowave.api.UploadHelper.getStaticFilePart;
@@ -19,7 +22,7 @@ public class ImagesHandler {
     //private static final String IMAGES_DIR = "/home/otowave/data/images/";
     private static final String IMAGES_DIR = "D:\\i\\";
 
-    protected static String applyImage(String imageType) {
+    private static String applyImage(String imageType) {
         return switch (imageType) {
             case "musicCover" -> applyToMusic();
             case "playlistCover" -> applyToPlaylist();
@@ -45,7 +48,20 @@ public class ImagesHandler {
         return "UPDATE users SET header_id = ? WHERE user_id = ?";
     }
 
-    protected static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
+    static void apply(ImagesApi.ImageData imageData, Connection conn) throws SQLException, IOException {
+        String sql = applyImage(imageData.imageType());
+        PreparedStatement stmt = conn.prepareStatement(sql);
+
+        stmt.setString(1, imageData.imageId());
+        stmt.setString(2, imageData.sourceId());
+        stmt.executeUpdate();
+
+        if(imageData.prevImageId() > 4) {
+            deleteImageFile(imageData.prevImageId());
+        }
+    }
+
+    static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
         Part imagePart = getStaticFilePart(req, "image");
         String fileName = imageId+getFileExtension(imagePart);
 
@@ -54,7 +70,7 @@ public class ImagesHandler {
         }
     }
 
-    protected static void deleteImageFile(int imageId) throws IOException {
+    static void deleteImageFile(int imageId) throws IOException {
         File dir = new File(IMAGES_DIR);
         File[] files = dir.listFiles();
 
