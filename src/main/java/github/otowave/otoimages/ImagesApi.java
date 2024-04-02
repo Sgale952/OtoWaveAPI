@@ -52,5 +52,20 @@ public class ImagesApi {
         return imageId;
     }
 
-    record ImageData(String imageType, int prevImageId, String sourceId) {}
+    public static String set(Request req, Response res) {
+        ImageData imageData = gson.fromJson(req.body(), ImageData.class);
+
+        try(Connection conn = getConnection()) {
+            apply(imageData, imageData.imageId, conn);
+            res.status(201);
+        }
+        catch(SQLException | IOException e) {
+            logger.error("Error in ImagesApi.set", e);
+            res.status(500);
+        }
+
+        return "";
+    }
+
+    record ImageData(String imageType, String imageId, int prevImageId, String sourceId) {}
 }

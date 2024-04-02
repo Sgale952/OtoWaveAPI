@@ -22,7 +22,20 @@ public class ImagesHandler {
     //private static final String IMAGES_DIR = "/home/otowave/data/images/";
     private static final String IMAGES_DIR = "D:\\i\\";
 
-    private static String applyImage(String imageType) {
+    static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
+        String sql = applySelector(imageData.imageType());
+        PreparedStatement stmt = conn.prepareStatement(sql);
+
+        stmt.setString(1, imageId);
+        stmt.setString(2, imageData.sourceId());
+        stmt.executeUpdate();
+
+        if(imageData.prevImageId() > 4) {
+            deleteImageFile(imageData.prevImageId());
+        }
+    }
+
+    private static String applySelector(String imageType) {
         return switch (imageType) {
             case "musicCover" -> applyToMusic();
             case "playlistCover" -> applyToPlaylist();
@@ -46,19 +59,6 @@ public class ImagesHandler {
 
     private static String applyToUserHeader() {
         return "UPDATE users SET header_id = ? WHERE user_id = ?";
-    }
-
-    static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
-        String sql = applyImage(imageData.imageType());
-        PreparedStatement stmt = conn.prepareStatement(sql);
-
-        stmt.setString(1, imageId);
-        stmt.setString(2, imageData.sourceId());
-        stmt.executeUpdate();
-
-        if(imageData.prevImageId() > 4) {
-            deleteImageFile(imageData.prevImageId());
-        }
     }
 
     static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
