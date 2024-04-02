@@ -4,7 +4,6 @@ import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
-import java.sql.*;
 
 import static github.otowave.api.UploadHelper.multipartConfig;
 import static spark.Spark.*;
@@ -41,10 +40,10 @@ public class Main {
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
             post("/new-image", (ImagesApi::upload));
+            post("/set-image", (ImagesApi::set));
             post("/new-song", (MusicApi::upload));
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));
-
             post("/new-playlist", (PlaylistApi::upload));
             post("/like-playlist", (PlaylistApi::like));
 
@@ -52,12 +51,12 @@ public class Main {
                 patch("/update-song", (MusicApi::update));
                 delete("/delete-song", (MusicApi::delete));
             });
+        });
 
-            path("/:playlistId", () -> {
-                post("/fill-playlist", (PlaylistApi::addSong));
-                patch("/update-playlist", (PlaylistApi::update));
-                delete("/delete-playlist", (PlaylistApi::delete));
-            });
+        path("/:playlistId", () -> {
+            post("/fill-playlist", (PlaylistApi::addMusic));
+            patch("/update-playlist", (PlaylistApi::update));
+            delete("/delete-playlist", (PlaylistApi::delete));
         });
     }
 }

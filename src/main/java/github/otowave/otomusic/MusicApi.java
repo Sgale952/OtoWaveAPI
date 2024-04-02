@@ -372,7 +372,7 @@ public class MusicApi {
 
         return "";
     }
-}
 
-record UserMusicRelation(int userId, int musicId) {}
-record MusicData(int authorId, int coverId, String title, String genre, int eContent) {}
+    record UserMusicRelation(int userId, int musicId) {}
+    record MusicData(int authorId, int coverId, String title, String genre, int eContent) {}
+}

@@ -106,6 +106,6 @@ public class UsersApi {
 
         return "";
     }
-}
 
-record UserData(String nickname, String email, String password, int access) {}
+    record UserData(String nickname, String email, String password, int access) {}
+}

@@ -21,8 +21,10 @@ import java.util.stream.Stream;
 import static github.otowave.api.UploadHelper.*;
 
 public class MusicHandler {
-    private static final String MUSIC_DIR = "/home/otowave/data/music/";
-    private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
+    //private static final String MUSIC_DIR = "/home/otowave/data/music/";
+    private static final String MUSIC_DIR = "D:\\i\\";
+    //private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
+    private static final String FFMPEG_PATH = "C:\\Program Files\\FFmpeg\\ffmpeg.exe";
 
     static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
         int convertedYear = convertToInt(year);
