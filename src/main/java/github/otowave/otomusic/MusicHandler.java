@@ -5,8 +5,6 @@ import jakarta.servlet.http.Part;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.utils.IOUtils;
 
@@ -56,49 +54,29 @@ public class MusicHandler {
             IOUtils.copy(musicPart.getInputStream(), outputStream);
         }
 
-        convertAudioFileToAac(musicId, getFileExtension(musicPart));
+        convertToM3u8(musicId, getFileExtension(musicPart));
     }
 
-    private static void convertAudioFileToAac(String musicId, String fileType) throws IOException {
+    private static void convertToM3u8(String musicId, String fileExtension) throws IOException {
         FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
-        String inputFile = MUSIC_DIR + musicId + "/" + musicId + fileType;
-        String outputFile = MUSIC_DIR + musicId + "/" + musicId + ".aac";
+        String inputFile = MUSIC_DIR + musicId + "/" + musicId + fileExtension;
+        String outputFile = MUSIC_DIR + musicId + "/" + musicId + ".m3u8";
 
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(inputFile)
                 .overrideOutputFiles(true)
                 .addOutput(outputFile)
                 .setAudioCodec("aac")
+                .setFormat("hls")
+                .setStartOffset(0, TimeUnit.SECONDS)
+                .addExtraArgs("-hls_time", "10")
+                .addExtraArgs("-hls_list_size", "0")
                 .done();
 
         FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
         executor.createJob(builder).run();
 
         deleteOldAudioFile(inputFile);
-
-        //trimAacFile(musicId, outputFile);
-    }
-
-    //Not worked
-    private static void trimAacFile(int musicId, String inputFile) throws IOException {
-        FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
-        String outputDir = MUSIC_DIR + musicId + "/";
-
-        FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput(inputFile)
-                .overrideOutputFiles(true)
-                .addOutput(outputDir+"output_%03d.ts")
-                .setFormat("mpegts")
-                .setAudioCodec("copy")
-                .setAudioBitRate(128000)
-                .setStartOffset(0, TimeUnit.SECONDS)
-                .addExtraArgs("-hls_time", "10")
-                .addExtraArgs("-hls_list_size", "0")
-                .addExtraArgs("-hls_segment_filename", "output_%03d.ts")
-                .done();
-
-        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
-        executor.createJob(builder).run();
     }
 
     private static void deleteOldAudioFile(String dir) {
