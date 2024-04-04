@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -103,7 +104,7 @@ public class MusicHandler {
         }
     }
 
-    static int getCover(int musicId, Connection conn) throws SQLException {
+    static int getCoverId(int musicId, Connection conn) throws SQLException {
         String sql = "SELECT cover_id FROM music WHERE music_id = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -123,5 +124,14 @@ public class MusicHandler {
         int convertedDay = convertToInt(day);
 
         return LocalDate.of(convertedYear, convertedMonth, convertedDay);
+    }
+
+    static boolean haveMusicIdAttribute(Request req) {
+        for (String attr : req.attributes()) {
+            if (Objects.equals(attr, "musicId")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

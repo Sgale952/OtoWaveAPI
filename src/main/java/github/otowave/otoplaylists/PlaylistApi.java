@@ -3,6 +3,9 @@ package github.otowave.otoplaylists;
 import java.sql.*;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import github.otowave.otoimages.ImagesApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -10,11 +13,47 @@ import spark.Response;
 
 import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.otoplaylists.PlaylistHandler.*;
 
 public class PlaylistApi {
     private static final Logger logger = LoggerFactory.getLogger(PlaylistApi.class);
     private static final Gson gson = new Gson();
 
+    //TODO: need tests
+    public static String allData(Request req, Response res) {
+        JsonObject jsonOutput = new JsonObject();
+        int playlistId = convertToInt(req.params(":playlistId"));
+
+        try(Connection conn = getConnection()) {
+            String sql = "SELECT * FROM playlists WHERE playlist_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, playlistId);
+
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                jsonOutput.addProperty("playlistId", rs.getInt("playlist_id"));
+                jsonOutput.addProperty("creatorId", rs.getInt("creator_id"));
+                jsonOutput.addProperty("coverId", rs.getInt("cover_id"));
+                jsonOutput.addProperty("title", rs.getString("title"));
+                jsonOutput.addProperty("official", rs.getString("official"));
+                jsonOutput.addProperty("access", rs.getInt("access"));
+                jsonOutput.addProperty("likes", rs.getInt("likes"));
+                jsonOutput.addProperty("listens", rs.getInt("listens"));
+            }
+
+            JsonArray jsonMusicIds = getMusicFilling(playlistId, conn);
+            jsonOutput.add("musicIds", jsonMusicIds);
+
+            res.status(200);
+        }
+        catch(SQLException e) {
+            logger.error("Error in PlaylistApi.allData", e);
+            res.status(500);
+        }
+
+        return gson.toJson(jsonOutput);
+    }
 
     /* Worked / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
@@ -48,6 +87,40 @@ public class PlaylistApi {
         return palylistId;
     }
 
+    public static String update(Request req, Response res) {
+        return "";
+    }
+
+    public static String delete(Request req, Response res) {
+        int playlistId = convertToInt(req.params(":playlistId"));
+
+        try(Connection conn = getConnection()) {
+            JsonArray musicIds = getMusicFilling(playlistId, conn);
+            int imageId = getCoverId(playlistId, conn);
+            String sql = "DELETE FROM playlists WHERE playlist_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, playlistId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0) {
+                ImagesApi.delete(imageId);
+                deleteAllMusic(musicIds, req, res);
+
+                res.status(200);
+            }
+            else {
+                res.status(404);
+            }
+        }
+        catch (SQLException e) {
+            logger.error("Error in PlaylistApi.delete", e);
+            res.status(500);
+        }
+
+        return "";
+    }
+
     /* Worked / Unstable / Unsafe */
     public static String addMusic(Request req, Response res) {
         int playlistId = convertToInt(req.params(":playlistId"));
@@ -69,14 +142,6 @@ public class PlaylistApi {
             res.status(500);
         }
 
-        return "";
-    }
-
-    public static String update(Request req, Response res) {
-        return "";
-    }
-
-    public static String delete(Request req, Response res) {
         return "";
     }
 

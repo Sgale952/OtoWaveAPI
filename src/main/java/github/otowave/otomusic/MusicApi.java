@@ -31,8 +31,10 @@ public class MusicApi {
         String musicId = req.params(":musicId");
 
         try(Connection conn = getConnection()) {
-            String sql = "SELECT * FROM music WHERE music_id = " + musicId;
+            String sql = "SELECT * FROM music WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, musicId);
 
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
@@ -126,16 +128,16 @@ public class MusicApi {
 
     /* Worked / Unstable / Unsafe */
     public static String delete(Request req, Response res) {
-        int musicId = convertToInt(req.params(":musicId"));
+        int musicId = haveMusicIdAttribute(req)? req.attribute("musicId") : convertToInt(req.params(":musicId"));
 
         try(Connection conn = getConnection()) {
-            int imageId = getCover(musicId, conn);
+            int imageId = getCoverId(musicId, conn);
             String sql = "DELETE FROM music WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, musicId);
-            int rowsAffected = stmt.executeUpdate();
 
+            int rowsAffected = stmt.executeUpdate();
             if(rowsAffected > 0) {
                 deleteAudio(musicId);
                 ImagesApi.delete(imageId);

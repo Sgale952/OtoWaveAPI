@@ -27,7 +27,7 @@ public class Main {
             //Try merging methods (updateInteraction)
             patch("/update-likes", (MusicApi::updateLikes));
             patch("/update-listens", (MusicApi::updateListens));
-            get("/song-data", (MusicApi::allData));
+            get("/data-song", (MusicApi::allData));
         });
 
         path("/:userId", () -> {
@@ -54,6 +54,7 @@ public class Main {
         });
 
         path("/:playlistId", () -> {
+            get("/data-playlist", (PlaylistApi::allData));
             post("/fill-playlist", (PlaylistApi::addMusic));
             patch("/update-playlist", (PlaylistApi::update));
             delete("/delete-playlist", (PlaylistApi::delete));

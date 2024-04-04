@@ -19,7 +19,7 @@ import static github.otowave.api.UploadHelper.*;
 
 public class ImagesHandler {
     //private static final String IMAGES_DIR = "/home/otowave/data/images/";
-    private static final String IMAGES_DIR = "D:\\i\\";
+    private static final String IMAGES_DIR = "D:\\s\\";
 
     static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
         int prevImageId = convertToInt(imageData.prevImageId());
@@ -62,10 +62,10 @@ public class ImagesHandler {
         File dir = new File(IMAGES_DIR);
         File[] files = dir.listFiles();
 
+        assert files != null;
         for(File file : files) {
             int indexExtension = file.getName().lastIndexOf('.');
-
-            if(file.getName().substring(0, indexExtension).equals(String.valueOf(imageId))) {
+            if(indexExtension >= 0 && file.getName().substring(0, indexExtension).equals(String.valueOf(imageId))) {
                 Path filePath = Path.of(file.getAbsolutePath());
                 Files.delete(filePath);
                 break;
