@@ -40,7 +40,7 @@ public class Main {
             post("/subscribe-user", ((request, response) -> ""));
             delete("/discard-user", ((request, response) -> ""));
             post("/new-image", (ImagesApi::upload));
-            post("/set-image", (ImagesApi::set));
+            post("/set-image", (ImagesApi::replace));
             post("/new-song", (MusicApi::upload));
             post("/like-song", (MusicApi::like));
             delete("/discard-song", (MusicApi::discard));

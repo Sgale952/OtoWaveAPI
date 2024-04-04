@@ -2,6 +2,7 @@ package github.otowave.otomusic;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import github.otowave.otoimages.ImagesApi;
 import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,28 +124,27 @@ public class MusicApi {
         return "";
     }
 
-    //Delete image file
-    //TODO: need tests
+    /* Worked / Unstable / Unsafe */
     public static String delete(Request req, Response res) {
         int musicId = convertToInt(req.params(":musicId"));
 
         try(Connection conn = getConnection()) {
-            String sql = "DELETE FROM music WHERE music_id = " + musicId;
+            int imageId = getCover(musicId, conn);
+            String sql = "DELETE FROM music WHERE music_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
+            stmt.setInt(1, musicId);
             int rowsAffected = stmt.executeUpdate();
+
             if(rowsAffected > 0) {
                 deleteAudio(musicId);
-                //deleteImageFile(musicId);
+                ImagesApi.delete(imageId);
+
                 res.status(200);
             }
             else {
                 res.status(404);
             }
-        }
-        catch(NumberFormatException e) {
-            logger.error("Detected unconvertible String in id variable", e);
-            res.status(400);
         }
         catch(SQLException | IOException e) {
             logger.error("Error in MusicApi.delete", e);

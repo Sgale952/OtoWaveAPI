@@ -11,6 +11,10 @@ import spark.utils.IOUtils;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
@@ -23,24 +27,6 @@ public class MusicHandler {
     private static final String MUSIC_DIR = "D:\\i\\";
     //private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
     private static final String FFMPEG_PATH = "C:\\Program Files\\FFmpeg\\ffmpeg.exe";
-
-    static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
-        int convertedYear = convertToInt(year);
-        int convertedMonth = convertToInt(month);
-        int convertedDay = convertToInt(day);
-
-        return LocalDate.of(convertedYear, convertedMonth, convertedDay);
-    }
-
-    static void deleteAudio(int musicId) throws IOException {
-        Path dir = Path.of(MUSIC_DIR + musicId);
-        try (Stream<Path> musicFiles = Files.walk(dir)) {
-            musicFiles
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
-        }
-    }
 
     static void saveAudioFile(Request req, String musicId) throws IOException, ServletException {
         Part musicPart = getStaticFilePart(req, "audio");
@@ -105,5 +91,37 @@ public class MusicHandler {
     private static void deleteOldAudioFile(String dir) {
         File audioFile = new File(dir);
         audioFile.delete();
+    }
+
+    static void deleteAudio(int musicId) throws IOException {
+        Path dir = Path.of(MUSIC_DIR + musicId);
+        try (Stream<Path> musicFiles = Files.walk(dir)) {
+            musicFiles
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+    }
+
+    static int getCover(int musicId, Connection conn) throws SQLException {
+        String sql = "SELECT cover_id FROM music WHERE music_id = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+
+        stmt.setInt(1, musicId);
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()) {
+            return rs.getInt("cover_id");
+        }
+
+        throw new SQLException("Image not found");
+    }
+
+    static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
+        int convertedYear = convertToInt(year);
+        int convertedMonth = convertToInt(month);
+        int convertedDay = convertToInt(day);
+
+        return LocalDate.of(convertedYear, convertedMonth, convertedDay);
     }
 }

@@ -37,29 +37,17 @@ public class ImagesHandler {
 
     private static String applySelector(String imageType) {
         return switch (imageType) {
-            case "musicCover" -> applyToMusic();
-            case "playlistCover" -> applyToPlaylist();
             case "userAvatar" -> applyToUserAvatar();
             case "userHeader" -> applyToUserHeader();
+            case "musicCover" -> applyToMusic();
+            case "playlistCover" -> applyToPlaylist();
             default -> "";
         };
     }
-
-    private static String applyToMusic() {
-        return "UPDATE music SET cover_id = ? WHERE music_id = ?";
-    }
-
-    private static String applyToPlaylist() {
-        return "UPDATE playlists SET cover_id = ? WHERE playlist_id = ?";
-    }
-
-    private static String applyToUserAvatar() {
-        return "UPDATE users SET avatar_id = ? WHERE user_id = ?";
-    }
-
-    private static String applyToUserHeader() {
-        return "UPDATE users SET header_id = ? WHERE user_id = ?";
-    }
+    private static String applyToUserAvatar() {return "UPDATE users SET avatar_id = ? WHERE user_id = ?";}
+    private static String applyToUserHeader() {return "UPDATE users SET header_id = ? WHERE user_id = ?";}
+    private static String applyToMusic() {return "UPDATE music SET cover_id = ? WHERE music_id = ?";}
+    private static String applyToPlaylist() {return "UPDATE playlists SET cover_id = ? WHERE playlist_id = ?";}
 
     static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
         Part imagePart = getStaticFilePart(req, "image");

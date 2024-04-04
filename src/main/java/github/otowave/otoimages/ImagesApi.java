@@ -53,7 +53,7 @@ public class ImagesApi {
     }
 
     /* Worked / Unstable / Unsafe */
-    public static String set(Request req, Response res) {
+    public static String replace(Request req, Response res) {
         ImageData imageData = gson.fromJson(req.body(), ImageData.class);
 
         try(Connection conn = getConnection()) {
@@ -61,11 +61,20 @@ public class ImagesApi {
             res.status(201);
         }
         catch(SQLException | IOException e) {
-            logger.error("Error in ImagesApi.set", e);
+            logger.error("Error in ImagesApi.replace", e);
             res.status(500);
         }
 
         return "";
+    }
+
+    public static void delete(int imageId) {
+        try {
+            deleteImageFile(imageId);
+        }
+        catch (IOException e) {
+            logger.error("Error in ImagesApi.delete", e);
+        }
     }
 
     record ImageData(String imageType, String imageId, String prevImageId, String sourceId) {}
