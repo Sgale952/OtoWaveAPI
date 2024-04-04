@@ -32,7 +32,7 @@ public class MusicHandler {
         return LocalDate.of(convertedYear, convertedMonth, convertedDay);
     }
 
-    static void deleteAudioFile(int musicId) throws IOException {
+    static void deleteAudio(int musicId) throws IOException {
         Path dir = Path.of(MUSIC_DIR + musicId);
         try (Stream<Path> musicFiles = Files.walk(dir)) {
             musicFiles
@@ -54,13 +54,32 @@ public class MusicHandler {
             IOUtils.copy(musicPart.getInputStream(), outputStream);
         }
 
-        convertToM3u8(musicId, getFileExtension(musicPart));
+        convertAudioFileToAac(musicId, getFileExtension(musicPart));
     }
 
-    private static void convertToM3u8(String musicId, String fileExtension) throws IOException {
+    private static void convertAudioFileToAac(String musicId, String fileExtension) throws IOException {
         FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
-        String inputFile = MUSIC_DIR + musicId + "/" + musicId + fileExtension;
-        String outputFile = MUSIC_DIR + musicId + "/" + musicId + ".m3u8";
+        String inputFile = getAudioFilePath(musicId, fileExtension);
+        String outputFile = getAudioFilePath(musicId, ".aac");
+
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(inputFile)
+                .overrideOutputFiles(true)
+                .addOutput(outputFile)
+                .setAudioCodec("aac")
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
+        executor.createJob(builder).run();
+
+        deleteOldAudioFile(inputFile);
+
+        trimAacFile(musicId, outputFile);
+    }
+
+    private static void trimAacFile(String musicId, String inputFile) throws IOException {
+        FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
+        String outputFile = getAudioFilePath(musicId, ".m3u8");
 
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(inputFile)
@@ -77,6 +96,10 @@ public class MusicHandler {
         executor.createJob(builder).run();
 
         deleteOldAudioFile(inputFile);
+    }
+
+    private static String getAudioFilePath(String musicId, String fileExtension) {
+        return MUSIC_DIR + musicId + "/" + musicId + fileExtension;
     }
 
     private static void deleteOldAudioFile(String dir) {

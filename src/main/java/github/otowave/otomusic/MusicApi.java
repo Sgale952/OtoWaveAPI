@@ -134,7 +134,7 @@ public class MusicApi {
 
             int rowsAffected = stmt.executeUpdate();
             if(rowsAffected > 0) {
-                deleteAudioFile(musicId);
+                deleteAudio(musicId);
                 //deleteImageFile(musicId);
                 res.status(200);
             }
