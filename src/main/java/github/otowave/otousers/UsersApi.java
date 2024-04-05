@@ -1,6 +1,7 @@
 package github.otowave.otousers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 
 import static github.otowave.api.DatabaseManager.getConnection;
 import static github.otowave.api.UploadHelper.convertToInt;
+import static github.otowave.otousers.Activities.activitySelector;
 import static github.otowave.otousers.UsersHandler.*;
 
 public class UsersApi {
@@ -50,14 +52,18 @@ public class UsersApi {
         return userId;
     }
 
+    public static String recovery(Request req, Response res) {
+        return "";
+    }
+
     /* Worked / Unstable / Unsafe */
     public static String delete(Request req, Response res) {
         int userId = convertToInt(req.params(":userId"));
 
         try(Connection conn = getConnection()) {
-            ArrayList<Integer> musicIds = getCreatedMusic(userId, conn);
-            ArrayList<Integer> imagesIds = getCreatedImages(userId, conn);
-            ArrayList<Integer> playlistsIds = getCreatedPlaylists(userId, conn);
+            ArrayList<Integer> musicIds = activitySelector("createdMusic", userId, conn);
+            ArrayList<Integer> imagesIds = activitySelector("createdImages", userId, conn);
+            ArrayList<Integer> playlistsIds = activitySelector("createdPlaylists", userId, conn);
             String sql = "DELETE FROM users WHERE user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -82,7 +88,7 @@ public class UsersApi {
         return "";
     }
 
-    public static String authorization(Request req, Response res) {
+    public static String login(Request req, Response res) {
         String email = req.queryParams("email");
         String password = req.queryParams("password");
 
@@ -116,7 +122,7 @@ public class UsersApi {
     }
 
     public static String changeName(Request req, Response res) {
-        String newName = req.queryParams("newName");
+        String newName = req.queryParams("name");
         String userId = req.params(":userId");
 
         try(Connection conn = getConnection()) {
@@ -139,6 +145,34 @@ public class UsersApi {
             res.status(500);
         }
 
+        return "";
+    }
+
+    //TODO: need tests
+    public static String activity(Request req, Response res) {
+        JsonArray jsonIds = new JsonArray();
+        int userId = convertToInt(req.params(":userId"));
+        String type = req.queryParams("type");
+
+        try(Connection conn = getConnection()) {
+            ArrayList<Integer> ids = activitySelector(type, userId, conn);
+            for(Integer id : ids) {
+                jsonIds.add(id);
+            }
+        }
+        catch(SQLException e) {
+            logger.error("Error in UserApi.activity", e);
+            res.status(500);
+        }
+
+        return gson.toJson(jsonIds);
+    }
+
+    public static String subscribe(Request req, Response res) {
+        return "";
+    }
+
+    public static String discard(Request req, Response res) {
         return "";
     }
 

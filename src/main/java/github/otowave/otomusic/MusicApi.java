@@ -40,11 +40,11 @@ public class MusicApi {
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
                 jsonOutput.addProperty("musicId", rs.getInt("music_id"));
-                jsonOutput.addProperty("author", rs.getInt("author_id"));
+                jsonOutput.addProperty("authorId", rs.getInt("author_id"));
                 jsonOutput.addProperty("coverId", rs.getInt("cover_id"));
                 jsonOutput.addProperty("title", rs.getString("title"));
                 jsonOutput.addProperty("genre", rs.getString("genre"));
-                jsonOutput.addProperty("econtent", rs.getInt("econtent"));
+                jsonOutput.addProperty("eContent", rs.getInt("econtent"));
                 jsonOutput.addProperty("likes", rs.getInt("likes"));
                 jsonOutput.addProperty("listens", rs.getInt("listens"));
                 jsonOutput.addProperty("uploaded", String.valueOf(rs.getTimestamp("uploaded")));

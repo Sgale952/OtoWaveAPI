@@ -150,7 +150,11 @@ public class PlaylistApi {
         return "";
     }
 
-    public static String like(Request req, Response res) {
+    public static String deleteMusic(Request req, Response res) {
+        return "";
+    }
+
+    public static String updateLikes(Request req, Response res) {
         return "";
     }
 
