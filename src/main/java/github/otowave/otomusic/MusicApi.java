@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.api.UploadHelper.haveAttribute;
 import static github.otowave.otomusic.MusicHandler.*;
 
 public class MusicApi {
@@ -128,7 +129,7 @@ public class MusicApi {
 
     /* Worked / Unstable / Unsafe */
     public static String delete(Request req, Response res) {
-        int musicId = haveMusicIdAttribute(req)? req.attribute("musicId") : convertToInt(req.params(":musicId"));
+        int musicId = haveAttribute("musicId", req)? req.attribute("musicId") : convertToInt(req.params(":musicId"));
 
         try(Connection conn = getConnection()) {
             int imageId = getCoverId(musicId, conn);

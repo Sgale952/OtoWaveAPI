@@ -27,7 +27,7 @@ public class MusicHandler {
     //private static final String MUSIC_DIR = "/home/otowave/data/music/";
     private static final String MUSIC_DIR = "D:\\i\\";
     //private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
-    private static final String FFMPEG_PATH = "C:\\Program Files\\FFmpeg\\ffmpeg.exe";
+    private static final String FFMPEG_PATH = "C:\\Program Files\\FFmpeg\\bin\\ffmpeg.exe";
 
     static void saveAudioFile(Request req, String musicId) throws IOException, ServletException {
         Part musicPart = getStaticFilePart(req, "audio");
@@ -60,7 +60,6 @@ public class MusicHandler {
         executor.createJob(builder).run();
 
         deleteOldAudioFile(inputFile);
-
         trimAacFile(musicId, outputFile);
     }
 
@@ -124,14 +123,5 @@ public class MusicHandler {
         int convertedDay = convertToInt(day);
 
         return LocalDate.of(convertedYear, convertedMonth, convertedDay);
-    }
-
-    static boolean haveMusicIdAttribute(Request req) {
-        for (String attr : req.attributes()) {
-            if (Objects.equals(attr, "musicId")) {
-                return true;
-            }
-        }
-        return false;
     }
 }

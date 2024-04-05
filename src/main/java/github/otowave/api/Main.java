@@ -35,6 +35,7 @@ public class Main {
             get("/liked", ((request, response) -> ""));
             get("/subscribed", ((request, response) -> ""));
             patch("/ban", ((request, response) -> ""));
+            delete("/delete", (UsersApi::delete));
             patch("/change-header", ((request, response) -> ""));
             patch("/change-name", ((request, response) -> ""));
             post("/subscribe-user", ((request, response) -> ""));

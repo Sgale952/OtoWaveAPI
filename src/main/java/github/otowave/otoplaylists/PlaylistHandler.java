@@ -11,21 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistHandler {
-
-    //I don't know how, but it works
-    static void deleteAllMusic(JsonArray musicIds, Request req, Response res) throws SQLException {
-        List<Integer> musicIdList = new ArrayList<>();
-        for(JsonElement element : musicIds) {
-            int id = element.getAsJsonPrimitive().getAsInt();
-            musicIdList.add(id);
-        }
-
-        for(int id : musicIdList) {
-            req.attribute("musicId", id);
-            MusicApi.delete(req, res);
-        }
-    }
-
     static JsonArray getMusicFilling(int playlistId, Connection conn) throws SQLException {
         JsonArray musicIds = new JsonArray();
         String sql = "SELECT music_id FROM fillingPlaylists WHERE playlist_id = ?";
@@ -53,5 +38,19 @@ public class PlaylistHandler {
         }
 
         throw new SQLException("Image not found");
+    }
+
+    //I don't know how, but it works
+    static void deleteAllMusic(JsonArray musicIds, Request req, Response res) throws SQLException {
+        List<Integer> musicIdList = new ArrayList<>();
+        for(JsonElement element : musicIds) {
+            int id = element.getAsJsonPrimitive().getAsInt();
+            musicIdList.add(id);
+        }
+
+        for(int id : musicIdList) {
+            req.attribute("musicId", id);
+            MusicApi.delete(req, res);
+        }
     }
 }

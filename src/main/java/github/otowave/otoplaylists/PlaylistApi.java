@@ -13,6 +13,7 @@ import spark.Response;
 
 import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.api.UploadHelper.haveAttribute;
 import static github.otowave.otoplaylists.PlaylistHandler.*;
 
 public class PlaylistApi {
@@ -91,8 +92,10 @@ public class PlaylistApi {
         return "";
     }
 
+    /* Worked / Unstable / Unsafe */
     public static String delete(Request req, Response res) {
-        int playlistId = convertToInt(req.params(":playlistId"));
+        int playlistId = haveAttribute("playlistId", req)? req.attribute("playlistId") : convertToInt(req.params(":playlistId"));
+        int softDelete = convertToInt(req.queryParams("softDelete"));
 
         try(Connection conn = getConnection()) {
             JsonArray musicIds = getMusicFilling(playlistId, conn);
@@ -105,7 +108,9 @@ public class PlaylistApi {
             int rowsAffected = stmt.executeUpdate();
             if(rowsAffected > 0) {
                 ImagesApi.delete(imageId);
-                deleteAllMusic(musicIds, req, res);
+                if(softDelete == 0) {
+                    deleteAllMusic(musicIds, req, res);
+                }
 
                 res.status(200);
             }

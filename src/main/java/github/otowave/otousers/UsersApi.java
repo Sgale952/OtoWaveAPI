@@ -8,8 +8,11 @@ import spark.Response;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.api.UploadHelper.convertToInt;
+import static github.otowave.otousers.UsersHandler.*;
 
 public class UsersApi {
     private static final Logger logger = LoggerFactory.getLogger(UsersApi.class);
@@ -45,6 +48,38 @@ public class UsersApi {
         }
 
         return userId;
+    }
+
+    /* Worked / Unstable / Unsafe */
+    public static String delete(Request req, Response res) {
+        int userId = convertToInt(req.params(":userId"));
+
+        try(Connection conn = getConnection()) {
+            ArrayList<Integer> musicIds = getCreatedMusic(userId, conn);
+            ArrayList<Integer> imagesIds = getCreatedImages(userId, conn);
+            ArrayList<Integer> playlistsIds = getCreatedPlaylists(userId, conn);
+            String sql = "DELETE FROM users WHERE user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, userId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0) {
+                deleteAllData(musicIds, imagesIds, playlistsIds, req, res);
+
+                res.status(200);
+            }
+            else {
+                res.status(404);
+            }
+
+        }
+        catch(SQLException e) {
+            logger.error("Error in UserApi.delete", e);
+            res.status(500);
+        }
+
+        return "";
     }
 
     public static String authorization(Request req, Response res) {

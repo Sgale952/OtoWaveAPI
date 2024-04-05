@@ -68,6 +68,7 @@ public class ImagesApi {
         return "";
     }
 
+    /* Worked / Unstable / Unsafe */
     public static void delete(int imageId) {
         try {
             deleteImageFile(imageId);
