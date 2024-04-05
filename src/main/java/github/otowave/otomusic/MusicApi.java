@@ -26,7 +26,7 @@ public class MusicApi {
     private static final Logger logger = LoggerFactory.getLogger(MusicApi.class);
     private static final Gson gson = new Gson();
 
-    //TODO: need tests
+    /* Worked / Unstable / Unsafe */
     public static String allData(Request req, Response res) {
         JsonObject jsonOutput = new JsonObject();
         String musicId = req.params(":musicId");
@@ -253,6 +253,10 @@ public class MusicApi {
         }
 
         return gson.toJson(genres);
+    }
+
+    public static String genreSort(Request req, Response res) {
+        return "";
     }
 
     //TODO: need tests

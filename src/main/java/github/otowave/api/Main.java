@@ -16,6 +16,7 @@ public class Main {
         get("/login", UsersApi::login);
         post("/recovery", (UsersApi::recovery));
 
+        get("/navigator", MusicApi::genreSort);
         get("/daily", MusicApi::dailyRandom);
         get("/search", (MusicApi::search));
 
@@ -30,7 +31,7 @@ public class Main {
             post("/subscribe-user", (UsersApi::subscribe));
             delete("/discard-user", (UsersApi::discard));
 
-            patch("/ban", ((request, response) -> ""));
+            patch("/ban", (UsersApi::ban));
             delete("/delete", (UsersApi::delete));
             patch("/change-name", (UsersApi::changeName));
             patch("/change-header", ((request, response) -> ""));

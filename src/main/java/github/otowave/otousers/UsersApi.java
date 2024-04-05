@@ -56,6 +56,39 @@ public class UsersApi {
         return "";
     }
 
+    public static String login(Request req, Response res) {
+        String email = req.queryParams("email");
+        String password = req.queryParams("password");
+
+        try(Connection conn = getConnection()) {
+            String sql = "SELECT passwrd FROM users WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, email);
+
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                String hashedPasswordFromDB = rs.getString("passwrd");
+                if(BCrypt.checkpw(password, hashedPasswordFromDB)) {
+                    res.status(200);
+                }
+                else {
+                    res.status(401);
+                }
+            }
+            else {
+                res.status(404);
+            }
+
+        }
+        catch(SQLException e) {
+            logger.error("Error in UserApi.authorization", e);
+            res.status(500);
+        }
+
+        return "";
+    }
+
     /* Worked / Unstable / Unsafe */
     public static String delete(Request req, Response res) {
         int userId = convertToInt(req.params(":userId"));
@@ -82,39 +115,6 @@ public class UsersApi {
         }
         catch(SQLException e) {
             logger.error("Error in UserApi.delete", e);
-            res.status(500);
-        }
-
-        return "";
-    }
-
-    public static String login(Request req, Response res) {
-        String email = req.queryParams("email");
-        String password = req.queryParams("password");
-
-        try(Connection conn = getConnection()) {
-            String sql = "SELECT passwrd FROM users WHERE email = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, email);
-
-            ResultSet rs = stmt.executeQuery();
-            if(rs.next()) {
-                String hashedPasswordFromDB = rs.getString("passwrd");
-                if(BCrypt.checkpw(password, hashedPasswordFromDB)) {
-                    res.status(200);
-                }
-                else {
-                 res.status(401);
-                }
-            }
-            else {
-                res.status(404);
-            }
-
-        }
-        catch(SQLException e) {
-            logger.error("Error in UserApi.authorization", e);
             res.status(500);
         }
 
@@ -148,7 +148,11 @@ public class UsersApi {
         return "";
     }
 
-    //TODO: need tests
+    public static String ban(Request req, Response res) {
+        return "";
+    }
+
+    /* Worked / Unstable / Unsafe */
     public static String activity(Request req, Response res) {
         JsonArray jsonIds = new JsonArray();
         int userId = convertToInt(req.params(":userId"));

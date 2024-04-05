@@ -20,7 +20,7 @@ public class PlaylistApi {
     private static final Logger logger = LoggerFactory.getLogger(PlaylistApi.class);
     private static final Gson gson = new Gson();
 
-    //TODO: need tests
+    /* Worked / Unstable / Unsafe */
     public static String allData(Request req, Response res) {
         JsonObject jsonOutput = new JsonObject();
         int playlistId = convertToInt(req.params(":playlistId"));
@@ -40,7 +40,6 @@ public class PlaylistApi {
                 jsonOutput.addProperty("official", rs.getString("official"));
                 jsonOutput.addProperty("access", rs.getInt("access"));
                 jsonOutput.addProperty("likes", rs.getInt("likes"));
-                jsonOutput.addProperty("listens", rs.getInt("listens"));
             }
 
             JsonArray jsonMusicIds = getMusicFilling(playlistId, conn);

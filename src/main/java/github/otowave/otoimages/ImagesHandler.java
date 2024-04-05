@@ -23,7 +23,7 @@ public class ImagesHandler {
 
     static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
         int prevImageId = convertToInt(imageData.prevImageId());
-        String sql = applySelector(imageData.imageType());
+        String sql = imageApplier.applySelector(imageData.imageType());
         PreparedStatement stmt = conn.prepareStatement(sql);
 
         stmt.setString(1, imageId);
@@ -34,20 +34,6 @@ public class ImagesHandler {
             deleteImageFile(prevImageId);
         }
     }
-
-    private static String applySelector(String imageType) {
-        return switch (imageType) {
-            case "userAvatar" -> applyToUserAvatar();
-            case "userHeader" -> applyToUserHeader();
-            case "musicCover" -> applyToMusic();
-            case "playlistCover" -> applyToPlaylist();
-            default -> "";
-        };
-    }
-    private static String applyToUserAvatar() {return "UPDATE users SET avatar_id = ? WHERE user_id = ?";}
-    private static String applyToUserHeader() {return "UPDATE users SET header_id = ? WHERE user_id = ?";}
-    private static String applyToMusic() {return "UPDATE music SET cover_id = ? WHERE music_id = ?";}
-    private static String applyToPlaylist() {return "UPDATE playlists SET cover_id = ? WHERE playlist_id = ?";}
 
     static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
         Part imagePart = getStaticFilePart(req, "image");
@@ -72,4 +58,21 @@ public class ImagesHandler {
             }
         }
     }
+}
+
+class imageApplier {
+    static String applySelector(String imageType) throws SQLException {
+        return switch (imageType) {
+            case "userAvatar" -> applyToUserAvatar();
+            case "userHeader" -> applyToUserHeader();
+            case "musicCover" -> applyToMusic();
+            case "playlistCover" -> applyToPlaylist();
+            default -> throw new SQLException("Incorrect image type");
+        };
+    }
+
+    private static String applyToUserAvatar() {return "UPDATE users SET avatar_id = ? WHERE user_id = ?";}
+    private static String applyToUserHeader() {return "UPDATE users SET header_id = ? WHERE user_id = ?";}
+    private static String applyToMusic() {return "UPDATE music SET cover_id = ? WHERE music_id = ?";}
+    private static String applyToPlaylist() {return "UPDATE playlists SET cover_id = ? WHERE playlist_id = ?";}
 }
