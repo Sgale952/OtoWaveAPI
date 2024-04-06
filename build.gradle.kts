@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "github.otowave"
-version = "0.74"
+version = "0.75"
 
 repositories {
     mavenCentral()

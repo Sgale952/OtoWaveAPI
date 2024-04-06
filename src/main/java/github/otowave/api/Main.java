@@ -10,6 +10,8 @@ import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
+        ipAddress("172.24.80.146");
+        port(4567);
         multipartConfig();
 
         post("/register", UsersApi::upload);

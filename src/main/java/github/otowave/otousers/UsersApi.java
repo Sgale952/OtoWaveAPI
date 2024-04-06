@@ -56,15 +56,17 @@ public class UsersApi {
 
     public static String login(Request req, Response res) {
         UserData userData = gson.fromJson(req.body(), UserData.class);
+        String userId = "";
 
         try(Connection conn = getConnection()) {
-            String sql = "SELECT passwrd FROM users WHERE email = ?";
+            String sql = "SELECT passwrd, user_id FROM users WHERE email = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, userData.email());
 
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
+                userId = rs.getString("user_id");
                 String hashedPasswordFromDB = rs.getString("passwrd");
                 if(userData.password().equals(hashedPasswordFromDB)) {
                     res.status(200);
@@ -83,7 +85,7 @@ public class UsersApi {
             res.status(500);
         }
 
-        return "";
+        return userId;
     }
 
     /* Worked / Unstable / Unsafe */
