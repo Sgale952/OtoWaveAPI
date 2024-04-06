@@ -70,10 +70,18 @@ public class ImagesApi {
 
     /* Worked / Unstable / Unsafe */
     public static void delete(int imageId) {
-        try {
-            deleteImageFile(imageId);
+        try(Connection conn = getConnection()) {
+            String sql = "DELETE FROM images WHERE image_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, imageId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0) {
+                deleteImageFile(imageId);
+            }
         }
-        catch (IOException e) {
+        catch (IOException | SQLException e) {
             logger.error("Error in ImagesApi.delete", e);
         }
     }
