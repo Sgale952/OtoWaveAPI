@@ -1,9 +1,10 @@
+group = "github.otowave"
+version = "0.76"
+
 plugins {
     id("java")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
-
-group = "github.otowave"
-version = "0.75"
 
 repositories {
     mavenCentral()
@@ -19,6 +20,12 @@ dependencies {
     implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("org.slf4j:slf4j-simple:2.0.9")
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "github.otowave.api.Main"
+    }
 }
 
 tasks.test {
