@@ -1,5 +1,5 @@
 group = "github.otowave"
-version = "0.76"
+version = "0.78"
 
 plugins {
     id("java")
