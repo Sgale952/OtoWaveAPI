@@ -40,6 +40,7 @@ public class PlaylistApi {
                 jsonOutput.addProperty("official", rs.getString("official"));
                 jsonOutput.addProperty("access", rs.getInt("access"));
                 jsonOutput.addProperty("likes", rs.getInt("likes"));
+                jsonOutput.addProperty("created", String.valueOf(rs.getTimestamp("created")));
             }
 
             JsonArray jsonMusicIds = getMusicFilling(playlistId, conn);
