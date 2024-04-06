@@ -18,8 +18,7 @@ import java.sql.SQLException;
 import static github.otowave.api.UploadHelper.*;
 
 public class ImagesHandler {
-    //private static final String IMAGES_DIR = "/home/otowave/data/images/";
-    private static final String IMAGES_DIR = "D:\\s\\";
+    private static final String IMAGES_DIR = "/home/otowave/data/images/";
 
     static void apply(ImagesApi.ImageData imageData, String imageId, Connection conn) throws SQLException, IOException {
         int prevImageId = convertToInt(imageData.prevImageId());

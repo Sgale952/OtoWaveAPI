@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,14 +25,13 @@ public class UsersApi {
         String userId = "";
 
         try(Connection conn = getConnection()) {
-            String hashedPassword = BCrypt.hashpw(userData.password(), BCrypt.gensalt());
             String sql = "INSERT INTO users (nickname, email, passwrd, access) " +
                     "VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, userData.nickname());
             stmt.setString(2, userData.email());
-            stmt.setString(3, hashedPassword);
+            stmt.setString(3, userData.password());
             stmt.setInt(4, userData.access());
             stmt.executeUpdate();
 
@@ -57,19 +55,18 @@ public class UsersApi {
     }
 
     public static String login(Request req, Response res) {
-        String email = req.queryParams("email");
-        String password = req.queryParams("password");
+        UserData userData = gson.fromJson(req.body(), UserData.class);
 
         try(Connection conn = getConnection()) {
             String sql = "SELECT passwrd FROM users WHERE email = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setString(1, email);
+            stmt.setString(1, userData.email());
 
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
                 String hashedPasswordFromDB = rs.getString("passwrd");
-                if(BCrypt.checkpw(password, hashedPasswordFromDB)) {
+                if(userData.password().equals(hashedPasswordFromDB)) {
                     res.status(200);
                 }
                 else {

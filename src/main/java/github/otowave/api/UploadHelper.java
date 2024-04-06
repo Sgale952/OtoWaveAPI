@@ -12,8 +12,7 @@ import static spark.Spark.before;
 import static spark.Spark.staticFiles;
 
 public class UploadHelper {
-    //private static final String TEMP_DIR = "/home/otowave/data/temp/";
-    private static final String TEMP_DIR = "D:\\i\\temp";
+    private static final String TEMP_DIR = "/home/otowave/data/temp/";
 
     public static void multipartConfig() {
         staticFiles.externalLocation(TEMP_DIR);

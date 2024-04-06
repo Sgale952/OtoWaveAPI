@@ -24,10 +24,8 @@ import java.util.stream.Stream;
 import static github.otowave.api.UploadHelper.*;
 
 public class MusicHandler {
-    //private static final String MUSIC_DIR = "/home/otowave/data/music/";
-    private static final String MUSIC_DIR = "D:\\i\\";
-    //private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
-    private static final String FFMPEG_PATH = "C:\\Program Files\\FFmpeg\\bin\\ffmpeg.exe";
+    private static final String MUSIC_DIR = "/home/otowave/data/music/";
+    private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
 
     static void saveAudioFile(Request req, String musicId) throws IOException, ServletException {
         Part musicPart = getStaticFilePart(req, "audio");

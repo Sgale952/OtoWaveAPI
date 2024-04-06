@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "github.otowave"
-version = "1.0.0"
+version = "0.74"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,6 @@ dependencies {
     implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("org.slf4j:slf4j-simple:2.0.9")
-    implementation ("org.mindrot:jbcrypt:0.4")
 }
 
 tasks.test {
