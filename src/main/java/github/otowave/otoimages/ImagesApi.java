@@ -1,6 +1,7 @@
 package github.otowave.otoimages;
 
 import com.google.gson.Gson;
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -9,63 +10,81 @@ import spark.Response;
 import java.io.IOException;
 import java.sql.*;
 
-import static github.otowave.api.CommonUtils.convertParamsToInt;
+import static github.otowave.api.UploadHelper.convertToInt;
 import static github.otowave.api.DatabaseManager.getConnection;
+import static github.otowave.otoimages.ImagesHandler.*;
 
-public class ImagesApi extends ImagesHandler {
+public class ImagesApi {
     private static final Logger logger = LoggerFactory.getLogger(ImagesApi.class);
     private static final Gson gson = new Gson();
 
-    //TODO: need tests
+    /* Worked / Unstable / Unsafe */
     public static String upload(Request req, Response res) {
-        ImagesData imagesData = gson.fromJson(req.body(), ImagesData.class);
-        int sourceId = convertParamsToInt(req.queryParams("sourceId"));
-        int imageId = 0;
+        ImageData imageData = new ImageData(req.queryParams("imageType"), req.queryParams("imageId"), req.queryParams("prevImageId"), req.queryParams("sourceId"));
+        int uploaderId = convertToInt(req.params(":userId"));
+        String imageId = "";
 
         try(Connection conn = getConnection()) {
-            String sql = "INSERT INTO images (uploader, file_type) VALUES (?, '?')";
+            String sql = "INSERT INTO images (uploader_id) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(1, convertParamsToInt(imagesData.uploader()));
-            stmt.setString(2, imagesData.fileType());
+            stmt.setInt(1, uploaderId);
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
-            imageId = generatedKeys.getInt(1);
+            if(generatedKeys.next()) {
+                imageId = generatedKeys.getString(1);
+            }
+            else {
+                throw new NullPointerException("Image id not generated");
+            }
 
-            PreparedStatement stmt2 = conn.prepareStatement(applyImage(imagesData.usage(), sourceId, imageId));
-            stmt2.executeUpdate();
+            apply(imageData, imageId, conn);
             saveImageFile(req, imageId);
 
             res.status(201);
         }
-        catch (SQLException | IOException e) {
+        catch(SQLException | ServletException | IOException e) {
             logger.error("Error in ImagesApi.upload", e);
             res.status(500);
         }
 
-        return String.valueOf(imageId);
+        return imageId;
     }
 
-    //TODO: need tests
-    public static String update(Request req, Response res) {
-        try {
-            int ImageId = convertParamsToInt(req.queryParams("sourceId"));
-            saveImageFile(req, ImageId);
+    /* Worked / Unstable / Unsafe */
+    public static String replace(Request req, Response res) {
+        ImageData imageData = gson.fromJson(req.body(), ImageData.class);
 
-            res.status(200);
+        try(Connection conn = getConnection()) {
+            apply(imageData, imageData.imageId, conn);
+            res.status(201);
         }
-        catch (IOException e) {
-            logger.error("Error in ImagesApi.update", e);
+        catch(SQLException | IOException e) {
+            logger.error("Error in ImagesApi.replace", e);
             res.status(500);
         }
 
         return "";
     }
 
-    public static String delete (Request req, Response res) {
-        return "";
-    }
-}
+    /* Worked / Unstable / Unsafe */
+    public static void delete(int imageId) {
+        try(Connection conn = getConnection()) {
+            String sql = "DELETE FROM images WHERE image_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-record ImagesData(String uploader, String fileType, String usage) {}
+            stmt.setInt(1, imageId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if(rowsAffected > 0) {
+                deleteImageFile(imageId);
+            }
+        }
+        catch (IOException | SQLException e) {
+            logger.error("Error in ImagesApi.delete", e);
+        }
+    }
+
+    record ImageData(String imageType, String imageId, String prevImageId, String sourceId) {}
+}

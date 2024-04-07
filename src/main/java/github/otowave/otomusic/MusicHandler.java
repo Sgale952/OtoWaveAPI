@@ -1,78 +1,119 @@
 package github.otowave.otomusic;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Part;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
-import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.Request;
+import spark.utils.IOUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
-import static github.otowave.api.CommonUtils.convertParamsToInt;
+import static github.otowave.api.UploadHelper.*;
 
 public class MusicHandler {
-    private static final Logger logger = LoggerFactory.getLogger(MusicHandler.class);
+    private static final String MUSIC_DIR = "/home/otowave/data/music/";
+    private static final String FFMPEG_PATH = "/usr/bin/ffmpeg";
 
-    protected static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
-        int convertedYear = convertParamsToInt(year);
-        int convertedMonth = convertParamsToInt(year);
-        int convertedDay = convertParamsToInt(year);
+    static void saveAudioFile(Request req, String musicId) throws IOException, ServletException {
+        Part musicPart = getStaticFilePart(req, "audio");
+        String fileName = musicId+getFileExtension(musicPart);
+        String songDir = MUSIC_DIR + musicId;
 
-        return LocalDate.of(convertedYear, convertedMonth, convertedDay);
-    }
-
-    protected static void deleteAudioFile(int musicId) throws IOException {
-        Path dir = Path.of("/home/otowave/data/songs/"+musicId);
-        Files.walk(dir)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
-    }
-
-    protected static void saveAudioFile(Request request, int musicId) throws IOException {
-        InputStream inputStream = request.raw().getInputStream();
-        String fileName = musicId + request.queryParams("fileType");
-        String dir = "/home/otowave/data/songs/" + musicId;
-
-        Path dirPath = Path.of(dir);
+        Path dirPath = Path.of(songDir);
         Files.createDirectory(dirPath);
 
-        Path filePath = dirPath.resolve(fileName);
-        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        try(OutputStream outputStream = new FileOutputStream(songDir + "/" + fileName)) {
+            IOUtils.copy(musicPart.getInputStream(), outputStream);
+        }
 
-        convertAudioFileToAac(musicId, request.queryParams("fileType"));
+        convertAudioFileToAac(musicId, getFileExtension(musicPart));
     }
 
-    private static void convertAudioFileToAac( int musicId, String fileType) throws IOException {
-        FFmpeg ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
-        FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
-        String inputFile = musicId + fileType;
-        String outputFile = musicId + ".aac";
+    private static void convertAudioFileToAac(String musicId, String fileExtension) throws IOException {
+        FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
+        String inputFile = getAudioFilePath(musicId, fileExtension);
+        String outputFile = getAudioFilePath(musicId, ".aac");
 
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(inputFile)
                 .overrideOutputFiles(true)
                 .addOutput(outputFile)
-                .setFormat(".aac")
+                .setAudioCodec("aac")
                 .done();
 
-        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-        //Check performance. Can be replaced by executor.createJob(builder).run();
-        executor.createTwoPassJob(builder).run();
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
+        executor.createJob(builder).run();
 
-        trimAacFile();
+        deleteUnconvertedFile(inputFile);
+        trimAacFile(musicId, outputFile);
     }
 
-    private static void trimAacFile() {
+    private static void trimAacFile(String musicId, String inputFile) throws IOException {
+        FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
+        String outputFile = getAudioFilePath(musicId, ".m3u8");
 
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(inputFile)
+                .overrideOutputFiles(true)
+                .addOutput(outputFile)
+                .setAudioCodec("aac")
+                .setFormat("hls")
+                .setStartOffset(0, TimeUnit.SECONDS)
+                .addExtraArgs("-hls_time", "10")
+                .addExtraArgs("-hls_list_size", "0")
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
+        executor.createJob(builder).run();
+
+        deleteUnconvertedFile(inputFile);
+    }
+
+    private static String getAudioFilePath(String musicId, String fileExtension) {
+        return MUSIC_DIR + musicId + "/" + musicId + fileExtension;
+    }
+
+    static void deleteAudio(int musicId) throws IOException {
+        Path dir = Path.of(MUSIC_DIR + musicId);
+        try (Stream<Path> musicFiles = Files.walk(dir)) {
+            musicFiles
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+    }
+
+    static int getCoverId(int musicId, Connection conn) throws SQLException {
+        String sql = "SELECT cover_id FROM music WHERE music_id = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+
+        stmt.setInt(1, musicId);
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()) {
+            return rs.getInt("cover_id");
+        }
+
+        throw new SQLException("Image not found");
+    }
+
+    static LocalDate convertDailyRandomCookieToDate(String year, String month, String day) {
+        int convertedYear = convertToInt(year);
+        int convertedMonth = convertToInt(month);
+        int convertedDay = convertToInt(day);
+
+        return LocalDate.of(convertedYear, convertedMonth, convertedDay);
     }
 }
