@@ -1,5 +1,5 @@
 group = "github.otowave"
-version = "0.78"
+version = "0.82"
 
 plugins {
     id("java")
@@ -20,7 +20,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
-    implementation("org.sejda.imageio:webp-imageio:0.1.6")
+    implementation("com.github.gotson:webp-imageio:0.2.2")
 
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("org.slf4j:slf4j-simple:2.0.9")

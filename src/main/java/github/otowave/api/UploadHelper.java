@@ -42,9 +42,9 @@ public class UploadHelper {
         return fileName.substring(fileName.lastIndexOf('.'));
     }
 
-    public static void deleteUnconvertedFile(String dir) {
-        File audioFile = new File(dir);
-        audioFile.delete();
+    public static void deleteUnconvertedFile(String path) {
+        File file = new File(path);
+        file.delete();
     }
 
     public static int convertToInt(String str) {
