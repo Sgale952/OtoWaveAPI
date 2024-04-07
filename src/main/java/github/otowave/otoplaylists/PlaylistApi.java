@@ -107,10 +107,10 @@ public class PlaylistApi {
 
             int rowsAffected = stmt.executeUpdate();
             if(rowsAffected > 0) {
-                ImagesApi.delete(imageId);
                 if(softDelete == 0) {
                     deleteAllMusic(musicIds, req, res);
                 }
+                ImagesApi.delete(imageId);
 
                 res.status(200);
             }
