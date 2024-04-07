@@ -1,10 +1,18 @@
 package github.otowave.otoimages;
 
+import com.luciad.imageio.webp.WebPImageWriterSpi;
+import com.luciad.imageio.webp.WebPWriteParam;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Part;
 import spark.Request;
 import spark.utils.IOUtils;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.spi.ImageWriterSpi;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +22,7 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import static github.otowave.api.UploadHelper.*;
 
@@ -36,11 +45,39 @@ public class ImagesHandler {
 
     static void saveImageFile(Request req, String imageId) throws ServletException, IOException {
         Part imagePart = getStaticFilePart(req, "image");
+        String fileExtension = getFileExtension(imagePart);
         String fileName = imageId+getFileExtension(imagePart);
 
         try(OutputStream outputStream = new FileOutputStream(IMAGES_DIR + fileName)) {
             IOUtils.copy(imagePart.getInputStream(), outputStream);
         }
+
+        if(!fileExtension.equals(".gif") && !fileExtension.equals(".webp")) {
+            convertToWebp(imageId, fileExtension);
+        }
+    }
+
+    public static void convertToWebp(String imageId, String fileExtension) throws IOException {
+        String input = IMAGES_DIR+imageId+fileExtension;
+
+        File inputFile = new File(input);
+        File outputFile = new File(IMAGES_DIR+imageId+".webp");
+        Locale locale = new Locale("en", "US");
+
+        try(ImageOutputStream output = ImageIO.createImageOutputStream(outputFile)) {
+            BufferedImage image = ImageIO.read(inputFile);
+
+            ImageWriterSpi writerSpi = new WebPImageWriterSpi();
+            ImageWriter writer = writerSpi.createWriterInstance();
+
+            writer.setOutput(output);
+            WebPWriteParam webpWriteParam = new WebPWriteParam(locale);
+            writer.write(null, new IIOImage(image, null, null), webpWriteParam);
+
+            writer.dispose();
+        }
+
+        deleteUnconvertedFile(input);
     }
 
     static void deleteImageFile(int imageId) throws IOException {
@@ -70,8 +107,16 @@ class imageApplier {
         };
     }
 
-    private static String applyToUserAvatar() {return "UPDATE users SET avatar_id = ? WHERE user_id = ?";}
-    private static String applyToUserHeader() {return "UPDATE users SET header_id = ? WHERE user_id = ?";}
-    private static String applyToMusic() {return "UPDATE music SET cover_id = ? WHERE music_id = ?";}
-    private static String applyToPlaylist() {return "UPDATE playlists SET cover_id = ? WHERE playlist_id = ?";}
+    private static String applyToUserAvatar() {
+        return "UPDATE users SET avatar_id = ? WHERE user_id = ?";
+    }
+    private static String applyToUserHeader() {
+        return "UPDATE users SET header_id = ? WHERE user_id = ?";
+    }
+    private static String applyToMusic() {
+        return "UPDATE music SET cover_id = ? WHERE music_id = ?";
+    }
+    private static String applyToPlaylist() {
+        return "UPDATE playlists SET cover_id = ? WHERE playlist_id = ?";
+    }
 }

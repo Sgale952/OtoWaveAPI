@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -57,7 +56,7 @@ public class MusicHandler {
         FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
         executor.createJob(builder).run();
 
-        deleteOldAudioFile(inputFile);
+        deleteUnconvertedFile(inputFile);
         trimAacFile(musicId, outputFile);
     }
 
@@ -79,16 +78,11 @@ public class MusicHandler {
         FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
         executor.createJob(builder).run();
 
-        deleteOldAudioFile(inputFile);
+        deleteUnconvertedFile(inputFile);
     }
 
     private static String getAudioFilePath(String musicId, String fileExtension) {
         return MUSIC_DIR + musicId + "/" + musicId + fileExtension;
-    }
-
-    private static void deleteOldAudioFile(String dir) {
-        File audioFile = new File(dir);
-        audioFile.delete();
     }
 
     static void deleteAudio(int musicId) throws IOException {

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Part;
 import spark.Request;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -39,6 +40,11 @@ public class UploadHelper {
     public static String getFileExtension(Part filePart) {
         String fileName = filePart.getSubmittedFileName();
         return fileName.substring(fileName.lastIndexOf('.'));
+    }
+
+    public static void deleteUnconvertedFile(String dir) {
+        File audioFile = new File(dir);
+        audioFile.delete();
     }
 
     public static int convertToInt(String str) {
