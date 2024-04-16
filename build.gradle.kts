@@ -24,6 +24,10 @@ dependencies {
 
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("org.slf4j:slf4j-simple:2.0.9")
+
+    implementation ("io.jsonwebtoken:jjwt-api:0.11.2")
+    runtimeOnly ("io.jsonwebtoken:jjwt-impl:0.11.2")
+    runtimeOnly ("io.jsonwebtoken:jjwt-jackson:0.11.2")
 }
 
 tasks.jar {
