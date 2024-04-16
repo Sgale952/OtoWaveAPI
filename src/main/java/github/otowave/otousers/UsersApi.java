@@ -2,6 +2,7 @@ package github.otowave.otousers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import github.otowave.auntificathoin.Auntificathion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -69,6 +70,7 @@ public class UsersApi {
                 userId = rs.getString("user_id");
                 String hashedPasswordFromDB = rs.getString("passwrd");
                 if(userData.password().equals(hashedPasswordFromDB)) {
+                   String token = Auntificathion.generateToken(userId);
                     res.status(200);
                 }
                 else {
