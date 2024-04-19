@@ -4,12 +4,16 @@ import github.otowave.otoimages.ImagesApi;
 import github.otowave.otomusic.MusicApi;
 import github.otowave.otoplaylists.PlaylistApi;
 import github.otowave.otousers.UsersApi;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static github.otowave.api.UploadHelper.multipartConfig;
-import static spark.Spark.*;
 
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+
         ipAddress("172.24.80.146");
         port(4567);
         multipartConfig();
