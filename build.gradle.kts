@@ -22,7 +22,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.3")
+    developmentOnly ("org.springframework.boot:spring-boot-devtools")
+    implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly ("org.mariadb.jdbc:mariadb-java-client")
+    testImplementation ("org.springframework.boot:spring-boot-starter-test")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
