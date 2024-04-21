@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 /src/main/java/github/otowave/api/UnsecureData.java
 /src/main/resources/application.properties
-
+/src/main/java/DataSourceConfig.java
 ### IntelliJ IDEA ###
 .idea/
 *.iws
