@@ -1,6 +1,5 @@
 package github.otowave.api;
 
-import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Part;
 import spark.Request;
@@ -13,16 +12,6 @@ import static spark.Spark.before;
 import static spark.Spark.staticFiles;
 
 public class UploadHelper {
-    private static final String TEMP_DIR = "/home/otowave/data/temp/";
-
-    public static void multipartConfig() {
-        staticFiles.externalLocation(TEMP_DIR);
-
-        before((req, res) -> {
-            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement(TEMP_DIR));
-
-        });
-    }
 
     public static boolean haveAttribute(String attribute, Request req) {
         for (String attr : req.attributes()) {

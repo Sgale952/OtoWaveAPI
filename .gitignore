@@ -1,12 +1,13 @@
 .gradle
-.profileconfig.json
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+.profileconfig.json
 /src/main/java/github/otowave/api/UnsecureData.java
 /src/main/resources/application.properties
-/src/main/java/DataSourceConfig.java
+
 ### IntelliJ IDEA ###
 .idea/
 *.iws
@@ -15,7 +16,6 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
 
 ### Eclipse ###
 .apt_generated

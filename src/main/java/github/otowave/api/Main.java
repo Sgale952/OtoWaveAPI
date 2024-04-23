@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
 
-        ipAddress("172.24.80.146");
+        //ipAddress("172.24.80.146");
         port(4567);
         multipartConfig();
 
