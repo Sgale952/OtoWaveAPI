@@ -26,7 +26,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
     implementation("com.zaxxer:HikariCP:5.1.0")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+    runtimeOnly("org.postgresql:postgresql:42.7.3")
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
