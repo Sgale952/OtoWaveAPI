@@ -1,5 +1,5 @@
-group = "github.otowave"
-version = "0.2.0"
+group = "github.otowave.api"
+version = "0.2.1"
 
 plugins {
     id("java")

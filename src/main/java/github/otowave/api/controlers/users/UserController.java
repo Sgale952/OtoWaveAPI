@@ -1,6 +1,5 @@
 package github.otowave.api.controlers.users;
 
-import github.otowave.api.entities.users.UsersEntity;
 import github.otowave.api.repositories.users.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
