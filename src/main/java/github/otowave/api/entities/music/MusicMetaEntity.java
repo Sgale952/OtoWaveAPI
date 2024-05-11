@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "musicMeta", schema = "music")
 public class MusicMetaEntity {
@@ -12,6 +14,7 @@ public class MusicMetaEntity {
     private String tale;
     private int likes;
     private int listens;
+    private LocalDateTime uploaded;
 
     public MusicMetaEntity() {
 
@@ -43,5 +46,12 @@ public class MusicMetaEntity {
     }
     public void setListens(int listens) {
         this.listens = listens;
+    }
+
+    public LocalDateTime getUploaded() {
+        return uploaded;
+    }
+    public void setUploaded(LocalDateTime uploaded) {
+        this.uploaded = uploaded;
     }
 }
