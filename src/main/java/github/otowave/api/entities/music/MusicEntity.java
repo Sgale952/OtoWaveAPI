@@ -16,8 +16,7 @@ public class MusicEntity {
     private int coverID;
     private String title;
     private String genre;
-    private int econtent;
-    private LocalDateTime uploaded;
+    private boolean econtent;
 
     public MusicEntity() {
 
@@ -58,17 +57,10 @@ public class MusicEntity {
         this.genre = genre;
     }
 
-    public int getEcontent() {
+    public boolean getEcontent() {
         return econtent;
     }
-    public void setEcontent(int econtent) {
+    public void setEcontent(boolean econtent) {
         this.econtent = econtent;
-    }
-
-    public LocalDateTime getUploaded() {
-        return uploaded;
-    }
-    public void setUploaded(LocalDateTime uploaded) {
-        this.uploaded = uploaded;
     }
 }

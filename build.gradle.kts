@@ -1,5 +1,5 @@
 group = "github.otowave"
-version = "0.82"
+version = "0.2.0"
 
 plugins {
     id("java")
@@ -27,7 +27,6 @@ dependencies {
     implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
     implementation("com.zaxxer:HikariCP:5.1.0")
     runtimeOnly("org.postgresql:postgresql:42.7.3")
-    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("com.github.gotson:webp-imageio:0.2.2")
 }
