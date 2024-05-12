@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class TopFreshFacesMaker extends MusicFacesMaker {
+public class TopRecentFacesMaker extends MusicFacesMaker {
     @Autowired
     private MusicMetaRepo musicMetaRepo;
 
@@ -26,8 +26,8 @@ public class TopFreshFacesMaker extends MusicFacesMaker {
         return faceModels;
     }
 
-    public ArrayList<MusicFaceModel> getFreshMusicFaceModels(int page, String genre) {
-        Iterable<MusicMetaEntity> musicMetaEntities = getFreshMusic(page);
+    public ArrayList<MusicFaceModel> getRecentMusicFaceModels(int page, String genre) {
+        Iterable<MusicMetaEntity> musicMetaEntities = getRecentMusic(page);
         ArrayList<MusicFaceModel> faceModels = getFaceModels(musicMetaEntities);
 
         if(genre!=null) {
@@ -41,7 +41,7 @@ public class TopFreshFacesMaker extends MusicFacesMaker {
         return musicMetaRepo.findAllPerMonth(pageRequest);
     }
 
-    private Iterable<MusicMetaEntity> getFreshMusic(int page) {
+    private Iterable<MusicMetaEntity> getRecentMusic(int page) {
         Pageable pageRequest = PageRequest.of(page, 50, Sort.by(Sort.Direction.DESC, "uploaded"));
         return musicMetaRepo.findAll(pageRequest);
     }
