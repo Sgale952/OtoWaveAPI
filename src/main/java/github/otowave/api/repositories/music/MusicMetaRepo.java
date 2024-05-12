@@ -1,6 +1,5 @@
 package github.otowave.api.repositories.music;
 
-import github.otowave.api.entities.music.MusicEntity;
 import github.otowave.api.entities.music.MusicMetaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

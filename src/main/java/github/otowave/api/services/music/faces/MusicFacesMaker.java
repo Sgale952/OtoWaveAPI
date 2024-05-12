@@ -23,8 +23,8 @@ public class MusicFacesMaker {
         ArrayList<MusicFaceModel> faceModels = new ArrayList<>();
 
         for(MusicMetaEntity musicMetaEntity : musicEntities) {
-            Iterable<MusicEntity> musicEntity = musicRepo.findAllByMusicID(musicMetaEntity.getMusicID());
-            faceModels.add(makeFaceModel((MusicEntity) musicEntity));
+            Optional<MusicEntity> musicEntity = musicRepo.findById(musicMetaEntity.getMusicID());
+            faceModels.add(makeFaceModel(musicEntity.get()));
         }
         return faceModels;
     }
@@ -43,7 +43,7 @@ public class MusicFacesMaker {
     }
 
     private String getUsername(int userID) {
-        Optional<UsersProfileEntity> userProfile = usersProfileRepo.findNicknameByUserID(userID);
+        Optional<UsersProfileEntity> userProfile = usersProfileRepo.findById(userID);
         if (userProfile.isPresent()) {
             return userProfile.get().getNickname();
         }

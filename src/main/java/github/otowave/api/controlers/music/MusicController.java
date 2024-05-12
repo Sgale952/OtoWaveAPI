@@ -1,10 +1,9 @@
 package github.otowave.api.controlers.music;
 
-import github.otowave.api.controlers.Customizable;
 import github.otowave.api.entities.music.GenresEntity;
 import github.otowave.api.models.music.*;
 import github.otowave.api.repositories.music.*;
-import github.otowave.api.services.music.faces.TopFreshFacesMaker;
+import github.otowave.api.services.music.faces.TopRecentFacesMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +18,10 @@ public class MusicController {
     private MusicMetaRepo musicMetaRepo;
     @Autowired
     private GenresRepo genresRepo;
-    private final TopFreshFacesMaker topFreshFacesMaker;
+    private final TopRecentFacesMaker topRecentFacesMaker;
 
-    public MusicController(TopFreshFacesMaker topFreshFacesMaker) {
-        this.topFreshFacesMaker = topFreshFacesMaker;
+    public MusicController(TopRecentFacesMaker topRecentFacesMaker) {
+        this.topRecentFacesMaker = topRecentFacesMaker;
     }
 
     @GetMapping("/daily")
@@ -47,11 +46,11 @@ public class MusicController {
 
     @GetMapping("/top")
     private ArrayList<MusicFaceModel> top(@RequestParam int page, @RequestParam(required = false) String genre) {
-        return topFreshFacesMaker.getTopMusicFaceModels(page, genre);
+        return topRecentFacesMaker.getTopMusicFaceModels(page, genre);
     }
 
-    @GetMapping("/fresh")
-    private ArrayList<MusicFaceModel> fresh(@RequestParam int page, @RequestParam(required = false) String genre) {
-        return topFreshFacesMaker.getFreshMusicFaceModels(page, genre);
+    @GetMapping("/recent")
+    private ArrayList<MusicFaceModel> recent(@RequestParam int page, @RequestParam(required = false) String genre) {
+        return topRecentFacesMaker.getRecentMusicFaceModels(page, genre);
     }
 }
