@@ -1,14 +1,12 @@
 package github.otowave.api.controlers.music;
 
+import github.otowave.api.controlers.Customizable;
 import github.otowave.api.entities.music.GenresEntity;
 import github.otowave.api.models.music.*;
 import github.otowave.api.repositories.music.*;
 import github.otowave.api.services.music.faces.TopFreshFacesMaker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
