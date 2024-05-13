@@ -1,20 +1,20 @@
-package github.otowave.api.controlers.music;
+package github.otowave.api.controlers.albums;
 
 import github.otowave.api.controlers.Customizable;
-import github.otowave.api.entities.music.MusicEntity;
-import github.otowave.api.entities.music.MusicMetaEntity;
-import github.otowave.api.repositories.music.MusicMetaRepo;
-import github.otowave.api.repositories.music.MusicRepo;
+import github.otowave.api.entities.albums.AlbumsEntity;
+import github.otowave.api.entities.albums.AlbumsMetaEntity;
+import github.otowave.api.repositories.albums.AlbumsMetaRepo;
+import github.otowave.api.repositories.albums.AlbumsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/music/{sourceID}")
-public class MusicCustomizeController implements Customizable {
+@RequestMapping("/albums/{sourceID}")
+public class AlbumsCustomizeController implements Customizable {
     @Autowired
-    private MusicRepo musicRepo;
+    private AlbumsRepo albumsRepo;
     @Autowired
-    private MusicMetaRepo musicMetaRepo;
+    private AlbumsMetaRepo albumsMetaRepo;
 
     @Override
     @GetMapping("/profile")
@@ -31,17 +31,17 @@ public class MusicCustomizeController implements Customizable {
     @Override
     @PatchMapping("/change-name")
     public void changeName(@PathVariable int sourceID, @RequestParam String newName) {
-        MusicEntity musicEntity = getEntity(sourceID, musicRepo);
-        musicEntity.setTitle(newName);
-        musicRepo.save(musicEntity);
+        AlbumsEntity albumEntity = getEntity(sourceID, albumsRepo);
+        albumEntity.setTitle(newName);
+        albumsRepo.save(albumEntity);
     }
 
     @Override
     @PatchMapping("/change-tale")
     public void changeTale(@PathVariable int sourceID, @RequestParam String newTale) {
-        MusicMetaEntity musicMetaEntity = getEntity(sourceID, musicMetaRepo);
-        musicMetaEntity.setTale(newTale);
-        musicMetaRepo.save(musicMetaEntity);
+        AlbumsMetaEntity albumMetaEntity = getEntity(sourceID, albumsMetaRepo);
+        albumMetaEntity.setTale(newTale);
+        albumsMetaRepo.save(albumMetaEntity);
     }
 
     @Override

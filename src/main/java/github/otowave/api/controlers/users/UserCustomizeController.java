@@ -1,20 +1,19 @@
-package github.otowave.api.controlers.music;
+package github.otowave.api.controlers.users;
 
 import github.otowave.api.controlers.Customizable;
-import github.otowave.api.entities.music.MusicEntity;
-import github.otowave.api.entities.music.MusicMetaEntity;
-import github.otowave.api.repositories.music.MusicMetaRepo;
-import github.otowave.api.repositories.music.MusicRepo;
+import github.otowave.api.entities.users.UsersProfileEntity;
+import github.otowave.api.repositories.users.UsersProfileRepo;
+import github.otowave.api.repositories.users.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/music/{sourceID}")
-public class MusicCustomizeController implements Customizable {
+@RequestMapping("/users/{sourceID}")
+public class UserCustomizeController implements Customizable {
     @Autowired
-    private MusicRepo musicRepo;
+    private UsersRepo usersRepo;
     @Autowired
-    private MusicMetaRepo musicMetaRepo;
+    private UsersProfileRepo usersProfileRepo;
 
     @Override
     @GetMapping("/profile")
@@ -31,17 +30,17 @@ public class MusicCustomizeController implements Customizable {
     @Override
     @PatchMapping("/change-name")
     public void changeName(@PathVariable int sourceID, @RequestParam String newName) {
-        MusicEntity musicEntity = getEntity(sourceID, musicRepo);
-        musicEntity.setTitle(newName);
-        musicRepo.save(musicEntity);
+        UsersProfileEntity userEntity = getEntity(sourceID, usersProfileRepo);
+        userEntity.setNickname(newName);
+        usersProfileRepo.save(userEntity);
     }
 
     @Override
     @PatchMapping("/change-tale")
     public void changeTale(@PathVariable int sourceID, @RequestParam String newTale) {
-        MusicMetaEntity musicMetaEntity = getEntity(sourceID, musicMetaRepo);
-        musicMetaEntity.setTale(newTale);
-        musicMetaRepo.save(musicMetaEntity);
+        UsersProfileEntity userEntity = getEntity(sourceID, usersProfileRepo);
+        userEntity.setTale(newTale);
+        usersProfileRepo.save(userEntity);
     }
 
     @Override
