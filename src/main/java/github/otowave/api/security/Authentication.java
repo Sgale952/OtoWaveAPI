@@ -1,8 +1,23 @@
 package github.otowave.api.security;
 
-import java.util.Date;
+import github.otowave.api.routes.users.repositories.UsersRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Authentication {
+    @Autowired
+    private UsersRepo usersRepo;
+
+    //Проверка токена и возвращение userID
+    // В случае неуспешной аутентификации / авторизации выбрасывай ResponseStatusException(HttpStatus.СТАТУСЫ_ПОСМОТРИ_В_HttpStatus, "сообщение об ошибке"))
+    public static int auth(String token) {
+        return tokenDecrypt(token);
+    }
+
+    private static int tokenDecrypt(String token) {
+        int userID = 0;
+        return userID;
+    }
+
 /*    private static final String SECRET_KEY = "h+LpvpheyFqt1Zv3JoiEmV3JsjIsCpuGDb7sjq";
     private static final long EXPIRATION_TIME = 86400000; // 24 часа (в миллисекундах)
 
