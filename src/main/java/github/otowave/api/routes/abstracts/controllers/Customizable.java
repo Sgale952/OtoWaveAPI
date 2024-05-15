@@ -7,18 +7,22 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 public interface Customizable {
-    default <T> T getEntity(int sourceID, CrudRepository<T, Integer> repo) {
-        Optional<T> entity = repo.findById(sourceID);
-        return entity.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Object ["+sourceID+"] Not Found"));
+    String IMAGE_DIR = "D:\\Archive\\";
+
+    void profile(int itemID);
+
+    void resetImage(int itemID);
+
+    //void changeImage(int itemID, MultipartFile file);
+
+    void changeName(int itemID, String newName);
+
+    void changeTale(int itemID, String newTale);
+
+    void delete(int itemID);
+
+    default <T> T getItemEntity(int itemID, CrudRepository<T, Integer> repo) {
+        Optional<T> entity = repo.findById(itemID);
+        return entity.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item ["+itemID+"] Not Found"));
     }
-
-    void profile(int sourceID);
-
-    /*void changeImage(int sourceID, int prevImageID);*/
-
-    void changeName(int sourceID, String newName);
-
-    void changeTale(int sourceID, String newTale);
-
-    void delete(int sourceID);
 }

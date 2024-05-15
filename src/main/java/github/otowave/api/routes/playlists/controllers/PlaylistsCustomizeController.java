@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/playlists/{sourceID}")
+@RequestMapping("/playlists/{itemID}")
 public class PlaylistsCustomizeController implements Customizable {
     @Autowired
     private PlaylistsRepo playlistsRepo;
@@ -18,35 +18,41 @@ public class PlaylistsCustomizeController implements Customizable {
     
     @Override
     @GetMapping("/profile")
-    public void profile(@PathVariable int sourceID) {
+    public void profile(@PathVariable int itemID) {
         
+    }
+
+    @Override
+    @GetMapping("/reset-image")
+    public void resetImage(@PathVariable int itemID) {
+
     }
 
 /*    @Override
     @PostMapping("/change-image")
-    public void changeImage(@PathVariable int sourceID, @RequestParam int prevImageID) {
+    public void changeImage(@PathVariable int itemID, @RequestParam int prevImageID) {
 
     }*/
 
     @Override
     @PatchMapping("/change-name")
-    public void changeName(@PathVariable int sourceID, @RequestParam String newName) {
-        PlaylistsEntity playlistEntity = getEntity(sourceID, playlistsRepo);
+    public void changeName(@PathVariable int itemID, @RequestParam String newName) {
+        PlaylistsEntity playlistEntity = getItemEntity(itemID, playlistsRepo);
         playlistEntity.setTitle(newName);
         playlistsRepo.save(playlistEntity);
     }
 
     @Override
     @PatchMapping("/change-tale")
-    public void changeTale(@PathVariable int sourceID, @RequestParam String newTale) {
-        PlaylistsMetaEntity playlistMetaEntity = getEntity(sourceID, playlistsMetaRepo);
+    public void changeTale(@PathVariable int itemID, @RequestParam String newTale) {
+        PlaylistsMetaEntity playlistMetaEntity = getItemEntity(itemID, playlistsMetaRepo);
         playlistMetaEntity.setTale(newTale);
         playlistsMetaRepo.save(playlistMetaEntity);
     }
 
     @Override
     @DeleteMapping("/delete")
-    public void delete(@PathVariable int sourceID) {
+    public void delete(@PathVariable int itemID) {
 
     }
 }
