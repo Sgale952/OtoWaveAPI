@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MultipartConfig {
-    private static final String TEMP_DIR = "/home/otowave/data/temp/";
+    //private static final String TEMP_DIR = "/home/otowave/data/temp/";
+    private static final String TEMP_DIR = "D:\\Archive\\";
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

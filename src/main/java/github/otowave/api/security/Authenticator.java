@@ -3,7 +3,7 @@ package github.otowave.api.security;
 import github.otowave.api.routes.users.repositories.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class Authentication {
+public class Authenticator {
     @Autowired
     private UsersRepo usersRepo;
 
@@ -17,6 +17,8 @@ public class Authentication {
         int userID = 0;
         return userID;
     }
+
+    //Скорее всего этот класс ещё будет использоваться для входа в аккаунт
 
 /*    private static final String SECRET_KEY = "h+LpvpheyFqt1Zv3JoiEmV3JsjIsCpuGDb7sjq";
     private static final long EXPIRATION_TIME = 86400000; // 24 часа (в миллисекундах)
