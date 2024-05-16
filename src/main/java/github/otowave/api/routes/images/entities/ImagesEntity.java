@@ -13,7 +13,11 @@ public class ImagesEntity {
     private boolean animated;
 
     public ImagesEntity() {
+    }
 
+    public ImagesEntity(int uploaderID, boolean animated) {
+        this.uploaderID = uploaderID;
+        this.animated = animated;
     }
 
     public int getImageID() {

@@ -1,6 +1,6 @@
 package github.otowave.api.routes.albums.controllers;
 
-import github.otowave.api.routes.abstracts.controllers.Customizable;
+import github.otowave.api.routes.common.controllers.Customizable;
 import github.otowave.api.routes.albums.entities.AlbumsEntity;
 import github.otowave.api.routes.albums.entities.AlbumsMetaEntity;
 import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
@@ -21,18 +21,6 @@ public class AlbumsCustomizeController implements Customizable {
     public void profile(@PathVariable int itemID) {
 
     }
-
-    @Override
-    @GetMapping("/reset-image")
-    public void resetImage(@PathVariable int itemID) {
-
-    }
-
-/*    @Override
-    @PostMapping("/change-image")
-    public void changeImage(@PathVariable int itemID, @RequestParam int prevImageID) {
-
-    }*/
 
     @Override
     @PatchMapping("/change-name")

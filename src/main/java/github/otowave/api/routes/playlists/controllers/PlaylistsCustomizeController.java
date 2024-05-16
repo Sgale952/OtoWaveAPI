@@ -1,6 +1,6 @@
 package github.otowave.api.routes.playlists.controllers;
 
-import github.otowave.api.routes.abstracts.controllers.Customizable;
+import github.otowave.api.routes.common.controllers.Customizable;
 import github.otowave.api.routes.playlists.entities.PlaylistsEntity;
 import github.otowave.api.routes.playlists.entities.PlaylistsMetaEntity;
 import github.otowave.api.routes.playlists.repositories.PlaylistsMetaRepo;
@@ -21,18 +21,6 @@ public class PlaylistsCustomizeController implements Customizable {
     public void profile(@PathVariable int itemID) {
         
     }
-
-    @Override
-    @GetMapping("/reset-image")
-    public void resetImage(@PathVariable int itemID) {
-
-    }
-
-/*    @Override
-    @PostMapping("/change-image")
-    public void changeImage(@PathVariable int itemID, @RequestParam int prevImageID) {
-
-    }*/
 
     @Override
     @PatchMapping("/change-name")

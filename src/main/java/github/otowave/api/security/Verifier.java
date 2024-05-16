@@ -4,7 +4,7 @@ import static github.otowave.api.security.Authenticator.auth;
 import static github.otowave.api.security.RouteAccessor.checkRouteAccess;
 
 public class Verifier {
-    //Верификация пользователя. Класс для удобного вызова методов из пакета security
+    //TODO: Верификация пользователя. Класс для удобного вызова методов из пакета security
     public static int verify(String token) {
         int userID = auth(token);
         checkRouteAccess(userID);

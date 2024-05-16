@@ -1,4 +1,4 @@
-package github.otowave.api.routes.abstracts.controllers;
+package github.otowave.api.routes.common.controllers;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
@@ -7,13 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 public interface Customizable {
-    String IMAGE_DIR = "D:\\Archive\\";
-
     void profile(int itemID);
-
-    void resetImage(int itemID);
-
-    //void changeImage(int itemID, MultipartFile file);
 
     void changeName(int itemID, String newName);
 
