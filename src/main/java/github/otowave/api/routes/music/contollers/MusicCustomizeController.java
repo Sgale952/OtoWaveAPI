@@ -1,15 +1,12 @@
 package github.otowave.api.routes.music.contollers;
 
-import github.otowave.api.routes.abstracts.controllers.Customizable;
-import github.otowave.api.routes.images.services.ImageUploader;
+import github.otowave.api.routes.common.controllers.Customizable;
 import github.otowave.api.routes.music.entities.MusicEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import static github.otowave.api.security.Verifier.verify;
 
@@ -25,18 +22,6 @@ public class MusicCustomizeController implements Customizable {
     @GetMapping("/profile")
     public void profile(@PathVariable int itemID) {
 
-    }
-
-    @Override
-    @DeleteMapping("/reset-image")
-    public void resetImage(@PathVariable int itemID) {
-
-    }
-
-    @PostMapping("/change-image")
-    public void changeImage(@PathVariable int itemID, @RequestPart Mono<FilePart> image, @CookieValue String authToken) {
-        int userID = verify(authToken, itemID);
-        ImageUploader imageUploader = new ImageUploader(itemID, userID);
     }
 
     @Override

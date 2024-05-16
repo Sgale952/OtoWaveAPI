@@ -7,7 +7,7 @@ public class Authenticator {
     @Autowired
     private UsersRepo usersRepo;
 
-    //Проверка токена и возвращение userID
+    //TODO: Проверка токена и возвращение userID
     // В случае неуспешной аутентификации / авторизации выбрасывай ResponseStatusException(HttpStatus.СТАТУСЫ_ПОСМОТРИ_В_HttpStatus, "сообщение об ошибке"))
     public static int auth(String token) {
         return tokenDecrypt(token);

@@ -1,6 +1,6 @@
 package github.otowave.api.routes.users.controlers;
 
-import github.otowave.api.routes.abstracts.controllers.Customizable;
+import github.otowave.api.routes.common.controllers.Customizable;
 import github.otowave.api.routes.users.entities.UsersProfileEntity;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import github.otowave.api.routes.users.repositories.UsersRepo;
@@ -20,18 +20,6 @@ public class UserCustomizeController implements Customizable {
     public void profile(@PathVariable int itemID) {
 
     }
-
-    @Override
-    @GetMapping("/reset-image")
-    public void resetImage(@PathVariable int itemID) {
-
-    }
-
-/*    @Override
-    @PostMapping("/change-image")
-    public void changeImage(@PathVariable int itemID, @RequestParam int prevImageID) {
-
-    }*/
 
     @Override
     @PatchMapping("/change-name")
