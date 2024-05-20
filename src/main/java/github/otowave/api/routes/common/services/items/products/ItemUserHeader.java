@@ -1,4 +1,4 @@
-package github.otowave.api.routes.common.services.items.realizations;
+package github.otowave.api.routes.common.services.items.products;
 
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.models.ItemModel;

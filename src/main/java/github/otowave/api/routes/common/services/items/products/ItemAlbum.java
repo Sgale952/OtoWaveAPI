@@ -1,4 +1,4 @@
-package github.otowave.api.routes.common.services.items.realizations;
+package github.otowave.api.routes.common.services.items.products;
 
 import github.otowave.api.routes.albums.entities.AlbumsEntity;
 import github.otowave.api.routes.albums.repositories.AlbumsRepo;
