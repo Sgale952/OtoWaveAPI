@@ -1,6 +1,7 @@
 package github.otowave.api.routes.music.repositories;
 
 import github.otowave.api.routes.music.entities.MusicEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface MusicRepo extends CrudRepository<MusicEntity, Integer> {}
+public interface MusicRepo extends ReactiveCrudRepository<MusicEntity, Integer> {
+}

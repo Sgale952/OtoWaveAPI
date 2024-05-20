@@ -7,8 +7,7 @@ import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import static github.otowave.api.security.Verifier.verify;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/music/{itemID}")
@@ -26,7 +25,7 @@ public class MusicCustomizeController implements Customizable {
 
     @Override
     @PatchMapping("/change-name")
-    public void changeName(@PathVariable int itemID, @RequestParam String newName) {
+    public Mono<Void> changeName(@PathVariable int itemID, @RequestParam String newName) {
         MusicEntity musicEntity = getItemEntity(itemID, musicRepo);
         musicEntity.setTitle(newName);
         musicRepo.save(musicEntity);
