@@ -2,7 +2,7 @@ package github.otowave.api.routes.common.services.items.factory;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.common.models.ItemTypes;
-import github.otowave.api.routes.common.services.items.realizations.*;
+import github.otowave.api.routes.common.services.items.products.*;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import reactor.core.publisher.Mono;
 
