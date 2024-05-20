@@ -4,14 +4,11 @@ import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import github.otowave.api.routes.images.entities.ImagesEntity;
 import github.otowave.api.routes.common.models.ItemModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
 public class ImageApplier {
-    @Autowired
-    ImageUploader imageUploader;
 
     public ImageApplier() {
     }
