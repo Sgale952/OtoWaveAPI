@@ -8,25 +8,33 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static github.otowave.api.configuration.StaticContentDirs.IMAGES_DIR;
+
 @Service
-public class ImageUploader {
-    private final String IMAGES_DIR = "D:\\Archive\\";
+public class ImageSaver {
     @Autowired
     ImagesRepo imagesRepo;
 
-    public ImageUploader() {
+    public ImageSaver() {
     }
 
-    Mono<ImagesEntity> uploadImage(ItemModel itemModel, Mono<FilePart> imageFile) {
-        return imageFile
-                .flatMap(file -> createImageEntity(itemModel, file))
-                .flatMap(this::saveImageEntity);
+    Mono<ImagesEntity> saveImage(ItemModel itemModel, Mono<FilePart> imageFile) {
+        return imageFile.flatMap(file -> {
+            Mono<ImagesEntity> newImageEntity = createImageEntity(itemModel, file).flatMap(this::saveImageEntity);
+            Mono<Integer> newImageID = newImageEntity.flatMap(this::getUploadedImageID);
+            newImageID.flatMap(imageID -> saveImageFile(imageFile, imageID));
+            return newImageEntity;
+        });
     }
 
     private Mono<ImagesEntity> createImageEntity(ItemModel itemModel, FilePart imageFile) {
         return Mono.fromCallable(() -> {
-            boolean animated = isAnimated(imageFile.filename());
-            return new ImagesEntity(itemModel.uploaderID(), animated);
+            int userID = itemModel.uploaderID();
+            boolean animated = isImageAnimated(imageFile.filename());
+            return new ImagesEntity(userID, animated);
         });
     }
 
@@ -34,21 +42,29 @@ public class ImageUploader {
         return imagesRepo.save(imageEntity);
     }
 
-    private boolean isAnimated(String filename) {
+    private Mono<Integer> getUploadedImageID(ImagesEntity imageEntity) {
+        return Mono.just(imageEntity.getImageID());
+    }
+
+    public Mono<Void> saveImageFile(Mono<FilePart> imageFile, int imageID) {
+        return imagePathBuilder(imageFile, imageID)
+                .flatMap(path -> imageFile.flatMap(file -> file.transferTo(path)));
+    }
+
+    private Mono<Path> imagePathBuilder(Mono<FilePart> imageFile, int imageID) {
+        return imageFile.map(file -> Paths.get(IMAGES_DIR.getDir() + imageID + getFileExtension(file.filename())));
+    }
+
+    private String getFileExtension(String filename) {
+        int extensionIndex = filename.lastIndexOf('.');
+        return filename.substring(extensionIndex);
+    }
+
+    private boolean isImageAnimated(String filename) {
         return filename.endsWith(".gif");
     }
-
-/*    private void saveImageFile() {
-        imageFile.flatMap(file -> {
-            file.transferTo(Paths.get(IMAGES_DIR + file.filename()));
-            fileName = file.filename();
-            return imageFile;
-        }).doOnError(error -> {
-            throw new FileSaveException("Image file not saved", error);
-        });
-    }
-
-    public void convertImageFileToWebp() throws IOException {
+}
+/*    public void convertImageFileToWebp() throws IOException {
         final String input = IMAGES_DIR;
         imageFile.flatMap(file -> input += file.filename());
 
@@ -91,4 +107,3 @@ public class ImageUploader {
         File file = new File(path);
         file.delete();
     }*/
-}
