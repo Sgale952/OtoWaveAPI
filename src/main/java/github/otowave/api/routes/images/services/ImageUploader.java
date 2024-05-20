@@ -1,73 +1,54 @@
 package github.otowave.api.routes.images.services;
 
-import com.luciad.imageio.webp.WebPImageWriterSpi;
-import com.luciad.imageio.webp.WebPWriteParam;
-import github.otowave.api.exceptions.FileSaveException;
-import github.otowave.api.exceptions.InvalidItemTypeException;
-import github.otowave.api.routes.images.models.ItemModel;
+import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.images.entities.ImagesEntity;
 import github.otowave.api.routes.images.repositories.ImagesRepo;
-import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
-import javax.imageio.spi.ImageWriterSpi;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Locale;
-
 @Service
 public class ImageUploader {
     private final String IMAGES_DIR = "D:\\Archive\\";
-    private ItemModel itemModel;
-    private int userID;
-    private int imageID;
-    private boolean animated;
-    private ImagesEntity imageEntity;
-    private Mono<FilePart> imageFile;
     @Autowired
     ImagesRepo imagesRepo;
 
     public ImageUploader() {
     }
 
-    public ImageUploader(ItemModel itemModel, ImagesEntity imageEntity, Mono<FilePart> imageFile) {
-        this.itemModel = itemModel;
-        this.userID = imageEntity.getUploaderID();
-        this.animated = imageEntity.isAnimated();
-        this.imageFile = imageFile;
-        this.imageEntity = imageEntity;
+    Mono<ImagesEntity> uploadImage(ItemModel itemModel, Mono<FilePart> imageFile) {
+        return imageFile
+                .flatMap(file -> createImageEntity(itemModel, file))
+                .flatMap(this::saveImageEntity);
     }
 
-    private void applyImageToItem() throws InvalidItemTypeException {
-        new ItemFactoryImp().makeItem(itemModel).changeImage(imageID);
+    private Mono<ImagesEntity> createImageEntity(ItemModel itemModel, FilePart imageFile) {
+        return Mono.fromCallable(() -> {
+            boolean animated = isAnimated(imageFile.filename());
+            return new ImagesEntity(itemModel.uploaderID(), animated);
+        });
     }
 
-    private void setImageID() {
-         this.imageID = imageEntity.getImageID();
-    }
-
-    private ImagesEntity saveImageEntity() {
+    private Mono<ImagesEntity> saveImageEntity(ImagesEntity imageEntity) {
         return imagesRepo.save(imageEntity);
     }
 
-    private void saveImageFile() {
-        imageFile.flatMap(file -> file.transferTo(Paths.get(IMAGES_DIR +file.filename()))).doOnError(error -> {
+    private boolean isAnimated(String filename) {
+        return filename.endsWith(".gif");
+    }
+
+/*    private void saveImageFile() {
+        imageFile.flatMap(file -> {
+            file.transferTo(Paths.get(IMAGES_DIR + file.filename()));
+            fileName = file.filename();
+            return imageFile;
+        }).doOnError(error -> {
             throw new FileSaveException("Image file not saved", error);
         });
     }
 
-/*    public void convertImageFileToWebp() throws IOException {
+    public void convertImageFileToWebp() throws IOException {
         final String input = IMAGES_DIR;
         imageFile.flatMap(file -> input += file.filename());
 

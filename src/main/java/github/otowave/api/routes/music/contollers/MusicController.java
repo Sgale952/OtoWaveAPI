@@ -5,7 +5,6 @@ import github.otowave.api.routes.music.models.*;
 import github.otowave.api.routes.music.repositories.GenresRepo;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
-import github.otowave.api.routes.music.repositories.*;
 import github.otowave.api.routes.music.services.faces.TopRecentFacesMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

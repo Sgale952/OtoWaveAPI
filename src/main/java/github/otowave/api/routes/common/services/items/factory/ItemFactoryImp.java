@@ -1,22 +1,21 @@
 package github.otowave.api.routes.common.services.items.factory;
 
-import github.otowave.api.exceptions.InvalidItemTypeException;
-import github.otowave.api.routes.images.models.ItemModel;
-import github.otowave.api.routes.common.services.items.ItemAlbum;
-import github.otowave.api.routes.common.services.items.ItemMusic;
-import github.otowave.api.routes.common.services.items.ItemPlaylist;
-import github.otowave.api.routes.common.services.items.ItemUser;
+import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.ItemTypes;
+import github.otowave.api.routes.common.services.items.realizations.*;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
+import reactor.core.publisher.Mono;
 
 public class ItemFactoryImp implements ItemFactory {
     @Override
-    public Item makeItem(ItemModel itemModel) throws InvalidItemTypeException {
-        String itemType = itemModel.itemType();
+    public Mono<Item> makeItem(ItemModel itemModel) {
+        ItemTypes itemType = itemModel.itemType();
         return switch (itemType) {
-            case "music" -> new ItemMusic(itemModel);
-            case "playlist" -> new ItemPlaylist(itemModel);
-            case "album" -> new ItemAlbum(itemModel);
-            case "user" -> new ItemUser(itemModel);
-            default -> throw new InvalidItemTypeException(String.format("Invalid item type: [%s]", itemType));
+            case MUSIC -> Mono.just(new ItemMusic(itemModel, DefaultImageIDs.MUSIC_COVER));
+            case PLAYLIST -> Mono.just(new ItemPlaylist(itemModel, DefaultImageIDs.PLAYLIST_COVER));
+            case ALBUM -> Mono.just(new ItemAlbum(itemModel, DefaultImageIDs.ALBUM_COVER));
+            case USER_AVATAR -> Mono.just(new ItemUserAvatar(itemModel, DefaultImageIDs.USER_AVATAR));
+            case USER_HEADER -> Mono.just(new ItemUserHeader(itemModel, DefaultImageIDs.USER_HEADER));
         };
     }
 }
