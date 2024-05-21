@@ -8,8 +8,6 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.security.Verifier.verify;
-
 @RestController
 @RequestMapping("/images/{itemType}/{itemID}")
 public class ImageController {
@@ -18,11 +16,10 @@ public class ImageController {
 
     @PostMapping("/change-image")
     public Mono<Void> changeImage(@PathVariable String itemType, @PathVariable int itemID,
-                                  @RequestPart Mono<FilePart> image, @CookieValue String authToken) {
-        return image.flatMap(file -> {
-            int userID = verify(authToken, itemID);
-            ItemModel itemModel = new ItemModel(ItemTypes.valueOf(itemType), itemID, userID);
-            return imageUploader.uploadImage(itemModel, image);
+                                  @RequestPart Mono<FilePart> imageFile, @CookieValue String authToken) {
+        return imageFile.flatMap(file -> {
+            ItemModel itemModel = new ItemModel(ItemTypes.valueOf(itemType), itemID, authToken);
+            return imageUploader.uploadImage(itemModel, imageFile);
         });
     }
 }

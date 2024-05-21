@@ -4,7 +4,7 @@ public enum ItemTypes {
     MUSIC("music"),
     PLAYLIST("playlist"),
     ALBUM("album"),
-    USER_AVATAR("userAvatar"),
+    USER("user"),
     USER_HEADER("userHeader");
 
     ItemTypes(String type) {
