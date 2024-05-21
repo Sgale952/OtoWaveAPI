@@ -1,4 +1,4 @@
-package github.otowave.api.routes.images.services;
+package github.otowave.api.routes.images.services.upload;
 
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
@@ -13,14 +13,14 @@ public class ImageApplier {
     public ImageApplier() {
     }
 
-    void applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
-        imageEntity
-                .flatMap(entity -> getUploadedImageID(entity)
+    protected Mono<Void> applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
+        return imageEntity
+                .flatMap(entity -> getImageID(entity)
                         .flatMap(newImageID -> changeItemImage(getItemFromModel(itemModel), newImageID)))
-                .subscribe();
+                .then();
     }
 
-    private Mono<Integer> getUploadedImageID(ImagesEntity imageEntity) {
+    private Mono<Integer> getImageID(ImagesEntity imageEntity) {
         return Mono.just(imageEntity.getImageID());
     }
 
