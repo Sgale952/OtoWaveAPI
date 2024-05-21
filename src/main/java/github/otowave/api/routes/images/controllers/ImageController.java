@@ -2,6 +2,8 @@ package github.otowave.api.routes.images.controllers;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.common.models.ItemTypes;
+import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import github.otowave.api.routes.images.services.upload.ImageUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
@@ -13,6 +15,12 @@ import reactor.core.publisher.Mono;
 public class ImageController {
     @Autowired
     ImageUploader imageUploader;
+
+    @PostMapping("/reset-image")
+    public Mono<Void> resetImage(@PathVariable String itemType, @PathVariable int itemID,
+                                  @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(ItemTypes.valueOf(itemType), itemID, authToken).flatMap(Item::resetImage);
+    }
 
     @PostMapping("/change-image")
     public Mono<Void> changeImage(@PathVariable String itemType, @PathVariable int itemID,
