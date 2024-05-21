@@ -1,4 +1,4 @@
-package github.otowave.api.routes.images.services;
+package github.otowave.api.routes.images.services.upload;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.images.entities.ImagesEntity;
@@ -21,7 +21,7 @@ public class ImageSaver {
     public ImageSaver() {
     }
 
-    Mono<ImagesEntity> saveImage(ItemModel itemModel, Mono<FilePart> imageFile) {
+    protected Mono<ImagesEntity> saveImage(ItemModel itemModel, Mono<FilePart> imageFile) {
         return imageFile.flatMap(file -> {
             Mono<ImagesEntity> newImageEntity = createImageEntity(itemModel, file).flatMap(this::saveImageEntity);
             Mono<Integer> newImageID = newImageEntity.flatMap(this::getUploadedImageID);
@@ -46,7 +46,7 @@ public class ImageSaver {
         return Mono.just(imageEntity.getImageID());
     }
 
-    public Mono<Void> saveImageFile(Mono<FilePart> imageFile, int imageID) {
+    private Mono<Void> saveImageFile(Mono<FilePart> imageFile, int imageID) {
         return imagePathBuilder(imageFile, imageID)
                 .flatMap(path -> imageFile.flatMap(file -> file.transferTo(path)));
     }
@@ -64,46 +64,3 @@ public class ImageSaver {
         return filename.endsWith(".gif");
     }
 }
-/*    public void convertImageFileToWebp() throws IOException {
-        final String input = IMAGES_DIR;
-        imageFile.flatMap(file -> input += file.filename());
-
-        File inputFile = new File(input);
-        File outputFile = new File(IMAGES_DIR+imageID+".webp");
-        Locale locale = new Locale("en", "US");
-
-        try(ImageOutputStream output = ImageIO.createImageOutputStream(outputFile)) {
-            BufferedImage image = ImageIO.read(inputFile);
-
-            ImageWriterSpi writerSpi = new WebPImageWriterSpi();
-            ImageWriter writer = writerSpi.createWriterInstance();
-
-            writer.setOutput(output);
-            WebPWriteParam webpWriteParam = new WebPWriteParam(locale);
-            writer.write(null, new IIOImage(image, null, null), webpWriteParam);
-
-            writer.dispose();
-        }
-
-        deleteUnconvertedFile(input);
-    }
-
-    private void deleteImageFile(int imageId) throws IOException {
-        File dir = new File(IMAGES_DIR);
-        File[] files = dir.listFiles();
-
-        assert files != null;
-        for(File file : files) {
-            int indexExtension = file.getName().lastIndexOf('.');
-            if(indexExtension >= 0 && file.getName().substring(0, indexExtension).equals(String.valueOf(imageId))) {
-                Path filePath = Path.of(file.getAbsolutePath());
-                Files.delete(filePath);
-                break;
-            }
-        }
-    }
-
-    public static void deleteUnconvertedFile(String path) {
-        File file = new File(path);
-        file.delete();
-    }*/
