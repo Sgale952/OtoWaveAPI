@@ -1,47 +1,39 @@
 package github.otowave.api.routes.music.contollers;
 
-import github.otowave.api.routes.common.controllers.Customizable;
-import github.otowave.api.routes.music.entities.MusicEntity;
-import github.otowave.api.routes.music.entities.MusicMetaEntity;
-import github.otowave.api.routes.music.repositories.MusicMetaRepo;
-import github.otowave.api.routes.music.repositories.MusicRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import github.otowave.api.routes.common.services.items.Customizable;
+import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import static github.otowave.api.routes.common.models.ItemTypes.MUSIC;
+
 @RestController
 @RequestMapping("/music/{itemID}")
-public class MusicCustomizeController implements Customizable {
-    @Autowired
-    private MusicRepo musicRepo;
-    @Autowired
-    private MusicMetaRepo musicMetaRepo;
-
-    @Override
+public class MusicCustomizeController {
     @GetMapping("/profile")
-    public void profile(@PathVariable int itemID) {
-
+    public Mono<Void> profile(@PathVariable int itemID) {
+        return new ItemFactoryImp().makeOpenItem(MUSIC, itemID)
+                .flatMap(Customizable::profile);
     }
 
-    @Override
     @PatchMapping("/change-name")
-    public Mono<Void> changeName(@PathVariable int itemID, @RequestParam String newName) {
-        MusicEntity musicEntity = getItemEntity(itemID, musicRepo);
-        musicEntity.setTitle(newName);
-        musicRepo.save(musicEntity);
+    public Mono<Void> changeName(@PathVariable int itemID, @RequestParam String newName,
+                                 @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(MUSIC, itemID, authToken)
+                .flatMap(item -> item.changeName(newName));
     }
 
-    @Override
     @PatchMapping("/change-tale")
-    public void changeTale(@PathVariable int itemID, @RequestParam String newTale) {
-        MusicMetaEntity musicMetaEntity = getItemEntity(itemID, musicMetaRepo);
-        musicMetaEntity.setTale(newTale);
-        musicMetaRepo.save(musicMetaEntity);
+    public Mono<Void> changeTale(@PathVariable int itemID, @RequestParam String newTale,
+                                 @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(MUSIC, itemID, authToken)
+                .flatMap(item -> item.changeTale(newTale));
     }
 
-    @Override
     @DeleteMapping("/delete")
-    public void delete(@PathVariable int itemID) {
-
+    public Mono<Void> delete(@PathVariable int itemID,
+                             @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(MUSIC, itemID, authToken)
+                .flatMap(Customizable::delete);
     }
 }

@@ -1,7 +1,7 @@
 package github.otowave.api.routes.albums.repositories;
 
 import github.otowave.api.routes.albums.entities.AlbumsMetaEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface AlbumsMetaRepo extends CrudRepository<AlbumsMetaEntity, Integer> {
+public interface AlbumsMetaRepo extends ReactiveCrudRepository<AlbumsMetaEntity, Integer> {
 }

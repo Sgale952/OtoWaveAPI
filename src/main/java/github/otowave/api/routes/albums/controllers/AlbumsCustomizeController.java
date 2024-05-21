@@ -1,46 +1,39 @@
 package github.otowave.api.routes.albums.controllers;
 
-import github.otowave.api.routes.common.controllers.Customizable;
-import github.otowave.api.routes.albums.entities.AlbumsEntity;
-import github.otowave.api.routes.albums.entities.AlbumsMetaEntity;
-import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
-import github.otowave.api.routes.albums.repositories.AlbumsRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import github.otowave.api.routes.common.services.items.Customizable;
+import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+import static github.otowave.api.routes.common.models.ItemTypes.ALBUM;
 
 @RestController
 @RequestMapping("/albums/{itemID}")
-public class AlbumsCustomizeController implements Customizable {
-    @Autowired
-    private AlbumsRepo albumsRepo;
-    @Autowired
-    private AlbumsMetaRepo albumsMetaRepo;
-
-    @Override
+public class AlbumsCustomizeController {
     @GetMapping("/profile")
-    public void profile(@PathVariable int itemID) {
-
+    public Mono<Void> profile(@PathVariable int itemID) {
+        return new ItemFactoryImp().makeOpenItem(ALBUM, itemID)
+                .flatMap(Customizable::profile);
     }
 
-    @Override
     @PatchMapping("/change-name")
-    public void changeName(@PathVariable int itemID, @RequestParam String newName) {
-        AlbumsEntity albumEntity = getItemEntity(itemID, albumsRepo);
-        albumEntity.setTitle(newName);
-        albumsRepo.save(albumEntity);
+    public Mono<Void> changeName(@PathVariable int itemID, @RequestParam String newName,
+                                 @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(ALBUM, itemID, authToken)
+                .flatMap(item -> item.changeName(newName));
     }
 
-    @Override
     @PatchMapping("/change-tale")
-    public void changeTale(@PathVariable int itemID, @RequestParam String newTale) {
-        AlbumsMetaEntity albumMetaEntity = getItemEntity(itemID, albumsMetaRepo);
-        albumMetaEntity.setTale(newTale);
-        albumsMetaRepo.save(albumMetaEntity);
+    public Mono<Void> changeTale(@PathVariable int itemID, @RequestParam String newTale,
+                                 @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(ALBUM, itemID, authToken)
+                .flatMap(item -> item.changeTale(newTale));
     }
 
-    @Override
     @DeleteMapping("/delete")
-    public void delete(@PathVariable int itemID) {
-
+    public Mono<Void> delete(@PathVariable int itemID,
+                             @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(ALBUM, itemID, authToken)
+                .flatMap(Customizable::delete);
     }
 }

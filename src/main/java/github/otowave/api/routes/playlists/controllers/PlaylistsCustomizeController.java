@@ -1,46 +1,40 @@
 package github.otowave.api.routes.playlists.controllers;
 
-import github.otowave.api.routes.common.controllers.Customizable;
-import github.otowave.api.routes.playlists.entities.PlaylistsEntity;
-import github.otowave.api.routes.playlists.entities.PlaylistsMetaEntity;
-import github.otowave.api.routes.playlists.repositories.PlaylistsMetaRepo;
-import github.otowave.api.routes.playlists.repositories.PlaylistsRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import github.otowave.api.routes.common.services.items.Customizable;
+import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
+
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+import static github.otowave.api.routes.common.models.ItemTypes.PLAYLIST;
 
 @RestController
 @RequestMapping("/playlists/{itemID}")
-public class PlaylistsCustomizeController implements Customizable {
-    @Autowired
-    private PlaylistsRepo playlistsRepo;
-    @Autowired
-    private PlaylistsMetaRepo playlistsMetaRepo;
-    
-    @Override
+public class PlaylistsCustomizeController {
     @GetMapping("/profile")
-    public void profile(@PathVariable int itemID) {
-        
+    public Mono<Void> profile(@PathVariable int itemID) {
+        return new ItemFactoryImp().makeOpenItem(PLAYLIST, itemID)
+                .flatMap(Customizable::profile);
     }
 
-    @Override
     @PatchMapping("/change-name")
-    public void changeName(@PathVariable int itemID, @RequestParam String newName) {
-        PlaylistsEntity playlistEntity = getItemEntity(itemID, playlistsRepo);
-        playlistEntity.setTitle(newName);
-        playlistsRepo.save(playlistEntity);
+    public Mono<Void> changeName(@PathVariable int itemID, @RequestParam String newName,
+                                 @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(PLAYLIST, itemID, authToken)
+                .flatMap(item -> item.changeName(newName));
     }
 
-    @Override
     @PatchMapping("/change-tale")
-    public void changeTale(@PathVariable int itemID, @RequestParam String newTale) {
-        PlaylistsMetaEntity playlistMetaEntity = getItemEntity(itemID, playlistsMetaRepo);
-        playlistMetaEntity.setTale(newTale);
-        playlistsMetaRepo.save(playlistMetaEntity);
+    public Mono<Void> changeTale(@PathVariable int itemID, @RequestParam String newTale,
+                                 @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(PLAYLIST, itemID, authToken)
+                .flatMap(item -> item.changeTale(newTale));
     }
 
-    @Override
     @DeleteMapping("/delete")
-    public void delete(@PathVariable int itemID) {
-
+    public Mono<Void> delete(@PathVariable int itemID,
+                             @CookieValue String authToken) {
+        return new ItemFactoryImp().makeCloseItem(PLAYLIST, itemID, authToken)
+                .flatMap(Customizable::delete);
     }
 }
