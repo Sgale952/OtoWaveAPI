@@ -1,10 +1,8 @@
 package github.otowave.api.routes.playlists.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "playlistsMeta", schema = "playlists")
 public class PlaylistsMetaEntity {
     @Id
@@ -13,7 +11,6 @@ public class PlaylistsMetaEntity {
     private int likes;
 
     public PlaylistsMetaEntity() {
-
     }
 
     public int getPlaylistID() {

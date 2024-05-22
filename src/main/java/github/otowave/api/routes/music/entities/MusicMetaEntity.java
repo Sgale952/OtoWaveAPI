@@ -1,12 +1,10 @@
 package github.otowave.api.routes.music.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "musicMeta", schema = "music")
 public class MusicMetaEntity {
     @Id
@@ -17,7 +15,6 @@ public class MusicMetaEntity {
     private LocalDateTime uploaded;
 
     public MusicMetaEntity() {
-
     }
 
     public int getMusicID() {

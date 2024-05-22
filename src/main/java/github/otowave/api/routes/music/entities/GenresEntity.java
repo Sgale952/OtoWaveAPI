@@ -1,14 +1,15 @@
 package github.otowave.api.routes.music.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "genres", schema = "music")
 public class GenresEntity {
     @Id
     private String genreID;
+
+    public GenresEntity() {
+    }
 
     public String getGenreID() {
         return genreID;

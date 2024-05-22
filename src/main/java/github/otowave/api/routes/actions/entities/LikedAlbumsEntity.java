@@ -1,12 +1,10 @@
 package github.otowave.api.routes.actions.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "likedAlbums", schema = "actions")
 public class LikedAlbumsEntity {
     @Id
@@ -15,7 +13,6 @@ public class LikedAlbumsEntity {
     private LocalDateTime liked;
 
     public LikedAlbumsEntity() {
-
     }
 
     public int getUserID() {

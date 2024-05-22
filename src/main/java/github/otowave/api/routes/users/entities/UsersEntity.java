@@ -1,10 +1,8 @@
 package github.otowave.api.routes.users.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "users", schema = "users")
 public class UsersEntity {
     @Id
@@ -15,7 +13,6 @@ public class UsersEntity {
     private String accessRole;
 
     public UsersEntity() {
-
     }
 
     public int getUserID() {
