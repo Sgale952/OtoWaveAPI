@@ -4,7 +4,7 @@ import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.common.models.ItemTypes;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
-import github.otowave.api.routes.images.services.upload.ImageUploader;
+import github.otowave.api.routes.images.services.ImageUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package github.otowave.api.routes.images.services.upload;
+package github.otowave.api.routes.images.services;
 
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;

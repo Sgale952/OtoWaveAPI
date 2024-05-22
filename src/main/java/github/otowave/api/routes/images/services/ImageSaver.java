@@ -1,4 +1,4 @@
-package github.otowave.api.routes.images.services.upload;
+package github.otowave.api.routes.images.services;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.images.entities.ImagesEntity;
