@@ -3,7 +3,7 @@ package github.otowave.api.routes.playlists.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "playlistsMeta", schema = "playlists")
+@Table(name = "playlists_meta", schema = "playlists")
 public class PlaylistsMetaEntity {
     @Id
     private int playlistID;
