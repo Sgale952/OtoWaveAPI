@@ -1,4 +1,4 @@
-package github.otowave.api.routes.images.services.upload;
+package github.otowave.api.routes.images.services;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class ImageUploader {
 
     public ImageUploader() {
     }
-
+    //TODO: Добавить логику удаления прошлого изображения
     public Mono<Void> uploadImage(ItemModel itemModel, Mono<FilePart> imageFile) {
         return imageSaver.saveImage(itemModel, imageFile)
                 .flatMap(imageEntity -> imageApplier.applyImageToItem(itemModel, Mono.just(imageEntity))

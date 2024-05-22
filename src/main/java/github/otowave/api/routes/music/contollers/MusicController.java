@@ -8,8 +8,7 @@ import github.otowave.api.routes.music.repositories.MusicRepo;
 import github.otowave.api.routes.music.services.faces.TopRecentFacesMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/music")
@@ -36,23 +35,18 @@ public class MusicController {
         return new SubsNewModel();
     }
 
-/*    @GetMapping("/{musicID}/face")
-    private MusicFaceModel face() {
-        return new MusicFaceModel();
-    }*/
-
     @GetMapping("/genres")
-    private Iterable<GenresEntity> genres() {
+    private Flux<GenresEntity> genres() {
         return genresRepo.findAll();
     }
 
     @GetMapping("/top")
-    private ArrayList<MusicFaceModel> top(@RequestParam int page, @RequestParam(required = false) String genre) {
+    private Flux<MusicFaceModel> top(@RequestParam int page, @RequestParam(required = false) String genre) {
         return topRecentFacesMaker.getTopMusicFaceModels(page, genre);
     }
 
     @GetMapping("/recent")
-    private ArrayList<MusicFaceModel> recent(@RequestParam int page, @RequestParam(required = false) String genre) {
+    private Flux<MusicFaceModel> recent(@RequestParam int page, @RequestParam(required = false) String genre) {
         return topRecentFacesMaker.getRecentMusicFaceModels(page, genre);
     }
 }

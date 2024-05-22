@@ -1,4 +1,4 @@
-package github.otowave.api.routes.images.services.upload;
+package github.otowave.api.routes.images.services;
 
 import com.luciad.imageio.webp.WebPImageWriterSpi;
 import com.luciad.imageio.webp.WebPWriteParam;
