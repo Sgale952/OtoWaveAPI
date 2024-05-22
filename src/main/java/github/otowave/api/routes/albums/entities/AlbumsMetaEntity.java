@@ -3,7 +3,7 @@ package github.otowave.api.routes.albums.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "albumsMeta", schema = "albums")
+@Table(name = "albums_meta", schema = "albums")
 public class AlbumsMetaEntity {
     @Id
     private int albumsID;
