@@ -1,10 +1,8 @@
 package github.otowave.api.routes.images.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "images", schema = "images")
 public class ImagesEntity {
     @Id

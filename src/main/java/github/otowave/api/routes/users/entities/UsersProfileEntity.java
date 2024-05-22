@@ -1,12 +1,10 @@
 package github.otowave.api.routes.users.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "usersProfile", schema = "users")
 public class UsersProfileEntity {
     @Id
@@ -18,7 +16,6 @@ public class UsersProfileEntity {
     private LocalDateTime created;
 
     public UsersProfileEntity() {
-
     }
 
     public int getUserID() {

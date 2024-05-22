@@ -1,10 +1,8 @@
 package github.otowave.api.routes.music.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "music", schema = "music")
 public class MusicEntity {
     @Id
@@ -16,7 +14,6 @@ public class MusicEntity {
     private boolean econtent;
 
     public MusicEntity() {
-
     }
 
     public int getMusicID() {

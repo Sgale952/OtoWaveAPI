@@ -1,5 +1,5 @@
 group = "github.otowave.api"
-version = "0.2.1"
+version = "0.3.3"
 
 plugins {
     id("java")
@@ -23,10 +23,8 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
-    implementation("com.zaxxer:HikariCP:5.1.0")
-    runtimeOnly("org.postgresql:postgresql:42.7.3")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    implementation("org.postgresql:r2dbc-postgresql")
 
     implementation("com.github.gotson:webp-imageio:0.2.2")
 }

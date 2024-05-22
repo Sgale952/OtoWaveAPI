@@ -3,7 +3,7 @@ package github.otowave.api.routes.music.services.faces;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
-import io.micrometer.common.lang.Nullable;
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
