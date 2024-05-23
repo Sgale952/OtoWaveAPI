@@ -3,8 +3,10 @@ package github.otowave.api.routes.common.services.items.factory;
 import github.otowave.api.routes.common.services.items.Customizable;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.common.models.ItemModel;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+@Component
 public abstract class Item implements Customizable {
     protected int itemID;
     protected int defaultImageID;

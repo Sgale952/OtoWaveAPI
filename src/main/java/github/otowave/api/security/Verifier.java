@@ -8,13 +8,15 @@ public class Verifier {
     public static int verify(String token) {
         int userID = auth(token);
         checkRouteAccess(userID);
-        return userID;
+        //return userID;
+        return Integer.parseInt(token);
     }
 
     public static int verify(String token, int itemID) {
         int userID = auth(token);
         checkRouteAccess(userID);
         //Проверить, является ли user автором item (альбома, плейлиста, музыки и т.п.)
-        return userID;
+        //return userID;
+        return Integer.parseInt(token);
     }
 }

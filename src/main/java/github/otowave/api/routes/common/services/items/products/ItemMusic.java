@@ -2,22 +2,22 @@ package github.otowave.api.routes.common.services.items.products;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
-import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.music.entities.MusicEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-public class ItemMusic extends Item {
-    @Autowired
-    MusicRepo musicRepo;
-    @Autowired
-    MusicMetaRepo musicMetaRepo;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.MUSIC_COVER;
 
-    public ItemMusic(ItemModel itemModel, DefaultImageIDs defaultImageID) {
-        super(itemModel, defaultImageID);
+public class ItemMusic extends Item {
+    private final MusicRepo musicRepo;
+    private final MusicMetaRepo musicMetaRepo;
+
+    public ItemMusic(ItemModel itemModel, MusicRepo musicRepo, MusicMetaRepo musicMetaRepo) {
+        super(itemModel, MUSIC_COVER);
+        this.musicRepo = musicRepo;
+        this.musicMetaRepo = musicMetaRepo;
     }
 
     @Override

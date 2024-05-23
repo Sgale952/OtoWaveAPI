@@ -7,14 +7,12 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ImagesEntity {
     @Id
     private int imageID;
-    private int uploaderID;
     private boolean animated;
 
     public ImagesEntity() {
     }
 
-    public ImagesEntity(int uploaderID, boolean animated) {
-        this.uploaderID = uploaderID;
+    public ImagesEntity(boolean animated) {
         this.animated = animated;
     }
 
@@ -23,13 +21,6 @@ public class ImagesEntity {
     }
     public void setImageID(int imageID) {
         this.imageID = imageID;
-    }
-
-    public int getUploaderID() {
-        return uploaderID;
-    }
-    public void setUploaderID(int uploaderID) {
-        this.uploaderID = uploaderID;
     }
 
     public boolean isAnimated() {

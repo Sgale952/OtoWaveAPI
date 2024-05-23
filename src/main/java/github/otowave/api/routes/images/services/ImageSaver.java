@@ -1,6 +1,5 @@
 package github.otowave.api.routes.images.services;
 
-import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.images.entities.ImagesEntity;
 import github.otowave.api.routes.images.repositories.ImagesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +20,19 @@ public class ImageSaver {
     public ImageSaver() {
     }
 
-    protected Mono<ImagesEntity> saveImage(ItemModel itemModel, Mono<FilePart> imageFile) {
+    protected Mono<ImagesEntity> saveImage(Mono<FilePart> imageFile) {
         return imageFile.flatMap(file -> {
-            Mono<ImagesEntity> newImageEntity = createImageEntity(itemModel, file).flatMap(this::saveImageEntity);
+            Mono<ImagesEntity> newImageEntity = createImageEntity(file).flatMap(this::saveImageEntity);
             Mono<Integer> newImageID = newImageEntity.flatMap(this::getUploadedImageID);
             newImageID.flatMap(imageID -> saveImageFile(imageFile, imageID));
             return newImageEntity;
         });
     }
 
-    private Mono<ImagesEntity> createImageEntity(ItemModel itemModel, FilePart imageFile) {
+    private Mono<ImagesEntity> createImageEntity(FilePart imageFile) {
         return Mono.fromCallable(() -> {
-            int userID = itemModel.uploaderID();
             boolean animated = isImageAnimated(imageFile.filename());
-            return new ImagesEntity(userID, animated);
+            return new ImagesEntity(animated);
         });
     }
 
