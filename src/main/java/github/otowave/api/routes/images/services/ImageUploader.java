@@ -17,9 +17,16 @@ public class ImageUploader {
 
     public ImageUploader() {
     }
-    //TODO: Добавить логику удаления прошлого изображения
+    /*
+    1) сохранение изображения в бд -> получение сгенерированного id
+    2) сохранене изображения на сервере (имя файла = imageID)
+    3) конвертация изображения в webp (если !isAnimated())
+    4) получение itemEntity, у которого меняется изображение
+    5) удаление старого изображения
+    6) замена imageID у itemEntity в бд
+    */
     public Mono<Void> uploadImage(ItemModel itemModel, Mono<FilePart> imageFile) {
-        return imageSaver.saveImage(itemModel, imageFile)
+        return imageSaver.saveImage(imageFile)
                 .flatMap(imageEntity -> imageApplier.applyImageToItem(itemModel, Mono.just(imageEntity))
                         .then(imageConverter.convertImageFileToWebp(imageEntity.getImageID(), imageFile))
                         .then());

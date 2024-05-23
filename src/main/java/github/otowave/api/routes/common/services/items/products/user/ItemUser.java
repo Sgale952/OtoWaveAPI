@@ -2,22 +2,22 @@ package github.otowave.api.routes.common.services.items.products.user;
 
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
-import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.users.entities.UsersEntity;
 import github.otowave.api.routes.users.entities.UsersProfileEntity;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import github.otowave.api.routes.users.repositories.UsersRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
-public class ItemUser extends Item {
-    @Autowired
-    UsersRepo usersRepo;
-    @Autowired
-    UsersProfileRepo usersProfileRepo;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.USER_AVATAR;
 
-    public ItemUser(ItemModel itemModel, DefaultImageIDs defaultImageID) {
-        super(itemModel, defaultImageID);
+public class ItemUser extends Item {
+    protected final UsersRepo usersRepo;
+    protected final UsersProfileRepo usersProfileRepo;
+
+    public ItemUser(ItemModel itemModel, UsersRepo usersRepo, UsersProfileRepo usersProfileRepo) {
+        super(itemModel, USER_AVATAR);
+        this.usersRepo = usersRepo;
+        this.usersProfileRepo = usersProfileRepo;
     }
 
     @Override

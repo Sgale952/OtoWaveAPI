@@ -6,18 +6,18 @@ import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
 import github.otowave.api.routes.albums.repositories.AlbumsRepo;
 import github.otowave.api.routes.common.models.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
-import github.otowave.api.routes.images.models.DefaultImageIDs;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
+import static github.otowave.api.routes.images.models.DefaultImageIDs.ALBUM_COVER;
+
 public class ItemAlbum extends Item {
-    @Autowired
-    AlbumsRepo albumsRepo;
-    @Autowired
-    AlbumsMetaRepo albumsMetaRepo;
+    private final AlbumsRepo albumsRepo;
+    private final AlbumsMetaRepo albumsMetaRepo;
     
-    public ItemAlbum(ItemModel itemModel, DefaultImageIDs defaultImageID) {
-        super(itemModel, defaultImageID);
+    public ItemAlbum(ItemModel itemModel, AlbumsRepo albumsRepo, AlbumsMetaRepo albumsMetaRepo) {
+        super(itemModel, ALBUM_COVER);
+        this.albumsRepo = albumsRepo;
+        this.albumsMetaRepo = albumsMetaRepo;
     }
 
     @Override
