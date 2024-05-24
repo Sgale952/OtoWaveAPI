@@ -4,7 +4,7 @@ import github.otowave.api.routes.albums.entities.AlbumsEntity;
 import github.otowave.api.routes.albums.entities.AlbumsMetaEntity;
 import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
 import github.otowave.api.routes.albums.repositories.AlbumsRepo;
-import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import reactor.core.publisher.Mono;
 
@@ -57,6 +57,11 @@ public class ItemAlbum extends Item {
                     entity.setCoverID(newImageID);
                     return albumsRepo.save(entity);
                 }).then();
+    }
+
+    @Override
+    public Mono<Integer> getCurrentImageID() {
+        return getItemEntity().map(AlbumsEntity::getCoverID);
     }
 
     @Override

@@ -2,8 +2,8 @@ package github.otowave.api.routes.common.services.items.factory;
 
 import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
 import github.otowave.api.routes.albums.repositories.AlbumsRepo;
-import github.otowave.api.routes.common.models.ItemModel;
-import github.otowave.api.routes.common.models.ItemTypes;
+import github.otowave.api.routes.common.models.items.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemTypes;
 import github.otowave.api.routes.common.services.items.products.*;
 import github.otowave.api.routes.common.services.items.products.user.ItemUser;
 import github.otowave.api.routes.common.services.items.products.user.ItemUserHeader;

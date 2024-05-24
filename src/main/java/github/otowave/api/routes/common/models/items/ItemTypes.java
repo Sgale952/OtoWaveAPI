@@ -1,4 +1,4 @@
-package github.otowave.api.routes.common.models;
+package github.otowave.api.routes.common.models.items;
 
 public enum ItemTypes {
     MUSIC("music"),

@@ -1,6 +1,6 @@
 package github.otowave.api.routes.common.services.items.products;
 
-import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.playlists.entities.PlaylistsEntity;
 import github.otowave.api.routes.playlists.entities.PlaylistsMetaEntity;
@@ -57,6 +57,11 @@ public class ItemPlaylist extends Item {
                     entity.setCoverID(newImageID);
                     return playlistsRepo.save(entity);
                 }).then();
+    }
+
+    @Override
+    public Mono<Integer> getCurrentImageID() {
+        return getItemEntity().map(PlaylistsEntity::getCoverID);
     }
 
     @Override

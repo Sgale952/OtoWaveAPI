@@ -2,7 +2,7 @@ package github.otowave.api.routes.common.services.items.factory;
 
 import github.otowave.api.routes.common.services.items.Customizable;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
-import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemModel;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -15,6 +15,8 @@ public abstract class Item implements Customizable {
         this.itemID = itemModel.itemID();
         this.defaultImageID = defaultImageID.getImageID();
     }
+
+    public abstract Mono<Integer> getCurrentImageID();
 
     public abstract Mono<Void> changeImage(int newImageID);
 

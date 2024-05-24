@@ -1,10 +1,10 @@
 package github.otowave.api.routes.images.controllers;
 
-import github.otowave.api.routes.common.models.ItemModel;
-import github.otowave.api.routes.common.models.ItemTypes;
+import github.otowave.api.routes.common.models.items.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemTypes;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
-import github.otowave.api.routes.images.services.ImageUploader;
+import github.otowave.api.routes.images.services.upload.ImageUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +24,15 @@ public class ImageController {
     @PostMapping("/reset-image")
     public Mono<Void> resetImage(@PathVariable String itemType, @PathVariable int itemID,
                                   @CookieValue String authToken) {
-        return itemFactory.makeItem(ItemTypes.valueOf(itemType), itemID).flatMap(Item::resetImage);
+        return itemFactory.makeItem(ItemTypes.valueOf(itemType.toUpperCase()), itemID).flatMap(Item::resetImage);
     }
 
     @PostMapping("/change-image")
     public Mono<Void> changeImage(@PathVariable String itemType, @PathVariable int itemID,
                                   @RequestPart Mono<FilePart> imageFile, @CookieValue String authToken) {
         return imageFile.flatMap(file -> {
-            ItemModel itemModel = new ItemModel(ItemTypes.valueOf(itemType), itemID);
-            return imageUploader.uploadImage(itemModel, imageFile);
+            ItemModel itemModel = new ItemModel(ItemTypes.valueOf(itemType.toUpperCase()), itemID);
+            return imageUploader.uploadImage(imageFile, itemModel);
         });
     }
 }

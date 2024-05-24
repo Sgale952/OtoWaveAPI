@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.common.models.ItemTypes.USER;
+import static github.otowave.api.routes.common.models.items.ItemTypes.USER;
 
 
 @RestController
