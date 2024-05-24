@@ -1,9 +1,10 @@
-package github.otowave.api.routes.images.services;
+package github.otowave.api.routes.images.services.upload.apply;
 
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import github.otowave.api.routes.images.entities.ImagesEntity;
-import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemModel;
+import github.otowave.api.routes.images.services.upload.UploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -11,21 +12,22 @@ import reactor.core.publisher.Mono;
 @Service
 public class ImageApplier {
     private final ItemFactoryImp itemFactory;
-
+    @Autowired
+    UploadHelper uploadHelper;
+    @Autowired
+    ImageDeleter imageDeleter;
     @Autowired
     public ImageApplier(ItemFactoryImp itemFactory) {
         this.itemFactory = itemFactory;
     }
 
-    protected Mono<Void> applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
-        return imageEntity
-                .flatMap(entity -> getImageID(entity)
-                        .flatMap(newImageID -> changeItemImage(getItemFromModel(itemModel), newImageID)))
-                .then();
-    }
-
-    private Mono<Integer> getImageID(ImagesEntity imageEntity) {
-        return Mono.just(imageEntity.getImageID());
+    public Mono<Void> applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
+        return imageEntity.flatMap(entity -> {
+            Mono<Item> item = getItemFromModel(itemModel);
+            return imageDeleter.deletePastImage(item)
+                    .then(uploadHelper.getImageID(entity))
+                    .flatMap(newImageID -> changeItemImage(item, newImageID));
+        });
     }
 
     private Mono<Item> getItemFromModel(ItemModel itemModel) {

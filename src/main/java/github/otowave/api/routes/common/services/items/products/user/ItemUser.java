@@ -1,6 +1,6 @@
 package github.otowave.api.routes.common.services.items.products.user;
 
-import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.users.entities.UsersEntity;
 import github.otowave.api.routes.users.entities.UsersProfileEntity;
@@ -57,6 +57,11 @@ public class ItemUser extends Item {
                     metaEntity.setAvatarID(newImageID);
                     return usersProfileRepo.save(metaEntity);
                 }).then();
+    }
+
+    @Override
+    public Mono<Integer> getCurrentImageID() {
+        return getItemMetaEntity().map(UsersProfileEntity::getAvatarID);
     }
 
     @Override
