@@ -8,14 +8,14 @@ import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.ALBUM_COVER;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.ALBUM;
 
 public class ItemAlbum extends Item {
     private final AlbumsRepo albumsRepo;
     private final AlbumsMetaRepo albumsMetaRepo;
     
     public ItemAlbum(ItemModel itemModel, AlbumsRepo albumsRepo, AlbumsMetaRepo albumsMetaRepo) {
-        super(itemModel, ALBUM_COVER);
+        super(itemModel, ALBUM);
         this.albumsRepo = albumsRepo;
         this.albumsMetaRepo = albumsMetaRepo;
     }

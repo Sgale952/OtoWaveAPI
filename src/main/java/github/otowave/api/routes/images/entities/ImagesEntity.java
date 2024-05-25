@@ -1,5 +1,6 @@
 package github.otowave.api.routes.images.entities;
 
+import github.otowave.api.routes.images.models.DefaultImageIDs;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,6 +15,11 @@ public class ImagesEntity {
 
     public ImagesEntity(boolean animated) {
         this.animated = animated;
+    }
+
+    public ImagesEntity(DefaultImageIDs imageID) {
+        this.imageID = imageID.getImageID();
+        this.animated = false;
     }
 
     public int getImageID() {

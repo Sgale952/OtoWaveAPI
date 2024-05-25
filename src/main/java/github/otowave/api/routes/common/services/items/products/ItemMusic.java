@@ -8,14 +8,14 @@ import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.MUSIC_COVER;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.MUSIC;
 
 public class ItemMusic extends Item {
     private final MusicRepo musicRepo;
     private final MusicMetaRepo musicMetaRepo;
 
     public ItemMusic(ItemModel itemModel, MusicRepo musicRepo, MusicMetaRepo musicMetaRepo) {
-        super(itemModel, MUSIC_COVER);
+        super(itemModel, MUSIC);
         this.musicRepo = musicRepo;
         this.musicMetaRepo = musicMetaRepo;
     }
