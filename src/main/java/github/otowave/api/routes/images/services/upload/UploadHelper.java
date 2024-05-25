@@ -18,16 +18,18 @@ public class UploadHelper {
         return Mono.just(imageEntity.getImageID());
     }
 
-    public boolean isImageAnimated(String filename) {
-        return filename.endsWith(".gif");
+    public Mono<Void> deleteImageFile(File file) {
+        return Mono.fromRunnable(() -> {
+            try {
+                Files.deleteIfExists(file.toPath());
+            }
+            catch (IOException e) {
+                //TODO: need handle exception
+            }
+        });
     }
 
-    public void deleteImageFile(File file) {
-        try {
-            Files.deleteIfExists(file.toPath());
-        }
-        catch (IOException e) {
-            //TODO: need handle exception
-        }
+    public boolean isImageAnimated(String filename) {
+        return filename.endsWith(".gif");
     }
 }

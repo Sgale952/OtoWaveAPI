@@ -30,29 +30,29 @@ public class ImageConverter {
     protected Mono<Void> convertImageToWebp(File inputFile) {
         return Mono.fromCallable(() -> {
             isNeedConversion(inputFile);
-            File outputFile = Paths.get(IMAGES_DIR.getDir(), getFileNameWithoutExtension(inputFile) + ".webp").toFile();
-            rewriteImageToWebp(inputFile, outputFile);
-            return Mono.empty();
+            return Paths.get(IMAGES_DIR.getDir(), getFileNameWithoutExtension(inputFile) + ".webp").toFile();
 
-        }).onErrorResume(FileNotNeedConversionException.class, e -> Mono.empty()).then();
+        }).flatMap(outputFile -> rewriteImageToWebp(inputFile, outputFile))
+          .onErrorResume(FileNotNeedConversionException.class, e -> Mono.empty()).then();
     }
 
     private void isNeedConversion(File inputFile) {
         String fileName = inputFile.getName();
-        if (uploadHelper.isImageAnimated(fileName))
+        if (isAppropriateExtension(fileName))
             throw new FileNotNeedConversionException(fileName);
     }
 
-    private void rewriteImageToWebp(File inputFile, File outputFile) {
-        try (ImageOutputStream output = ImageIO.createImageOutputStream(outputFile)) {
-            BufferedImage image = ImageIO.read(inputFile);
-            writeToWebp(output, image);
-
-            uploadHelper.deleteImageFile(inputFile);
-        }
-        catch (IOException e) {
-            //TODO: need handle exception
-        }
+    private Mono<Void> rewriteImageToWebp(File inputFile, File outputFile) {
+        return Mono.fromCallable(() -> {
+            try (ImageOutputStream output = ImageIO.createImageOutputStream(outputFile)) {
+                BufferedImage image = ImageIO.read(inputFile);
+                writeToWebp(output, image);
+            }
+            catch (IOException e) {
+                throw new RuntimeException("Error processing image files", e);
+            }
+            return inputFile;
+        }).flatMap(uploadHelper::deleteImageFile); //delete unconverted image file
     }
 
     private void writeToWebp(ImageOutputStream output, BufferedImage image) throws IOException {
@@ -68,6 +68,10 @@ public class ImageConverter {
     private ImageWriter getWriter() throws IOException {
         ImageWriterSpi writerSpi = new WebPImageWriterSpi();
         return writerSpi.createWriterInstance();
+    }
+
+    private boolean isAppropriateExtension(String filename) {
+        return uploadHelper.isImageAnimated(filename) || filename.endsWith(".webp");
     }
 
     private String getFileNameWithoutExtension(File file) {
