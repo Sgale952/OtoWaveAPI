@@ -21,7 +21,7 @@ public class ImageApplier {
         this.itemFactory = itemFactory;
     }
 
-    public Mono<Void> applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
+    public Mono<Integer> applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
         return imageEntity.flatMap(entity -> {
             Mono<Item> item = getItemFromModel(itemModel);
             return imageDeleter.deletePastImage(item)
@@ -34,7 +34,7 @@ public class ImageApplier {
         return itemFactory.makeItem(itemModel);
     }
 
-    private Mono<Void> changeItemImage(Mono<Item> item, int newImageID) {
-        return item.flatMap(i -> i.changeImage(newImageID));
+    private Mono<Integer> changeItemImage(Mono<Item> item, int newImageID) {
+        return item.flatMap(i -> i.changeImage(newImageID)).thenReturn(newImageID);
     }
 }

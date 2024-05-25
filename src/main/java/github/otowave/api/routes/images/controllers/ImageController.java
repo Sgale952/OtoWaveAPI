@@ -20,7 +20,7 @@ public class ImageController {
     ImageApplier imageApplier;
 
     @PostMapping("/change-image")
-    public Mono<Void> changeImage(@PathVariable String itemType, @PathVariable int itemID,
+    public Mono<Integer> changeImage(@PathVariable String itemType, @PathVariable int itemID,
                                   @RequestPart Mono<FilePart> imageFile) {
         return imageFile.flatMap(file -> {
             ItemModel itemModel = new ItemModel(ItemTypes.valueOf(itemType.toUpperCase()), itemID);
@@ -29,7 +29,7 @@ public class ImageController {
     }
 
     @PostMapping("/reset-image")
-    public Mono<Void> resetImage(@PathVariable String itemType, @PathVariable int itemID) {
+    public Mono<Integer> resetImage(@PathVariable String itemType, @PathVariable int itemID) {
         ItemModel itemModel = new ItemModel(ItemTypes.valueOf(itemType.toUpperCase()), itemID);
         Mono<ImagesEntity> imagesEntity = Mono.just(new ImagesEntity(DefaultImageIDs.valueOf(itemType.toUpperCase())));
         return imageApplier.applyImageToItem(itemModel, imagesEntity);
