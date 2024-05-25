@@ -14,10 +14,6 @@ public class UploadHelper {
     public UploadHelper() {
     }
 
-    public Mono<Integer> getImageID(ImagesEntity imageEntity) {
-        return Mono.just(imageEntity.getImageID());
-    }
-
     public Mono<Void> deleteImageFile(File file) {
         return Mono.fromRunnable(() -> {
             try {
@@ -27,6 +23,10 @@ public class UploadHelper {
                 //TODO: need handle exception
             }
         });
+    }
+
+    public Mono<Integer> getImageID(ImagesEntity imageEntity) {
+        return Mono.just(imageEntity.getImageID());
     }
 
     public boolean isImageAnimated(String filename) {

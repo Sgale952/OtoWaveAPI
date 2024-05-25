@@ -8,14 +8,14 @@ import github.otowave.api.routes.playlists.repositories.PlaylistsMetaRepo;
 import github.otowave.api.routes.playlists.repositories.PlaylistsRepo;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.PLAYLIST_COVER;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.PLAYLIST;
 
 public class ItemPlaylist extends Item {
     private final PlaylistsRepo playlistsRepo;
     private final PlaylistsMetaRepo playlistsMetaRepo;
     
     public ItemPlaylist(ItemModel itemModel, PlaylistsRepo playlistsRepo, PlaylistsMetaRepo playlistsMetaRepo) {
-        super(itemModel, PLAYLIST_COVER);
+        super(itemModel, PLAYLIST);
         this.playlistsRepo = playlistsRepo;
         this.playlistsMetaRepo = playlistsMetaRepo;
     }

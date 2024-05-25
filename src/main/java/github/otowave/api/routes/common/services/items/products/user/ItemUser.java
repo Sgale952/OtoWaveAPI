@@ -2,20 +2,27 @@ package github.otowave.api.routes.common.services.items.products.user;
 
 import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.users.entities.UsersEntity;
 import github.otowave.api.routes.users.entities.UsersProfileEntity;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import github.otowave.api.routes.users.repositories.UsersRepo;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.USER_AVATAR;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.USER;
 
 public class ItemUser extends Item {
     protected final UsersRepo usersRepo;
     protected final UsersProfileRepo usersProfileRepo;
 
     public ItemUser(ItemModel itemModel, UsersRepo usersRepo, UsersProfileRepo usersProfileRepo) {
-        super(itemModel, USER_AVATAR);
+        super(itemModel, USER);
+        this.usersRepo = usersRepo;
+        this.usersProfileRepo = usersProfileRepo;
+    }
+
+    public ItemUser(DefaultImageIDs defaultImageID, ItemModel itemModel, UsersRepo usersRepo, UsersProfileRepo usersProfileRepo) {
+        super(itemModel, defaultImageID);
         this.usersRepo = usersRepo;
         this.usersProfileRepo = usersProfileRepo;
     }

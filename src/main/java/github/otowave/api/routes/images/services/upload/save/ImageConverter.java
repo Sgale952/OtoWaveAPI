@@ -49,7 +49,7 @@ public class ImageConverter {
                 writeToWebp(output, image);
             }
             catch (IOException e) {
-                throw new RuntimeException("Error processing image files", e);
+                //TODO: need handle exception
             }
             return inputFile;
         }).flatMap(uploadHelper::deleteImageFile); //delete unconverted image file

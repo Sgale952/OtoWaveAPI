@@ -20,10 +20,6 @@ public abstract class Item implements Customizable {
 
     public abstract Mono<Void> changeImage(int newImageID);
 
-    public Mono<Void> resetImage() {
-        return changeImage(defaultImageID);
-    }
-
     public abstract Mono getItemEntity();
 
     public abstract Mono getItemMetaEntity();
