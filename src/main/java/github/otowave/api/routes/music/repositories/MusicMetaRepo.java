@@ -7,6 +7,9 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
 public interface MusicMetaRepo extends ReactiveCrudRepository<MusicMetaEntity, Integer> {
+    @Query("SELECT * FROM music.music_meta ORDER BY RANDOM() LIMIT 50")
+    Flux<MusicMetaEntity> findRandomPage();
+
     @Query("SELECT * FROM music.music_meta ORDER BY uploaded DESC LIMIT :limit OFFSET :offset")
     Flux<MusicMetaEntity> findAllWithPages(@Param("limit") int limit, @Param("offset") int offset);
 

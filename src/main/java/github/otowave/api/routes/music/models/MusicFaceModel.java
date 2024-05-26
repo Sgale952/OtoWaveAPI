@@ -1,4 +1,4 @@
 package github.otowave.api.routes.music.models;
 
-public record MusicFaceModel(String title, String author, int coverID, String genre, boolean econtent) {
+public record MusicFaceModel(int musicID, int authorID, int coverID, String title, String authorName, String genre, boolean econtent) {
 }

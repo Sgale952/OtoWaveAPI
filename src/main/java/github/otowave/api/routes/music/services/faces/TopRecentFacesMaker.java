@@ -14,14 +14,14 @@ public class TopRecentFacesMaker extends MusicFacesMaker {
     private MusicMetaRepo musicMetaRepo;
 
     public Flux<MusicFaceModel> getTopMusicFaceModels(int page, @Nullable String genre) {
-        Flux<MusicMetaEntity> musicMetaEntity = getTopMusic(page);
-        Flux<MusicFaceModel> topMusicFaceModels = getFaceModels(musicMetaEntity);
+        Flux<MusicMetaEntity> musicMetaEntities = getTopMusic(page);
+        Flux<MusicFaceModel> topMusicFaceModels = getFaceModels(musicMetaEntities);
         return checkGenre(topMusicFaceModels, genre);
     }
 
     public Flux<MusicFaceModel> getRecentMusicFaceModels(int page, @Nullable String genre) {
-        Flux<MusicMetaEntity> musicMetaEntity = getRecentMusic(page);
-        Flux<MusicFaceModel> recentMusicFaceModels = getFaceModels(musicMetaEntity);
+        Flux<MusicMetaEntity> musicMetaEntities = getRecentMusic(page);
+        Flux<MusicFaceModel> recentMusicFaceModels = getFaceModels(musicMetaEntities);
         return checkGenre(recentMusicFaceModels, genre);
     }
 

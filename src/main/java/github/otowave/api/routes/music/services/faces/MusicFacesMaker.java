@@ -29,13 +29,15 @@ public class MusicFacesMaker {
     }
 
     private Mono<MusicFaceModel> makeFaceModel(MusicEntity musicEntity) {
+        int musicID = musicEntity.getMusicID();
         String title = musicEntity.getTitle();
+        int authorID = musicEntity.getAuthorID();
         int coverID = musicEntity.getCoverID();
         String genre = musicEntity.getGenre();
         boolean econtent = musicEntity.getEcontent();
 
-        return getUsername(musicEntity.getAuthorID())
-                .map(author -> new MusicFaceModel(title, author, coverID, genre, econtent));
+        return getUsername(authorID)
+                .map(authorName -> new MusicFaceModel(musicID, authorID, coverID, title, authorName, genre, econtent));
     }
 
     private Mono<String> getUsername(int userID) {
