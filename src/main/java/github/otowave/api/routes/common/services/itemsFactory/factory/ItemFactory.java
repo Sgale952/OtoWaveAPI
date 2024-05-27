@@ -1,7 +1,7 @@
-package github.otowave.api.routes.common.services.items.factory;
+package github.otowave.api.routes.common.services.itemsFactory.factory;
 
-import github.otowave.api.routes.common.models.items.ItemModel;
-import github.otowave.api.routes.common.models.items.ItemTypes;
+import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.ItemTypes;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 

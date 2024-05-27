@@ -1,4 +1,4 @@
-package github.otowave.api.routes.common.models.items;
+package github.otowave.api.routes.common.models;
 
 public enum ItemTypes {
     MUSIC("music"),
@@ -8,5 +8,9 @@ public enum ItemTypes {
     USER_HEADER("userHeader");
 
     ItemTypes(String type) {
+    }
+
+    public static ItemTypes toItemType(String itemType) {
+        return valueOf(itemType.toUpperCase());
     }
 }

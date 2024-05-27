@@ -1,7 +1,6 @@
-package github.otowave.api.routes.common.services.items.products.user;
+package github.otowave.api.routes.common.services.itemsFactory.products.user;
 
-import github.otowave.api.routes.common.models.items.ItemModel;
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.itemsFactory.factory.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.users.entities.UsersMetaEntity;
 import github.otowave.api.routes.users.entities.UsersSecurityEntity;
@@ -9,27 +8,29 @@ import github.otowave.api.routes.users.entities.UsersProfileEntity;
 import github.otowave.api.routes.users.repositories.UsersMetaRepo;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.USER;
-
+@Component("ItemUser")
 public class ItemUser extends Item {
     protected final UsersSecurityRepo usersSecurityRepo;
-    protected final UsersMetaRepo usersMetaRepo;
     protected final UsersProfileRepo usersProfileRepo;
+    protected final UsersMetaRepo usersMetaRepo;
 
-    public ItemUser(ItemModel itemModel, UsersSecurityRepo usersSecurityRepo, UsersMetaRepo usersMetaRepo, UsersProfileRepo usersProfileRepo) {
-        super(itemModel, USER);
+    @Autowired
+    public ItemUser(UsersSecurityRepo usersSecurityRepo, UsersProfileRepo usersProfileRepo, UsersMetaRepo usersMetaRepo) {
+        super(DefaultImageIDs.USER);
         this.usersSecurityRepo = usersSecurityRepo;
-        this.usersMetaRepo = usersMetaRepo;
         this.usersProfileRepo = usersProfileRepo;
+        this.usersMetaRepo = usersMetaRepo;
     }
 
-    public ItemUser(DefaultImageIDs defaultImageID, ItemModel itemModel, UsersSecurityRepo usersSecurityRepo, UsersMetaRepo usersMetaRepo, UsersProfileRepo usersProfileRepo) {
-        super(itemModel, defaultImageID);
+    public ItemUser(DefaultImageIDs defaultImageID, UsersSecurityRepo usersSecurityRepo, UsersProfileRepo usersProfileRepo, UsersMetaRepo usersMetaRepo) {
+        super(defaultImageID);
         this.usersSecurityRepo = usersSecurityRepo;
-        this.usersMetaRepo = usersMetaRepo;
         this.usersProfileRepo = usersProfileRepo;
+        this.usersMetaRepo = usersMetaRepo;
     }
 
     @Override
@@ -81,12 +82,12 @@ public class ItemUser extends Item {
         return usersSecurityRepo.findById(itemID);
     }
 
+    public Mono<UsersProfileEntity> getItemProfileEntity() {
+        return usersProfileRepo.findById(itemID);
+    }
+
     @Override
     public Mono<UsersMetaEntity> getItemMetaEntity() {
         return usersMetaRepo.findById(itemID);
-    }
-
-    public Mono<UsersProfileEntity> getItemProfileEntity() {
-        return usersProfileRepo.findById(itemID);
     }
 }

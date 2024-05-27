@@ -1,21 +1,23 @@
-package github.otowave.api.routes.common.services.items.products;
+package github.otowave.api.routes.common.services.itemsFactory.products;
 
-import github.otowave.api.routes.common.models.items.ItemModel;
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.itemsFactory.factory.Item;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.playlists.entities.PlaylistsEntity;
 import github.otowave.api.routes.playlists.entities.PlaylistsMetaEntity;
 import github.otowave.api.routes.playlists.repositories.PlaylistsMetaRepo;
 import github.otowave.api.routes.playlists.repositories.PlaylistsRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.PLAYLIST;
-
+@Component
 public class ItemPlaylist extends Item {
     private final PlaylistsRepo playlistsRepo;
     private final PlaylistsMetaRepo playlistsMetaRepo;
-    
-    public ItemPlaylist(ItemModel itemModel, PlaylistsRepo playlistsRepo, PlaylistsMetaRepo playlistsMetaRepo) {
-        super(itemModel, PLAYLIST);
+
+    @Autowired
+    public ItemPlaylist(PlaylistsRepo playlistsRepo, PlaylistsMetaRepo playlistsMetaRepo) {
+        super(DefaultImageIDs.PLAYLIST);
         this.playlistsRepo = playlistsRepo;
         this.playlistsMetaRepo = playlistsMetaRepo;
     }
