@@ -1,21 +1,23 @@
-package github.otowave.api.routes.common.services.items.products;
+package github.otowave.api.routes.common.services.itemsFactory.products;
 
 import github.otowave.api.routes.albums.entities.AlbumsEntity;
 import github.otowave.api.routes.albums.entities.AlbumsMetaEntity;
 import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
 import github.otowave.api.routes.albums.repositories.AlbumsRepo;
-import github.otowave.api.routes.common.models.items.ItemModel;
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.itemsFactory.factory.Item;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import static github.otowave.api.routes.images.models.DefaultImageIDs.ALBUM;
-
+@Component
 public class ItemAlbum extends Item {
     private final AlbumsRepo albumsRepo;
     private final AlbumsMetaRepo albumsMetaRepo;
-    
-    public ItemAlbum(ItemModel itemModel, AlbumsRepo albumsRepo, AlbumsMetaRepo albumsMetaRepo) {
-        super(itemModel, ALBUM);
+
+    @Autowired
+    public ItemAlbum(AlbumsRepo albumsRepo, AlbumsMetaRepo albumsMetaRepo) {
+        super(DefaultImageIDs.ALBUM);
         this.albumsRepo = albumsRepo;
         this.albumsMetaRepo = albumsMetaRepo;
     }
