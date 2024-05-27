@@ -1,6 +1,6 @@
 package github.otowave.api.routes.users.controlers;
 
-import github.otowave.api.routes.users.repositories.UsersRepo;
+import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    private UsersRepo usersRepo;
+    private UsersSecurityRepo usersSecurityRepo;
 
     @PostMapping("/registration")
     public ResponseEntity Registration(RequestBody user) {

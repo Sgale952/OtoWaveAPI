@@ -12,13 +12,14 @@ import static github.otowave.api.routes.common.models.items.ItemTypes.MUSIC;
 @RequestMapping("/music/{itemID}")
 public class MusicCustomizeController {
     private final ItemFactoryImp itemFactory;
+
     @Autowired
     public MusicCustomizeController(ItemFactoryImp itemFactory) {
         this.itemFactory = itemFactory;
     }
 
     @GetMapping("/profile")
-    public Mono<Void> profile(@PathVariable int itemID) {
+    public Mono profile(@PathVariable int itemID) {
         return itemFactory.makeItem(MUSIC, itemID)
                 .flatMap(Customizable::profile);
     }

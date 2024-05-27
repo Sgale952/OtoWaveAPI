@@ -11,8 +11,9 @@ import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
 import github.otowave.api.routes.playlists.repositories.PlaylistsMetaRepo;
 import github.otowave.api.routes.playlists.repositories.PlaylistsRepo;
+import github.otowave.api.routes.users.repositories.UsersMetaRepo;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
-import github.otowave.api.routes.users.repositories.UsersRepo;
+import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -32,7 +33,9 @@ public class ItemFactoryImp implements ItemFactory {
     @Autowired
     private AlbumsMetaRepo albumsMetaRepo;
     @Autowired
-    private UsersRepo usersRepo;
+    private UsersSecurityRepo usersSecurityRepo;
+    @Autowired
+    private UsersMetaRepo usersMetaRepo;
     @Autowired
     private UsersProfileRepo usersProfileRepo;
 
@@ -49,8 +52,8 @@ public class ItemFactoryImp implements ItemFactory {
             case MUSIC -> Mono.just(new ItemMusic(itemModel, musicRepo, musicMetaRepo));
             case PLAYLIST -> Mono.just(new ItemPlaylist(itemModel, playlistsRepo, playlistsMetaRepo));
             case ALBUM -> Mono.just(new ItemAlbum(itemModel, albumsRepo, albumsMetaRepo));
-            case USER -> Mono.just(new ItemUser(itemModel, usersRepo, usersProfileRepo));
-            case USER_HEADER -> Mono.just(new ItemUserHeader(itemModel, usersRepo, usersProfileRepo));
+            case USER -> Mono.just(new ItemUser(itemModel, usersSecurityRepo, usersMetaRepo, usersProfileRepo));
+            case USER_HEADER -> Mono.just(new ItemUserHeader(itemModel, usersSecurityRepo, usersMetaRepo, usersProfileRepo));
         };
     }
 }

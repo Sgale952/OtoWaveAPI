@@ -1,11 +1,11 @@
 package github.otowave.api.security;
 
-import github.otowave.api.routes.users.repositories.UsersRepo;
+import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Authenticator {
     @Autowired
-    private UsersRepo usersRepo;
+    private UsersSecurityRepo usersSecurityRepo;
 
     //TODO: Проверка токена и возвращение userID
     // В случае неуспешной аутентификации / авторизации выбрасывай ResponseStatusException(HttpStatus.СТАТУСЫ_ПОСМОТРИ_В_HttpStatus, "сообщение об ошибке"))

@@ -1,4 +1,6 @@
 package github.otowave.api.routes.music.models;
 
-public record MusicProfileModel() {
+import java.time.LocalDateTime;
+
+public record MusicProfileModel(MusicFaceModel musicFaceModel, String tale, int likes, int listens, LocalDateTime uploaded) {
 }
