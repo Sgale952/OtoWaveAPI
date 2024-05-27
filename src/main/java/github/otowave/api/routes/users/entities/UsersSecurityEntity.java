@@ -3,8 +3,8 @@ package github.otowave.api.routes.users.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "users", schema = "users")
-public class UsersEntity {
+@Table(name = "users_security", schema = "users")
+public class UsersSecurityEntity {
     @Id
     private int userID;
     private String email;
@@ -12,7 +12,7 @@ public class UsersEntity {
     private boolean blocked;
     private String accessRole;
 
-    public UsersEntity() {
+    public UsersSecurityEntity() {
     }
 
     public int getUserID() {

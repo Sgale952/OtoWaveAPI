@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 public interface Customizable {
-    Mono<Void> profile();
+    Mono profile();
 
     Mono<Void> changeName(String newName);
 

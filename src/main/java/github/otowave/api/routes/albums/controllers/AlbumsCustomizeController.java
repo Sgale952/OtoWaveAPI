@@ -16,11 +16,11 @@ public class AlbumsCustomizeController {
     public AlbumsCustomizeController(ItemFactoryImp itemFactory) {
         this.itemFactory = itemFactory;
     }
-    @GetMapping("/profile")
+/*    @GetMapping("/profile")
     public Mono<Void> profile(@PathVariable int itemID) {
         return itemFactory.makeItem(ALBUM, itemID)
                 .flatMap(Customizable::profile);
-    }
+    }*/
 
     @PatchMapping("/change-name")
     public Mono<Void> changeName(@PathVariable int itemID, @RequestParam String newName,

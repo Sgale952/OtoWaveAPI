@@ -20,7 +20,7 @@ public class MusicFacesMaker {
 
     protected Flux<MusicFaceModel> getFaceModels(Flux<MusicMetaEntity> musicMetaEntities) {
         return musicMetaEntities
-                .flatMap(musicMetaEntity -> musicRepo.findById(musicMetaEntity.getMusicID())
+                .flatMap(entity -> musicRepo.findById(entity.getMusicID())
                         .flatMap(this::makeFaceModel));
     }
 

@@ -21,7 +21,7 @@ public class ItemPlaylist extends Item {
     }
 
     @Override
-    public Mono<Void> profile() {
+    public Mono profile() {
         return null;
     }
 

@@ -4,6 +4,7 @@ import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.music.entities.MusicEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
+import github.otowave.api.routes.music.models.MusicProfileModel;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicRepo;
 import reactor.core.publisher.Mono;
@@ -20,8 +21,8 @@ public class ItemMusic extends Item {
         this.musicMetaRepo = musicMetaRepo;
     }
 
-    @Override
-    public Mono<Void> profile() {
+        @Override
+        public Mono<MusicProfileModel> profile() {
         return null;
     }
 

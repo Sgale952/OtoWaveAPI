@@ -12,8 +12,6 @@ public class UsersProfileEntity {
     private int avatarID;
     private int headerID;
     private String nickname;
-    private String tale;
-    private LocalDateTime created;
 
     public UsersProfileEntity() {
     }
@@ -44,19 +42,5 @@ public class UsersProfileEntity {
     }
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getTale() {
-        return tale;
-    }
-    public void setTale(String tale) {
-        this.tale = tale;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
     }
 }
