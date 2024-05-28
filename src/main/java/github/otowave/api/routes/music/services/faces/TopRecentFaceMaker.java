@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 @Service
-public class TopRecentFacesMaker extends MusicFacesMaker {
+public class TopRecentFaceMaker extends MusicFaceMaker {
     @Autowired
     private MusicMetaRepo musicMetaRepo;
 

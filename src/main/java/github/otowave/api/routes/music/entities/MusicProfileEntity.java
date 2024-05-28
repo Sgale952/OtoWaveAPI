@@ -1,14 +1,11 @@
 package github.otowave.api.routes.music.entities;
 
-import org.springframework.data.annotation.Id;
+import github.otowave.api.routes.common.entities.ProfileEntity;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "profile", schema = "music")
-public class MusicProfileEntity {
-    @Id
-    private int musicID;
+public class MusicProfileEntity extends ProfileEntity {
     private int authorID;
-    private int coverID;
     private String title;
     private String genre;
     private boolean econtent;
@@ -16,25 +13,11 @@ public class MusicProfileEntity {
     public MusicProfileEntity() {
     }
 
-    public int getMusicID() {
-        return musicID;
-    }
-    public void setMusicID(int musicID) {
-        this.musicID = musicID;
-    }
-
     public int getAuthorID() {
         return authorID;
     }
     public void setAuthorID(int authorID) {
         this.authorID = authorID;
-    }
-
-    public int getCoverID() {
-        return coverID;
-    }
-    public void setCoverID(int coverID) {
-        this.coverID = coverID;
     }
 
     public String getTitle() {

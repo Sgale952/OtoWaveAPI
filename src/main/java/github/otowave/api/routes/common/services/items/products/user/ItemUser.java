@@ -67,14 +67,14 @@ public class ItemUser extends Item {
     public Mono<Void> changeImage(int newImageID) {
         return getItemProfileEntity()
                 .flatMap(entity -> {
-                    entity.setAvatarID(newImageID);
+                    entity.setCoverID(newImageID);
                     return usersProfileRepo.save(entity);
                 }).then();
     }
 
     @Override
     public Mono<Integer> getCurrentImageID() {
-        return getItemProfileEntity().map(UsersProfileEntity::getAvatarID);
+        return getItemProfileEntity().map(UsersProfileEntity::getCoverID);
     }
 
     @Override
