@@ -25,7 +25,7 @@ public class MusicFacesMaker {
     }
 
     protected Flux<MusicFaceModel> filterByGenre(Flux<MusicFaceModel> musicFaces, String genre) {
-        return musicFaces.filter(face -> Objects.equals(face.genre(), genre));
+        return musicFaces.filter(face -> Objects.equals(face.getGenre(), genre));
     }
 
     private Mono<MusicFaceModel> makeFaceModel(MusicProfileEntity musicProfileEntity) {
@@ -41,6 +41,6 @@ public class MusicFacesMaker {
     }
 
     private Mono<String> getUsername(int userID) {
-        return usersProfileRepo.findById(userID).map(UsersProfileEntity::getNickname);
+        return usersProfileRepo.findById(userID).map(UsersProfileEntity::getUsername);
     }
 }

@@ -1,0 +1,93 @@
+package github.otowave.api.routes.common.services.items.products.user;
+
+import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
+import github.otowave.api.routes.users.entities.UsersMetaEntity;
+import github.otowave.api.routes.users.entities.UsersSecurityEntity;
+import github.otowave.api.routes.users.entities.UsersProfileEntity;
+import github.otowave.api.routes.users.repositories.UsersMetaRepo;
+import github.otowave.api.routes.users.repositories.UsersProfileRepo;
+import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+@Component("ItemUser")
+public class ItemUser extends Item {
+    protected final UsersProfileRepo usersProfileRepo;
+    protected final UsersMetaRepo usersMetaRepo;
+    protected final UsersSecurityRepo usersSecurityRepo;
+
+    @Autowired
+    public ItemUser(UsersProfileRepo usersProfileRepo, UsersMetaRepo usersMetaRepo, UsersSecurityRepo usersSecurityRepo) {
+        super(DefaultImageIDs.USER);
+        this.usersProfileRepo = usersProfileRepo;
+        this.usersSecurityRepo = usersSecurityRepo;
+        this.usersMetaRepo = usersMetaRepo;
+    }
+
+    public ItemUser(DefaultImageIDs defaultImageID, UsersProfileRepo usersProfileRepo, UsersMetaRepo usersMetaRepo, UsersSecurityRepo usersSecurityRepo) {
+        super(defaultImageID);
+        this.usersProfileRepo = usersProfileRepo;
+        this.usersMetaRepo = usersMetaRepo;
+        this.usersSecurityRepo = usersSecurityRepo;
+    }
+
+    @Override
+    public Mono profile() {
+        return null;
+    }
+
+    @Override
+    public Mono<Void> changeName(String newName) {
+        return getItemProfileEntity()
+                .flatMap(entity -> {
+                    entity.setUsername(newName);
+                    return usersProfileRepo.save(entity)
+                            .then();
+                });
+    }
+
+    @Override
+    public Mono<Void> changeTale(String newTale) {
+        return getItemMetaEntity()
+                .flatMap(entity -> {
+                    entity.setTale(newTale);
+                    return usersMetaRepo.save(entity)
+                            .then();
+                });
+    }
+
+    @Override
+    public Mono<Void> delete() {
+        return getItemSecurityEntity().flatMap(entity -> usersSecurityRepo.delete(entity));
+    }
+
+    @Override
+    public Mono<Void> changeImage(int newImageID) {
+        return getItemProfileEntity()
+                .flatMap(entity -> {
+                    entity.setAvatarID(newImageID);
+                    return usersProfileRepo.save(entity);
+                }).then();
+    }
+
+    @Override
+    public Mono<Integer> getCurrentImageID() {
+        return getItemProfileEntity().map(UsersProfileEntity::getAvatarID);
+    }
+
+    @Override
+    public Mono<UsersProfileEntity> getItemProfileEntity() {
+        return usersProfileRepo.findById(itemID);
+    }
+
+    @Override
+    public Mono<UsersMetaEntity> getItemMetaEntity() {
+        return usersMetaRepo.findById(itemID);
+    }
+
+    public Mono<UsersSecurityEntity> getItemSecurityEntity() {
+        return usersSecurityRepo.findById(itemID);
+    }
+}
