@@ -1,25 +1,15 @@
 package github.otowave.api.routes.songlists.entities.playlists;
 
-import org.springframework.data.annotation.Id;
+import github.otowave.api.routes.common.entities.ProfileEntity;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "profile", schema = "playlists")
-public class PlaylistsProfileEntity {
-    @Id
-    private int playlistID;
+public class PlaylistsProfileEntity extends ProfileEntity {
     private int creatorID;
-    private int coverID;
     private String title;
     private boolean access;
 
     public PlaylistsProfileEntity() {
-    }
-
-    public int getPlaylistID() {
-        return playlistID;
-    }
-    public void setPlaylistID(int playlistID) {
-        this.playlistID = playlistID;
     }
 
     public int getCreatorID() {
@@ -27,13 +17,6 @@ public class PlaylistsProfileEntity {
     }
     public void setCreatorID(int creatorID) {
         this.creatorID = creatorID;
-    }
-
-    public int getCoverID() {
-        return coverID;
-    }
-    public void setCoverID(int coverID) {
-        this.coverID = coverID;
     }
 
     public String getTitle() {

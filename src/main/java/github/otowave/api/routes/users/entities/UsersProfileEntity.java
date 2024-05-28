@@ -1,31 +1,14 @@
 package github.otowave.api.routes.users.entities;
 
-import org.springframework.data.annotation.Id;
+import github.otowave.api.routes.common.entities.ProfileEntity;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "profile", schema = "users")
-public class UsersProfileEntity {
-    @Id
-    private int userID;
-    private int avatarID;
+public class UsersProfileEntity extends ProfileEntity {
     private int headerID;
     private String username;
 
     public UsersProfileEntity() {
-    }
-
-    public int getUserID() {
-        return userID;
-    }
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public int getAvatarID() {
-        return avatarID;
-    }
-    public void setAvatarID(int avatarID) {
-        this.avatarID = avatarID;
     }
 
     public int getHeaderID() {

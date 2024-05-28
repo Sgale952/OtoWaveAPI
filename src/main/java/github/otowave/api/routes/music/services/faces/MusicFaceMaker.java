@@ -12,15 +12,15 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-public class MusicFacesMaker {
+public class MusicFaceMaker {
     @Autowired
     private MusicProfileRepo musicProfileRepo;
     @Autowired
     private UsersProfileRepo usersProfileRepo;
 
-    protected Flux<MusicFaceModel> getFaceModels(Flux<MusicMetaEntity> musicMetaEntities) {
+    public Flux<MusicFaceModel> getFaceModels(Flux<MusicMetaEntity> musicMetaEntities) {
         return musicMetaEntities
-                .flatMap(entity -> musicProfileRepo.findById(entity.getMusicID())
+                .flatMap(entity -> musicProfileRepo.findById(entity.getItemID())
                         .flatMap(this::makeFaceModel));
     }
 
@@ -29,7 +29,7 @@ public class MusicFacesMaker {
     }
 
     private Mono<MusicFaceModel> makeFaceModel(MusicProfileEntity musicProfileEntity) {
-        int musicID = musicProfileEntity.getMusicID();
+        int musicID = musicProfileEntity.getItemID();
         String title = musicProfileEntity.getTitle();
         int authorID = musicProfileEntity.getAuthorID();
         int coverID = musicProfileEntity.getCoverID();
