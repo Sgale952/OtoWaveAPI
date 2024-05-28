@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Table(name = "filling_albums", schema = "albums")
+@Table(name = "filling", schema = "albums")
 public class FillingAlbumsEntity {
     @Id
     private int albumID;

@@ -4,7 +4,7 @@ import github.otowave.api.routes.music.entities.GenresEntity;
 import github.otowave.api.routes.music.models.*;
 import github.otowave.api.routes.music.repositories.GenresRepo;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
-import github.otowave.api.routes.music.repositories.MusicRepo;
+import github.otowave.api.routes.music.repositories.MusicProfileRepo;
 import github.otowave.api.routes.music.services.faces.DailyFaceMaker;
 import github.otowave.api.routes.music.services.faces.TopRecentFacesMaker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class MusicController {
     @Autowired
     private GenresRepo genresRepo;
     @Autowired
-    private MusicRepo musicRepo;
+    private MusicProfileRepo musicProfileRepo;
     @Autowired
     private MusicMetaRepo musicMetaRepo;
     @Autowired

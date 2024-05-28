@@ -3,9 +3,7 @@ package github.otowave.api.routes.users.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
-
-@Table(name = "users_profile", schema = "users")
+@Table(name = "profile", schema = "users")
 public class UsersProfileEntity {
     @Id
     private int userID;

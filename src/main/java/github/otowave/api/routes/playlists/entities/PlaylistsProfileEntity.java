@@ -1,28 +1,25 @@
-package github.otowave.api.routes.albums.entities;
+package github.otowave.api.routes.playlists.entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
-
-@Table(name = "albums", schema = "albums")
-public class AlbumsEntity {
+@Table(name = "profile", schema = "playlists")
+public class PlaylistsProfileEntity {
     @Id
-    private int albumID;
+    private int playlistID;
     private int creatorID;
     private int coverID;
     private String title;
     private boolean access;
-    private LocalDateTime created;
 
-    public AlbumsEntity() {
+    public PlaylistsProfileEntity() {
     }
 
-    public int getAlbumID() {
-        return albumID;
+    public int getPlaylistID() {
+        return playlistID;
     }
-    public void setAlbumID(int albumID) {
-        this.albumID = albumID;
+    public void setPlaylistID(int playlistID) {
+        this.playlistID = playlistID;
     }
 
     public int getCreatorID() {
@@ -51,12 +48,5 @@ public class AlbumsEntity {
     }
     public void setAccess(boolean access) {
         this.access = access;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
     }
 }

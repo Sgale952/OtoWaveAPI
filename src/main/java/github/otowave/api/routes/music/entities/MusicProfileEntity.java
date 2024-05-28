@@ -3,8 +3,8 @@ package github.otowave.api.routes.music.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "music", schema = "music")
-public class MusicEntity {
+@Table(name = "profile", schema = "music")
+public class MusicProfileEntity {
     @Id
     private int musicID;
     private int authorID;
@@ -13,7 +13,7 @@ public class MusicEntity {
     private String genre;
     private boolean econtent;
 
-    public MusicEntity() {
+    public MusicProfileEntity() {
     }
 
     public int getMusicID() {

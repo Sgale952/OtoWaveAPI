@@ -3,7 +3,7 @@ package github.otowave.api.routes.users.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "users_security", schema = "users")
+@Table(name = "security", schema = "users")
 public class UsersSecurityEntity {
     @Id
     private int userID;
@@ -48,13 +48,5 @@ public class UsersSecurityEntity {
     }
     public void setAccessRole(String accessRole) {
         this.accessRole = accessRole;
-    }
-
-    @Override
-    public String toString() {
-        return "userID="+getUserID()+
-                " passwrd="+getPasswrd()+
-                " email="+getEmail()+
-                " accessRole="+getAccessRole();
     }
 }

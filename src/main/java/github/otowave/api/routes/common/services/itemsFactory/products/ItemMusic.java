@@ -2,11 +2,11 @@ package github.otowave.api.routes.common.services.itemsFactory.products;
 
 import github.otowave.api.routes.common.services.itemsFactory.factory.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
-import github.otowave.api.routes.music.entities.MusicEntity;
+import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import github.otowave.api.routes.music.models.MusicProfileModel;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
-import github.otowave.api.routes.music.repositories.MusicRepo;
+import github.otowave.api.routes.music.repositories.MusicProfileRepo;
 import github.otowave.api.routes.music.services.MusicProfileMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,15 +14,15 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ItemMusic extends Item {
-    private final MusicRepo musicRepo;
+    private final MusicProfileRepo musicProfileRepo;
     private final MusicMetaRepo musicMetaRepo;
     @Autowired
     MusicProfileMaker musicProfileMaker;
 
     @Autowired
-    public ItemMusic(MusicRepo musicRepo, MusicMetaRepo musicMetaRepo) {
+    public ItemMusic(MusicProfileRepo musicProfileRepo, MusicMetaRepo musicMetaRepo) {
         super(DefaultImageIDs.MUSIC);
-        this.musicRepo = musicRepo;
+        this.musicProfileRepo = musicProfileRepo;
         this.musicMetaRepo = musicMetaRepo;
     }
 
@@ -36,7 +36,7 @@ public class ItemMusic extends Item {
         return getItemEntity()
                 .flatMap(entity -> {
                     entity.setTitle(newName);
-                    return musicRepo.save(entity)
+                    return musicProfileRepo.save(entity)
                             .then();
                 });
     }
@@ -53,7 +53,7 @@ public class ItemMusic extends Item {
 
     @Override
     public Mono<Void> delete() {
-        return getItemEntity().flatMap(entity -> musicRepo.delete(entity));
+        return getItemEntity().flatMap(entity -> musicProfileRepo.delete(entity));
     }
 
     @Override
@@ -61,18 +61,18 @@ public class ItemMusic extends Item {
         return getItemEntity()
                 .flatMap(entity -> {
                     entity.setCoverID(newImageID);
-                    return musicRepo.save(entity);
+                    return musicProfileRepo.save(entity);
                 }).then();
     }
 
     @Override
     public Mono<Integer> getCurrentImageID() {
-        return getItemEntity().map(MusicEntity::getCoverID);
+        return getItemEntity().map(MusicProfileEntity::getCoverID);
     }
 
     @Override
-    public Mono<MusicEntity> getItemEntity() {
-        return musicRepo.findById(itemID);
+    public Mono<MusicProfileEntity> getItemEntity() {
+        return musicProfileRepo.findById(itemID);
     }
 
     @Override

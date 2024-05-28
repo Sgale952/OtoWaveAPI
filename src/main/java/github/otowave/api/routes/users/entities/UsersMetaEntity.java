@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Table(name = "users_meta", schema = "users")
+@Table(name = "meta", schema = "users")
 public class UsersMetaEntity {
     @Id
     private int userID;
