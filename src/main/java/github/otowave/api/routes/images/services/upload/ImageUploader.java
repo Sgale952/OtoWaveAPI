@@ -1,6 +1,6 @@
 package github.otowave.api.routes.images.services.upload;
 
-import github.otowave.api.routes.common.models.ItemModel;
+import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.images.services.upload.apply.ImageApplier;
 import github.otowave.api.routes.images.services.upload.save.ImageSaver;
 import org.springframework.beans.factory.annotation.Autowired;

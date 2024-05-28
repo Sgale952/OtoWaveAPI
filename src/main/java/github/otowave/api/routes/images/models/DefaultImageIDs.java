@@ -13,6 +13,10 @@ public enum DefaultImageIDs {
         this.imageID = imageID;
     }
 
+    public static DefaultImageIDs toDefaultImageID(String itemType) {
+        return valueOf(itemType.toUpperCase());
+    }
+
     public int getImageID() {
         return imageID;
     }
