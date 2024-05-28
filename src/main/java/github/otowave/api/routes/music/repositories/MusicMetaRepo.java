@@ -7,12 +7,12 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
 public interface MusicMetaRepo extends ReactiveCrudRepository<MusicMetaEntity, Integer> {
-    @Query("SELECT * FROM music.music_meta ORDER BY RANDOM() LIMIT 50")
+    @Query("SELECT * FROM music.meta ORDER BY RANDOM() LIMIT 50")
     Flux<MusicMetaEntity> findRandomPage();
 
-    @Query("SELECT * FROM music.music_meta ORDER BY uploaded DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM music.meta ORDER BY uploaded DESC LIMIT :limit OFFSET :offset")
     Flux<MusicMetaEntity> findAllWithPages(@Param("limit") int limit, @Param("offset") int offset);
 
-    @Query("SELECT * FROM music.music_meta WHERE EXTRACT(YEAR FROM uploaded) = EXTRACT(YEAR FROM CURRENT_DATE) AND EXTRACT(MONTH FROM uploaded) = EXTRACT(MONTH FROM CURRENT_DATE) ORDER BY listens DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM music.meta WHERE EXTRACT(YEAR FROM uploaded) = EXTRACT(YEAR FROM CURRENT_DATE) AND EXTRACT(MONTH FROM uploaded) = EXTRACT(MONTH FROM CURRENT_DATE) ORDER BY listens DESC LIMIT :limit OFFSET :offset")
     Flux<MusicMetaEntity> findAllPerMonthWithPages(@Param("limit") int limit, @Param("offset") int offset);
 }

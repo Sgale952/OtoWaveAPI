@@ -3,12 +3,15 @@ package github.otowave.api.routes.albums.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "albums_meta", schema = "albums")
+import java.time.LocalDateTime;
+
+@Table(name = "meta", schema = "albums")
 public class AlbumsMetaEntity {
     @Id
     private int albumsID;
     private String tale;
     private int likes;
+    private LocalDateTime created;
 
     public AlbumsMetaEntity() {
     }
@@ -32,5 +35,12 @@ public class AlbumsMetaEntity {
     }
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 }

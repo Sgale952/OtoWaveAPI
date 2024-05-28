@@ -1,9 +1,9 @@
 package github.otowave.api.routes.common.services.itemsFactory.products;
 
-import github.otowave.api.routes.albums.entities.AlbumsEntity;
+import github.otowave.api.routes.albums.entities.AlbumsProfileEntity;
 import github.otowave.api.routes.albums.entities.AlbumsMetaEntity;
 import github.otowave.api.routes.albums.repositories.AlbumsMetaRepo;
-import github.otowave.api.routes.albums.repositories.AlbumsRepo;
+import github.otowave.api.routes.albums.repositories.AlbumsProfileRepo;
 import github.otowave.api.routes.common.services.itemsFactory.factory.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,13 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ItemAlbum extends Item {
-    private final AlbumsRepo albumsRepo;
+    private final AlbumsProfileRepo albumsProfileRepo;
     private final AlbumsMetaRepo albumsMetaRepo;
 
     @Autowired
-    public ItemAlbum(AlbumsRepo albumsRepo, AlbumsMetaRepo albumsMetaRepo) {
+    public ItemAlbum(AlbumsProfileRepo albumsProfileRepo, AlbumsMetaRepo albumsMetaRepo) {
         super(DefaultImageIDs.ALBUM);
-        this.albumsRepo = albumsRepo;
+        this.albumsProfileRepo = albumsProfileRepo;
         this.albumsMetaRepo = albumsMetaRepo;
     }
 
@@ -32,7 +32,7 @@ public class ItemAlbum extends Item {
         return getItemEntity()
                 .flatMap(entity -> {
                     entity.setTitle(newName);
-                    return albumsRepo.save(entity)
+                    return albumsProfileRepo.save(entity)
                             .then();
                 });
     }
@@ -49,7 +49,7 @@ public class ItemAlbum extends Item {
 
     @Override
     public Mono<Void> delete() {
-        return getItemEntity().flatMap(entity -> albumsRepo.delete(entity));
+        return getItemEntity().flatMap(entity -> albumsProfileRepo.delete(entity));
     }
 
     @Override
@@ -57,18 +57,18 @@ public class ItemAlbum extends Item {
         return getItemEntity()
                 .flatMap(entity -> {
                     entity.setCoverID(newImageID);
-                    return albumsRepo.save(entity);
+                    return albumsProfileRepo.save(entity);
                 }).then();
     }
 
     @Override
     public Mono<Integer> getCurrentImageID() {
-        return getItemEntity().map(AlbumsEntity::getCoverID);
+        return getItemEntity().map(AlbumsProfileEntity::getCoverID);
     }
 
     @Override
-    public Mono<AlbumsEntity> getItemEntity() {
-        return albumsRepo.findById(itemID);
+    public Mono<AlbumsProfileEntity> getItemEntity() {
+        return albumsProfileRepo.findById(itemID);
     }
 
     @Override
