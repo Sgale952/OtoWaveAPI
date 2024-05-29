@@ -7,13 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 @Service
-public class DailyFaceMaker extends MusicFaceMaker {
+public class DailyFaceMaker {
+    @Autowired
+    MusicFaceMaker musicFaceMaker;
     @Autowired
     private MusicMetaRepo musicMetaRepo;
 
     public Flux<MusicFaceModel> getDailyMusicFaceModel() {
         Flux<MusicMetaEntity> musicMetaEntities = getDailyMusicEntity();
-        return getFaceModels(musicMetaEntities);
+        return musicFaceMaker.getFaceModelsFromMeta(musicMetaEntities);
     }
 
     private Flux<MusicMetaEntity> getDailyMusicEntity() {

@@ -1,46 +1,54 @@
 package github.otowave.api.routes.music.services.faces;
 
+import github.otowave.api.routes.common.entities.ActionsEntity;
+import github.otowave.api.routes.common.models.FaceModel;
+import github.otowave.api.routes.common.services.FaceMaker;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
-import github.otowave.api.routes.users.entities.UsersProfileEntity;
 import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;
-import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-public class MusicFaceMaker {
+@Service
+public class MusicFaceMaker extends FaceMaker<MusicFaceModel, MusicMetaEntity, MusicProfileEntity> {
     @Autowired
     private MusicProfileRepo musicProfileRepo;
-    @Autowired
-    private UsersProfileRepo usersProfileRepo;
 
-    public Flux<MusicFaceModel> getFaceModels(Flux<MusicMetaEntity> musicMetaEntities) {
-        return musicMetaEntities
+    public MusicFaceMaker() {
+    }
+
+    public <T extends ActionsEntity> Flux<MusicFaceModel> getFaceModelsFromActions(Flux<T> actionsEntity) {
+        return actionsEntity
                 .flatMap(entity -> musicProfileRepo.findById(entity.getItemID())
                         .flatMap(this::makeFaceModel));
     }
 
-    protected Flux<MusicFaceModel> filterByGenre(Flux<MusicFaceModel> musicFaces, String genre) {
-        return musicFaces.filter(face -> Objects.equals(face.getGenre(), genre));
+    @Override
+    public Flux<MusicFaceModel> getFaceModelsFromMeta(Flux<MusicMetaEntity> metaEntities) {
+        return metaEntities
+                .flatMap(entity -> musicProfileRepo.findById(entity.getItemID())
+                        .flatMap(this::makeFaceModel));
     }
 
-    private Mono<MusicFaceModel> makeFaceModel(MusicProfileEntity musicProfileEntity) {
-        int musicID = musicProfileEntity.getItemID();
-        String title = musicProfileEntity.getTitle();
-        int authorID = musicProfileEntity.getAuthorID();
-        int coverID = musicProfileEntity.getCoverID();
-        String genre = musicProfileEntity.getGenre();
-        boolean econtent = musicProfileEntity.getEcontent();
+    @Override
+    protected Mono<MusicFaceModel> makeFaceModel(MusicProfileEntity profileEntity) {
+        int musicID = profileEntity.getItemID();
+        String title = profileEntity.getTitle();
+        int authorID = profileEntity.getAuthorID();
+        int coverID = profileEntity.getCoverID();
+        String genre = profileEntity.getGenre();
+        boolean econtent = profileEntity.getEcontent();
 
         return getUsername(authorID)
-                .map(authorName -> new MusicFaceModel(musicID, authorID, coverID, title, authorName, genre, econtent));
+                .map(authorName -> new MusicFaceModel(musicID, authorID, coverID, authorName, title, genre, econtent));
     }
 
-    private Mono<String> getUsername(int userID) {
-        return usersProfileRepo.findById(userID).map(UsersProfileEntity::getUsername);
+    protected Flux<MusicFaceModel> filterByGenre(Flux<MusicFaceModel> faces, String genre) {
+        return faces.filter(face -> Objects.equals(face.getGenre(), genre));
     }
 }

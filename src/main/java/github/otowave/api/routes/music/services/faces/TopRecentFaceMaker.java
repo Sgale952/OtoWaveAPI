@@ -9,19 +9,21 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 @Service
-public class TopRecentFaceMaker extends MusicFaceMaker {
+public class TopRecentFaceMaker {
+    @Autowired
+    MusicFaceMaker musicFaceMaker;
     @Autowired
     private MusicMetaRepo musicMetaRepo;
 
     public Flux<MusicFaceModel> getTopMusicFaceModels(int page, @Nullable String genre) {
         Flux<MusicMetaEntity> musicMetaEntities = getTopMusic(page);
-        Flux<MusicFaceModel> topMusicFaceModels = getFaceModels(musicMetaEntities);
+        Flux<MusicFaceModel> topMusicFaceModels = musicFaceMaker.getFaceModelsFromMeta(musicMetaEntities);
         return checkGenre(topMusicFaceModels, genre);
     }
 
     public Flux<MusicFaceModel> getRecentMusicFaceModels(int page, @Nullable String genre) {
         Flux<MusicMetaEntity> musicMetaEntities = getRecentMusic(page);
-        Flux<MusicFaceModel> recentMusicFaceModels = getFaceModels(musicMetaEntities);
+        Flux<MusicFaceModel> recentMusicFaceModels = musicFaceMaker.getFaceModelsFromMeta(musicMetaEntities);
         return checkGenre(recentMusicFaceModels, genre);
     }
 
@@ -35,7 +37,7 @@ public class TopRecentFaceMaker extends MusicFaceMaker {
 
     private Flux<MusicFaceModel> checkGenre(Flux<MusicFaceModel> faceModels, String genre) {
         if (genre != null && !genre.isEmpty())
-            return filterByGenre(faceModels, genre);
+            return musicFaceMaker.filterByGenre(faceModels, genre);
         else
             return faceModels;
     }

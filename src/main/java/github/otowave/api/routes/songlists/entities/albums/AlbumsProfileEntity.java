@@ -7,7 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class AlbumsProfileEntity extends ProfileEntity {
     private int creatorID;
     private String title;
-    private boolean access;
+    private String genre;
+    private boolean econtent;
 
     public AlbumsProfileEntity() {
     }
@@ -26,10 +27,17 @@ public class AlbumsProfileEntity extends ProfileEntity {
         this.title = title;
     }
 
-    public boolean isAccess() {
-        return access;
+    public String getGenre() {
+        return genre;
     }
-    public void setAccess(boolean access) {
-        this.access = access;
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public boolean getEcontent() {
+        return econtent;
+    }
+    public void setEcontent(boolean econtent) {
+        this.econtent = econtent;
     }
 }

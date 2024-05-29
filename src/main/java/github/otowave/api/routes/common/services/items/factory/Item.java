@@ -17,7 +17,7 @@ public abstract class Item implements Customizable, Imageable {
         this.itemID = itemID;
     }
 
-    public abstract Mono<?> getItemProfileEntity();
+    protected abstract Mono<?> getItemProfileEntity();
 
-    public abstract Mono<?> getItemMetaEntity();
+    protected abstract Mono<?> getItemMetaEntity();
 }

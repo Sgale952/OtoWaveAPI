@@ -7,7 +7,7 @@ public class MusicFaceModel extends FaceModel {
     private final String genre;
     private final boolean econtent;
 
-    public MusicFaceModel(int musicID, int authorID, int coverID, String title, String authorName, String genre, boolean econtent) {
+    public MusicFaceModel(int musicID, int authorID, int coverID, String authorName, String title, String genre, boolean econtent) {
         super(musicID, authorID, coverID, authorName);
         this.title = title;
         this.genre = genre;
