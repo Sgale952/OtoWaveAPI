@@ -10,9 +10,9 @@ public interface MusicMetaRepo extends ReactiveCrudRepository<MusicMetaEntity, I
     @Query("SELECT * FROM music.meta ORDER BY RANDOM() LIMIT 50")
     Flux<MusicMetaEntity> findRandomPage();
 
-    @Query("SELECT * FROM music.meta ORDER BY uploaded DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM music.meta ORDER BY created DESC LIMIT :limit OFFSET :offset")
     Flux<MusicMetaEntity> findAllWithPages(@Param("limit") int limit, @Param("offset") int offset);
 
-    @Query("SELECT * FROM music.meta WHERE EXTRACT(YEAR FROM uploaded) = EXTRACT(YEAR FROM CURRENT_DATE) AND EXTRACT(MONTH FROM uploaded) = EXTRACT(MONTH FROM CURRENT_DATE) ORDER BY listens DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM music.meta WHERE EXTRACT(YEAR FROM created) = EXTRACT(YEAR FROM CURRENT_DATE) AND EXTRACT(MONTH FROM created) = EXTRACT(MONTH FROM CURRENT_DATE) ORDER BY listens DESC LIMIT :limit OFFSET :offset")
     Flux<MusicMetaEntity> findAllPerMonthWithPages(@Param("limit") int limit, @Param("offset") int offset);
 }
