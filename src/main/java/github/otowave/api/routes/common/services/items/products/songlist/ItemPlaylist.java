@@ -1,11 +1,13 @@
 package github.otowave.api.routes.common.services.items.products.songlist;
 
+import github.otowave.api.routes.common.models.ProfileModel;
 import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsProfileEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsMetaEntity;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsProfileRepo;
+import github.otowave.api.routes.songlists.services.playlists.PlaylistsProfileMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -14,6 +16,8 @@ import reactor.core.publisher.Mono;
 public class ItemPlaylist extends Item {
     private final PlaylistsProfileRepo playlistsProfileRepo;
     private final PlaylistsMetaRepo playlistsMetaRepo;
+    @Autowired
+    PlaylistsProfileMaker playlistsProfileMaker;
 
     @Autowired
     public ItemPlaylist(PlaylistsProfileRepo playlistsProfileRepo, PlaylistsMetaRepo playlistsMetaRepo) {
@@ -23,8 +27,8 @@ public class ItemPlaylist extends Item {
     }
 
     @Override
-    public Mono profile() {
-        return null;
+    public Mono<ProfileModel> profile() {
+        return playlistsProfileMaker.getProfile(getItemMetaEntity());
     }
 
     @Override

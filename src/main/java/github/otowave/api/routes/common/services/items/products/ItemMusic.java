@@ -28,7 +28,7 @@ public class ItemMusic extends Item {
 
     @Override
     public Mono<MusicProfileModel> profile() {
-        return musicProfileMaker.getMusicProfile(getItemMetaEntity());
+        return musicProfileMaker.getProfile(getItemMetaEntity());
     }
 
     @Override

@@ -5,9 +5,11 @@ import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.users.entities.UsersMetaEntity;
 import github.otowave.api.routes.users.entities.UsersSecurityEntity;
 import github.otowave.api.routes.users.entities.UsersProfileEntity;
+import github.otowave.api.routes.users.models.UserProfileModel;
 import github.otowave.api.routes.users.repositories.UsersMetaRepo;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
+import github.otowave.api.routes.users.services.UserProfileMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -17,6 +19,8 @@ public class ItemUser extends Item {
     protected final UsersProfileRepo usersProfileRepo;
     protected final UsersMetaRepo usersMetaRepo;
     protected final UsersSecurityRepo usersSecurityRepo;
+    @Autowired
+    UserProfileMaker userProfileMaker;
 
     @Autowired
     public ItemUser(UsersProfileRepo usersProfileRepo, UsersMetaRepo usersMetaRepo, UsersSecurityRepo usersSecurityRepo) {
@@ -34,8 +38,8 @@ public class ItemUser extends Item {
     }
 
     @Override
-    public Mono profile() {
-        return null;
+    public Mono<UserProfileModel> profile() {
+        return userProfileMaker.getProfile(getItemMetaEntity());
     }
 
     @Override
