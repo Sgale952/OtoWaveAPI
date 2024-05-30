@@ -25,7 +25,7 @@ public class ImageController {
                                   @RequestPart Mono<FilePart> imageFile) {
         return imageFile.flatMap(file -> {
             ItemModel itemModel = new ItemModel(toItemType(itemType), itemID);
-            return imageUploader.uploadImage(imageFile, itemModel);
+            return imageUploader.upload(imageFile, itemModel);
         });
     }
 

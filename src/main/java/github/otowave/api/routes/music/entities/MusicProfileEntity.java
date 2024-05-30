@@ -1,6 +1,7 @@
 package github.otowave.api.routes.music.entities;
 
 import github.otowave.api.routes.common.entities.ProfileEntity;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "profile", schema = "music")
@@ -11,6 +12,14 @@ public class MusicProfileEntity extends ProfileEntity {
     private boolean econtent;
 
     public MusicProfileEntity() {
+    }
+
+    public MusicProfileEntity(DefaultImageIDs coverID, int authorID, String title, String genre, boolean econtent) {
+        setCoverID(coverID.getImageID());
+        this.authorID = authorID;
+        this.title = title;
+        this.genre = genre;
+        this.econtent = econtent;
     }
 
     public int getAuthorID() {
