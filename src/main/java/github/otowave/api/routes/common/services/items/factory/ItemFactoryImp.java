@@ -35,13 +35,13 @@ public class ItemFactoryImp implements ItemFactory {
                 case MUSIC -> {
                     return getItem(ItemMusic.class, itemModel);
                 }
-                case PLAYLIST -> {
+                case PLAYLISTS -> {
                     return getItem(ItemPlaylist.class, itemModel);
                 }
-                case ALBUM -> {
+                case ALBUMS -> {
                     return getItem(ItemAlbum.class, itemModel);
                 }
-                case USER -> {
+                case USERS -> {
                     return getItem("ItemUser", ItemUser.class, itemModel);
                 }
                 case USER_HEADER -> {

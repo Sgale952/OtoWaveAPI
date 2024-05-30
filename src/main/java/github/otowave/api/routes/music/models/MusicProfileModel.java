@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 public class MusicProfileModel extends ProfileModel {
     private final int listens;
 
-    public MusicProfileModel(MusicFaceModel musicFaceModel, String tale, int likes, int listens, LocalDateTime uploaded) {
-        super(musicFaceModel, tale, likes, uploaded);
+    public MusicProfileModel(MusicFaceModel musicFaceModel, String tale, int likes, int listens, LocalDateTime created) {
+        super(musicFaceModel, tale, likes, created);
         this.listens = listens;
     }
 

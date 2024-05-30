@@ -1,7 +1,7 @@
 package github.otowave.api.routes.music.services.faces;
 
 import github.otowave.api.routes.common.entities.ActionsEntity;
-import github.otowave.api.routes.common.models.FaceModel;
+import github.otowave.api.routes.common.entities.FillingEntity;
 import github.otowave.api.routes.common.services.FaceMaker;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
@@ -20,6 +20,12 @@ public class MusicFaceMaker extends FaceMaker<MusicFaceModel, MusicMetaEntity, M
     private MusicProfileRepo musicProfileRepo;
 
     public MusicFaceMaker() {
+    }
+
+    public <T extends FillingEntity> Flux<MusicFaceModel> getFaceModelsFromFilling(Flux<T> fillingEntity) {
+        return fillingEntity
+                .flatMap(entity -> musicProfileRepo.findById(entity.getMusicID())
+                        .flatMap(this::makeFaceModel));
     }
 
     public <T extends ActionsEntity> Flux<MusicFaceModel> getFaceModelsFromActions(Flux<T> actionsEntity) {
