@@ -1,8 +1,8 @@
 package github.otowave.api.routes.common.services.items.products.songlist;
 
-import github.otowave.api.routes.common.models.ProfileModel;
 import github.otowave.api.routes.songlists.entities.albums.AlbumsProfileEntity;
 import github.otowave.api.routes.songlists.entities.albums.AlbumsMetaEntity;
+import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsProfileRepo;
 import github.otowave.api.routes.common.services.items.factory.Item;
@@ -27,7 +27,7 @@ public class ItemAlbum extends Item {
     }
 
     @Override
-    public Mono<ProfileModel> profile() {
+    public Mono<SonglistProfileModel> profile() {
         return albumsProfileMaker.getProfile(getItemMetaEntity());
     }
 

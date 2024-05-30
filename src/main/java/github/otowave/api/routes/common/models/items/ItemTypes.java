@@ -2,9 +2,9 @@ package github.otowave.api.routes.common.models.items;
 
 public enum ItemTypes {
     MUSIC,
-    PLAYLIST,
-    ALBUM,
-    USER,
+    PLAYLISTS,
+    ALBUMS,
+    USERS,
     USER_HEADER;
 
     public static ItemTypes toItemType(String itemType) {

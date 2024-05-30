@@ -5,6 +5,7 @@ import github.otowave.api.routes.common.services.items.factory.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsProfileEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsMetaEntity;
+import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsProfileRepo;
 import github.otowave.api.routes.songlists.services.playlists.PlaylistsProfileMaker;
@@ -27,7 +28,7 @@ public class ItemPlaylist extends Item {
     }
 
     @Override
-    public Mono<ProfileModel> profile() {
+    public Mono<SonglistProfileModel> profile() {
         return playlistsProfileMaker.getProfile(getItemMetaEntity());
     }
 

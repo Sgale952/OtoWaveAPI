@@ -13,8 +13,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static github.otowave.api.routes.songlists.models.SonglistTypes.PLAYLIST;
-
 @Service
 public class PlaylistsFaceMaker extends FaceMaker<SonglistFaceModel, PlaylistsMetaEntity, PlaylistsProfileEntity> {
     @Autowired
@@ -46,7 +44,7 @@ public class PlaylistsFaceMaker extends FaceMaker<SonglistFaceModel, PlaylistsMe
         boolean econtent = profileEntity.getEcontent();
 
         return getUsername(authorID)
-                .map(authorName -> new SonglistFaceModel(playlistID, authorID, coverID, authorName, title, genre, econtent, PLAYLIST));
+                .map(authorName -> new SonglistFaceModel(playlistID, authorID, coverID, authorName, title, genre, econtent));
     }
 
     protected Flux<SonglistFaceModel> filterByGenre(Flux<SonglistFaceModel> faces, String genre) {
