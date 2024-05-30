@@ -10,6 +10,11 @@ public class MusicMetaEntity extends MetaEntity {
     public MusicMetaEntity() {
     }
 
+    public MusicMetaEntity(int itemID, String tale) {
+        setItemID(itemID);
+        setTale(tale);
+    }
+
     public int getListens() {
         return listens;
     }

@@ -2,11 +2,11 @@ package github.otowave.api.routes.images.services.upload.save;
 
 import github.otowave.api.routes.images.entities.ImagesEntity;
 import github.otowave.api.routes.images.repositories.ImagesRepo;
-import github.otowave.api.routes.images.services.upload.ImageUploader;
 import github.otowave.api.routes.images.services.upload.UploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
@@ -27,6 +27,7 @@ public class ImageSaver {
     public ImageSaver() {
     }
 
+    @Transactional
     public Mono<ImagesEntity> saveImage(Mono<FilePart> imageFile) {
         return imageFile
                 .flatMap(this::createImageEntity)

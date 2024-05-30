@@ -18,7 +18,7 @@ public class ImageUploader {
     public ImageUploader() {
     }
 
-    public Mono<Integer> uploadImage(Mono<FilePart> imageFile, ItemModel itemModel) {
+    public Mono<Integer> upload(Mono<FilePart> imageFile, ItemModel itemModel) {
         return imageSaver.saveImage(imageFile)
                 .flatMap(imageEntity -> imageApplier.applyImageToItem(itemModel, Mono.just(imageEntity)));
     }
