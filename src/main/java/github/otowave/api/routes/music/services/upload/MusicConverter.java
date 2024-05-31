@@ -52,8 +52,9 @@ public class MusicConverter {
                 "-segment_list", outputFile,
                 tsFilePattern
         );
-        Process process = builder.start();
-/*        int exitCode = process.waitFor();
+        builder.start();
+/*        Process process = builder.start();
+        int exitCode = process.waitFor();
         if (exitCode != 0) {
             throw new FfmpegExecutionException(inputFile, exitCode);
         }*/
