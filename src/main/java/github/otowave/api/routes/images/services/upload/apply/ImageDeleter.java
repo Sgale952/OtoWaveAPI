@@ -1,7 +1,7 @@
 package github.otowave.api.routes.images.services.upload.apply;
 
 import github.otowave.api.exceptions.ImageNotNeedDeletion;
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.items.factory.item.Item;
 import github.otowave.api.routes.images.repositories.ImagesRepo;
 import github.otowave.api.routes.images.services.upload.UploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,6 +10,7 @@ import github.otowave.api.routes.songlists.services.playlists.PlaylistsFaceMaker
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class UserSonglistsActions {
@@ -34,7 +35,7 @@ public class UserSonglistsActions {
     }
 
     public Flux<SonglistFaceModel> getLikedPlaylists(int userID) {
-        return playlistsFaceMaker.getFaceModelsFromActions(likedPlaylistsRepo.findAllById(Flux.just(userID)));
+        return playlistsFaceMaker.getFaceModelsFromActions(likedPlaylistsRepo.findAllByUserID(Mono.just(userID)));
     }
 
     public Flux<SonglistFaceModel> getCreatedAlbums(int userID) {
@@ -42,6 +43,6 @@ public class UserSonglistsActions {
     }
 
     public Flux<SonglistFaceModel> getLikedAlbums(int userID) {
-        return albumsFaceMaker.getFaceModelsFromActions(likedAlbumsRepo.findAllById(Flux.just(userID)));
+        return albumsFaceMaker.getFaceModelsFromActions(likedAlbumsRepo.findAllByUserID(Mono.just(userID)));
     }
 }

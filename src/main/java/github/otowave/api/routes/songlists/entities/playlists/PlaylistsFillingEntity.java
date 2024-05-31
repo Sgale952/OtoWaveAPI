@@ -7,4 +7,9 @@ import org.springframework.data.relational.core.mapping.Table;
 public class PlaylistsFillingEntity extends FillingEntity {
     public PlaylistsFillingEntity() {
     }
+
+    public PlaylistsFillingEntity(int itemID, int musicID) {
+        setItemID(itemID);
+        setMusicID(musicID);
+    }
 }

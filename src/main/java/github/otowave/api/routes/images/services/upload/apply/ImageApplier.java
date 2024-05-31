@@ -1,6 +1,6 @@
 package github.otowave.api.routes.images.services.upload.apply;
 
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.items.factory.item.Item;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
 import github.otowave.api.routes.images.entities.ImagesEntity;
 import github.otowave.api.routes.common.models.items.ItemModel;

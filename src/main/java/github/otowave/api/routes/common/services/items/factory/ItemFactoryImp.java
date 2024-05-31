@@ -2,6 +2,8 @@ package github.otowave.api.routes.common.services.items.factory;
 
 import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.models.items.ItemTypes;
+import github.otowave.api.routes.common.services.items.factory.item.Item;
+import github.otowave.api.routes.common.services.items.factory.songlist.SonglistItem;
 import github.otowave.api.routes.common.services.items.products.*;
 import github.otowave.api.routes.common.services.items.products.songlist.ItemAlbum;
 import github.otowave.api.routes.common.services.items.products.songlist.ItemPlaylist;
@@ -54,17 +56,39 @@ public class ItemFactoryImp implements ItemFactory {
         });
     }
 
-    private <T extends Item> Mono<Item> getItem(Class<T> itemClass, ItemModel itemModel) {
-        Item item = context.getBean(itemClass);
+    public Mono<SonglistItem> makeSonglistItem(ItemTypes itemType, int itemID) {
+        ItemModel itemModel = new ItemModel(itemType, itemID);
+        return makeSonglistItem(itemModel);
+    }
+
+    public Mono<SonglistItem> makeSonglistItem(ItemModel itemModel) {
+        ItemTypes itemType = itemModel.itemType();
+        return Mono.defer(() -> {
+            switch (itemType) {
+                case PLAYLISTS -> {
+                    return getItem(ItemPlaylist.class, itemModel);
+                }
+                case ALBUMS -> {
+                    return getItem(ItemAlbum.class, itemModel);
+                }
+                default -> {
+                    return Mono.error(new IllegalArgumentException("Unknown item type: " + itemType));
+                }
+            }
+        });
+    }
+
+    private <I extends Item> Mono<I> getItem(Class<I> itemClass, ItemModel itemModel) {
+        I item = context.getBean(itemClass);
         return prepareItem(item, itemModel);
     }
 
-    private <T extends Item> Mono<Item> getItem(String beanName, Class<T> itemClass, ItemModel itemModel) {
-        Item item = context.getBean(beanName, itemClass);
+    private <I extends Item> Mono<I> getItem(String beanName, Class<I> itemClass, ItemModel itemModel) {
+        I item = context.getBean(beanName, itemClass);
         return prepareItem(item, itemModel);
     }
 
-    private Mono<Item> prepareItem(Item item, ItemModel itemModel) {
+    private <I extends Item> Mono<I> prepareItem(I item, ItemModel itemModel) {
         item.setItemID(itemModel.itemID());
         return Mono.just(item);
     }

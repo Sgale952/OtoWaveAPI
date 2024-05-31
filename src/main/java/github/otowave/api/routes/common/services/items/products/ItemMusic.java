@@ -1,6 +1,6 @@
 package github.otowave.api.routes.common.services.items.products;
 
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.items.factory.item.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
@@ -80,6 +80,6 @@ public class ItemMusic extends Item {
 
     @Override
     public Mono<MusicMetaEntity> getItemMetaEntity() {
-        return musicMetaRepo.findById(itemID);
+        return musicMetaRepo.findAllByItemID(itemID);
     }
 }

@@ -1,6 +1,7 @@
 package github.otowave.api.routes.songlists.entities.playlists;
 
 import github.otowave.api.routes.common.entities.ProfileEntity;
+import github.otowave.api.routes.images.models.DefaultImageIDs;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "profile", schema = "playlists")
@@ -11,6 +12,12 @@ public class PlaylistsProfileEntity extends ProfileEntity {
     private boolean econtent;
 
     public PlaylistsProfileEntity() {
+    }
+
+    public PlaylistsProfileEntity(int creatorID, String title) {
+        this.creatorID = creatorID;
+        this.title = title;
+        setCoverID(DefaultImageIDs.PLAYLIST.getImageID());
     }
 
     public int getCreatorID() {

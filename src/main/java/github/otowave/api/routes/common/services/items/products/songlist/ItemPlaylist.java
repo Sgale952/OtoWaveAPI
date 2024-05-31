@@ -1,24 +1,29 @@
 package github.otowave.api.routes.common.services.items.products.songlist;
 
-import github.otowave.api.routes.common.models.ProfileModel;
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.items.factory.songlist.SonglistItem;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
-import github.otowave.api.routes.songlists.entities.playlists.PlaylistsProfileEntity;
+import github.otowave.api.routes.songlists.entities.albums.AlbumsFillingEntity;
+import github.otowave.api.routes.songlists.entities.playlists.PlaylistsFillingEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsMetaEntity;
+import github.otowave.api.routes.songlists.entities.playlists.PlaylistsProfileEntity;
+import github.otowave.api.routes.songlists.entities.playlists.PlaylistsSecurityEntity;
 import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsProfileRepo;
 import github.otowave.api.routes.songlists.services.playlists.PlaylistsProfileMaker;
+import github.otowave.api.routes.songlists.services.playlists.PlaylistsUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class ItemPlaylist extends Item {
+public class ItemPlaylist extends SonglistItem {
     private final PlaylistsProfileRepo playlistsProfileRepo;
     private final PlaylistsMetaRepo playlistsMetaRepo;
     @Autowired
     PlaylistsProfileMaker playlistsProfileMaker;
+    @Autowired
+    PlaylistsUploader playlistsUploader;
 
     @Autowired
     public ItemPlaylist(PlaylistsProfileRepo playlistsProfileRepo, PlaylistsMetaRepo playlistsMetaRepo) {
@@ -67,6 +72,26 @@ public class ItemPlaylist extends Item {
     }
 
     @Override
+    public Mono<Integer> upload(int creatorID, String title, String tale, boolean access) {
+        return playlistsUploader.upload(makeProfileEntity(creatorID, title), new PlaylistsMetaEntity(tale), new PlaylistsSecurityEntity(access));
+    }
+
+    @Override
+    public PlaylistsProfileEntity makeProfileEntity(int creatorID, String title) {
+        return new PlaylistsProfileEntity(creatorID, title);
+    }
+
+    @Override
+    public Mono<Void> addMusic(int musicID) {
+        return playlistsUploader.addMusic(new PlaylistsFillingEntity(itemID, musicID));
+    }
+
+    @Override
+    public Mono<Void> removeMusic(int musicID) {
+        return playlistsUploader.removeMusic(itemID, musicID);
+    }
+
+    @Override
     public Mono<Integer> getCurrentImageID() {
         return getItemProfileEntity().map(PlaylistsProfileEntity::getCoverID);
     }
@@ -78,6 +103,6 @@ public class ItemPlaylist extends Item {
 
     @Override
     public Mono<PlaylistsMetaEntity> getItemMetaEntity() {
-        return playlistsMetaRepo.findById(itemID);
+        return playlistsMetaRepo.findAllByItemID(itemID);
     }
 }

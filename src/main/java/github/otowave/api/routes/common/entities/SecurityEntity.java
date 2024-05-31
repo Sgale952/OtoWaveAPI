@@ -1,11 +1,15 @@
 package github.otowave.api.routes.common.entities;
 
-import org.springframework.data.annotation.Id;
-
 public class SecurityEntity {
-    @Id
     private int itemID;
     private boolean access;
+
+    public SecurityEntity() {
+    }
+
+    public SecurityEntity(boolean access) {
+        this.access = access;
+    }
 
     public int getItemID() {
         return itemID;
