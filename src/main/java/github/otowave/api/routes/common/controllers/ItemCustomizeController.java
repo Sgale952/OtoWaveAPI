@@ -40,7 +40,7 @@ public class ItemCustomizeController {
     }
 
     @DeleteMapping("/delete")
-    Mono<Void> delete(@PathVariable String itemType, @PathVariable int itemID) {
+    Mono<Integer> delete(@PathVariable String itemType, @PathVariable int itemID) {
         return itemFactory.makeItem(toItemType(itemType), itemID)
                 .flatMap(Customizable::delete);
     }

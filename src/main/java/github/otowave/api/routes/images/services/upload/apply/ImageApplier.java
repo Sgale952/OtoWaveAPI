@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import static github.otowave.api.routes.common.models.items.ItemTypes.toItemType;
+import static github.otowave.api.routes.images.models.DefaultImageIDs.toDefaultImageID;
+
 @Service
 public class ImageApplier {
     private final ItemFactoryImp itemFactory;
@@ -19,6 +22,12 @@ public class ImageApplier {
     @Autowired
     public ImageApplier(ItemFactoryImp itemFactory) {
         this.itemFactory = itemFactory;
+    }
+
+    public Mono<Integer> resetImage(String itemType, int musicID) {
+        ItemModel itemModel = new ItemModel(toItemType(itemType), musicID);
+        Mono<ImagesEntity> imagesEntity = Mono.just(new ImagesEntity(toDefaultImageID(itemType)));
+        return applyImageToItem(itemModel, imagesEntity);
     }
 
     public Mono<Integer> applyImageToItem(ItemModel itemModel, Mono<ImagesEntity> imageEntity) {
