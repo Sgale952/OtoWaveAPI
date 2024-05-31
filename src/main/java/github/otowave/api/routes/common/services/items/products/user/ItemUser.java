@@ -63,8 +63,8 @@ public class ItemUser extends Item {
     }
 
     @Override
-    public Mono<Void> delete() {
-        return getItemSecurityEntity().flatMap(entity -> usersSecurityRepo.delete(entity));
+    public Mono<Integer> delete() {
+        return getItemSecurityEntity().flatMap(entity -> usersSecurityRepo.delete(entity)).thenReturn(1);
     }
 
     @Override

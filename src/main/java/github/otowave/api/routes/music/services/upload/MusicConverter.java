@@ -32,7 +32,7 @@ public class MusicConverter {
     private void executeFfmpeg(String inputFile, String outputFile) {
         try {
             runProcessBuilder(inputFile, outputFile);
-            //TODO: Deletes the loaded file too early. Need to wait for FFmpeg to finish but waitFor() stops FFmpeg process
+            //TODO: Maybe work fine in Linux. Uncomment deleteUnconvertedFile and runProcessBuilder
             //deleteUnconvertedFile(inputFile);
         }
         catch (Exception e) {
@@ -52,7 +52,11 @@ public class MusicConverter {
                 "-segment_list", outputFile,
                 tsFilePattern
         );
-        builder.start();
+        Process process = builder.start();
+/*        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new FfmpegExecutionException(inputFile, exitCode);
+        }*/
     }
 
     private void deleteUnconvertedFile(String file) {

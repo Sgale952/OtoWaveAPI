@@ -12,5 +12,5 @@ public interface Customizable {
 
     Mono<Void> changeTale(String newTale);
 
-    Mono<Void> delete();
+    Mono<Integer> delete();
 }

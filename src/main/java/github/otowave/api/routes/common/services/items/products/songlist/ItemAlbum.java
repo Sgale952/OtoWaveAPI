@@ -52,8 +52,8 @@ public class ItemAlbum extends Item {
     }
 
     @Override
-    public Mono<Void> delete() {
-        return getItemProfileEntity().flatMap(entity -> albumsProfileRepo.delete(entity));
+    public Mono<Integer> delete() {
+        return getItemProfileEntity().flatMap(entity -> albumsProfileRepo.delete(entity)).thenReturn(1);
     }
 
     @Override

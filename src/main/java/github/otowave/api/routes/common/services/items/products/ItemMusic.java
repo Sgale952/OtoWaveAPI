@@ -7,6 +7,7 @@ import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import github.otowave.api.routes.music.models.MusicProfileModel;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;
+import github.otowave.api.routes.music.services.MusicDeleter;
 import github.otowave.api.routes.music.services.MusicProfileMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,8 @@ public class ItemMusic extends Item {
     private final MusicMetaRepo musicMetaRepo;
     @Autowired
     MusicProfileMaker musicProfileMaker;
+    @Autowired
+    MusicDeleter musicDeleter;
 
     @Autowired
     public ItemMusic(MusicProfileRepo musicProfileRepo, MusicMetaRepo musicMetaRepo) {
@@ -52,8 +55,8 @@ public class ItemMusic extends Item {
     }
 
     @Override
-    public Mono<Void> delete() {
-        return getItemProfileEntity().flatMap(entity -> musicProfileRepo.delete(entity));
+    public Mono<Integer> delete() {
+        return musicDeleter.delete(itemID);
     }
 
     @Override
