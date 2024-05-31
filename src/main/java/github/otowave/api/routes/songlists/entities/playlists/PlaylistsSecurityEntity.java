@@ -7,4 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class PlaylistsSecurityEntity extends SecurityEntity {
     public PlaylistsSecurityEntity() {
     }
+
+    public PlaylistsSecurityEntity(boolean access) {
+        setAccess(access);
+    }
 }

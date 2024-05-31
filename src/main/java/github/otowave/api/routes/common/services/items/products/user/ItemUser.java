@@ -1,6 +1,6 @@
 package github.otowave.api.routes.common.services.items.products.user;
 
-import github.otowave.api.routes.common.services.items.factory.Item;
+import github.otowave.api.routes.common.services.items.factory.item.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.users.entities.UsersMetaEntity;
 import github.otowave.api.routes.users.entities.UsersSecurityEntity;
@@ -88,10 +88,10 @@ public class ItemUser extends Item {
 
     @Override
     public Mono<UsersMetaEntity> getItemMetaEntity() {
-        return usersMetaRepo.findById(itemID);
+        return usersMetaRepo.findAllByItemID(itemID);
     }
 
     public Mono<UsersSecurityEntity> getItemSecurityEntity() {
-        return usersSecurityRepo.findById(itemID);
+        return usersSecurityRepo.findAllByItemID(itemID);
     }
 }

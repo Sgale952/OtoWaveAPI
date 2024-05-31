@@ -7,4 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class AlbumsMetaEntity extends MetaEntity {
     public AlbumsMetaEntity() {
     }
+
+    public AlbumsMetaEntity(String tale) {
+        setTale(tale);
+    }
 }

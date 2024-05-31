@@ -8,6 +8,13 @@ public class MetaEntity {
     private int likes;
     private LocalDateTime created;
 
+    public MetaEntity() {
+    }
+
+    public MetaEntity(String tale) {
+        this.tale = tale;
+    }
+
     public int getItemID() {
         return itemID;
     }

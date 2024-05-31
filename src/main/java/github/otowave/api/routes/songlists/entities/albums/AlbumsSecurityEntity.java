@@ -7,4 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class AlbumsSecurityEntity extends SecurityEntity {
     public AlbumsSecurityEntity() {
     }
+
+    public AlbumsSecurityEntity(boolean access) {
+        setAccess(access);
+    }
 }

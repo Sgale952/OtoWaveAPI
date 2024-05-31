@@ -1,4 +1,4 @@
-package github.otowave.api.routes.common.services.items.factory;
+package github.otowave.api.routes.common.services.items.factory.item;
 
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import org.springframework.stereotype.Component;

@@ -7,4 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class PlaylistsMetaEntity extends MetaEntity {
     public PlaylistsMetaEntity() {
     }
+
+    public PlaylistsMetaEntity(String tale) {
+        setTale(tale);
+    }
 }

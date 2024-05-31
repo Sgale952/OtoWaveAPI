@@ -1,10 +1,8 @@
-package github.otowave.api.routes.common.services.items.factory;
+package github.otowave.api.routes.common.services.items.factory.item;
 
 import github.otowave.api.routes.common.models.ProfileModel;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
 public interface Customizable {
     <T extends ProfileModel> Mono<T> profile();
 

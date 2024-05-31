@@ -9,7 +9,6 @@ import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsFillingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -46,6 +45,6 @@ public class AlbumsProfileMaker extends ProfileMaker<SonglistProfileModel, Album
     }
 
     private Mono<List<MusicFaceModel>> getFilling(int playlistID) {
-        return musicFaceMaker.getFaceModelsFromFilling(albumsFillingRepo.findAllById(Flux.just(playlistID))).collectList();
+        return musicFaceMaker.getFaceModelsFromFilling(albumsFillingRepo.findAllByItemID(Mono.just(playlistID))).collectList();
     }
 }

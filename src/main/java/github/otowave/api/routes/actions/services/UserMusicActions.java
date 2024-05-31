@@ -7,6 +7,7 @@ import github.otowave.api.routes.music.services.faces.MusicFaceMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class UserMusicActions {
@@ -25,6 +26,6 @@ public class UserMusicActions {
     }
 
     public Flux<MusicFaceModel> getLikedMusicFaces(int userID) {
-        return musicFaceMaker.getFaceModelsFromActions(likedMusicRepo.findAllById(Flux.just(userID)));
+        return musicFaceMaker.getFaceModelsFromActions(likedMusicRepo.findAllByUserID(Mono.just(userID)));
     }
 }
