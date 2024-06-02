@@ -4,7 +4,7 @@ import github.otowave.api.routes.music.entities.GenresEntity;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.models.*;
 import github.otowave.api.routes.music.repositories.GenresRepo;
-import github.otowave.api.routes.music.services.faces.DailyFaceMaker;
+import github.otowave.api.routes.music.services.faces.MusicDailyFaceMaker;
 import github.otowave.api.routes.music.services.faces.TopRecentFaceMaker;
 import github.otowave.api.routes.music.services.upload.MusicUploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class MusicController {
     @Autowired
     private GenresRepo genresRepo;
     @Autowired
-    private DailyFaceMaker dailyFaceMaker;
+    private MusicDailyFaceMaker musicDailyFaceMaker;
     @Autowired
     private TopRecentFaceMaker topRecentFacesMaker;
     @Autowired
@@ -34,7 +34,7 @@ public class MusicController {
 
     @GetMapping("/daily")
     private Flux<MusicFaceModel> daily() {
-        return dailyFaceMaker.getDailyMusicFaceModel();
+        return musicDailyFaceMaker.getDailyFaceModel();
     }
 
 /*    @GetMapping("/subs-new")
