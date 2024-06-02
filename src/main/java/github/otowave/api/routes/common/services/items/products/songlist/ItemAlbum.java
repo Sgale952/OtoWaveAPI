@@ -10,7 +10,7 @@ import github.otowave.api.routes.songlists.repositories.albums.AlbumsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsProfileRepo;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.songlists.services.albums.AlbumDeleter;
-import github.otowave.api.routes.songlists.services.albums.AlbumsProfileMaker;
+import github.otowave.api.routes.songlists.services.albums.faces.AlbumsProfileMaker;
 import github.otowave.api.routes.songlists.services.albums.AlbumsUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

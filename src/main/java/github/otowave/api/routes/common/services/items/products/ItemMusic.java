@@ -8,7 +8,7 @@ import github.otowave.api.routes.music.models.MusicProfileModel;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;
 import github.otowave.api.routes.music.services.MusicDeleter;
-import github.otowave.api.routes.music.services.MusicProfileMaker;
+import github.otowave.api.routes.music.services.faces.MusicProfileMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;

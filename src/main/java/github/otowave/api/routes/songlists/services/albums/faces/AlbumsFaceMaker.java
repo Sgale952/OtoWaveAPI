@@ -1,4 +1,4 @@
-package github.otowave.api.routes.songlists.services.albums;
+package github.otowave.api.routes.songlists.services.albums.faces;
 
 import github.otowave.api.routes.common.entities.ActionsEntity;
 import github.otowave.api.routes.common.services.FaceMaker;

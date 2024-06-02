@@ -1,4 +1,4 @@
-package github.otowave.api.routes.music.services;
+package github.otowave.api.routes.music.services.faces;
 
 import github.otowave.api.routes.common.services.ProfileMaker;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;

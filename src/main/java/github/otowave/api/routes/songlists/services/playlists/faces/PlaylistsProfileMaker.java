@@ -1,4 +1,4 @@
-package github.otowave.api.routes.songlists.services.playlists;
+package github.otowave.api.routes.songlists.services.playlists.faces;
 
 import github.otowave.api.routes.common.services.ProfileMaker;
 import github.otowave.api.routes.music.models.MusicFaceModel;
