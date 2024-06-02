@@ -17,7 +17,7 @@ public class PlaylistsProfileEntity extends ProfileEntity {
     public PlaylistsProfileEntity(int creatorID, String title) {
         this.creatorID = creatorID;
         this.title = title;
-        setCoverID(DefaultImageIDs.PLAYLIST.getImageID());
+        setCoverID(DefaultImageIDs.PLAYLISTS.getImageID());
     }
 
     public int getCreatorID() {

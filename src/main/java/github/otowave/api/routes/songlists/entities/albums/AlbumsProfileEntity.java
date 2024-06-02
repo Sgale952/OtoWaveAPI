@@ -17,7 +17,7 @@ public class AlbumsProfileEntity extends ProfileEntity {
     public AlbumsProfileEntity(int creatorID, String title) {
         this.creatorID = creatorID;
         this.title = title;
-        setCoverID(DefaultImageIDs.ALBUM.getImageID());
+        setCoverID(DefaultImageIDs.ALBUMS.getImageID());
     }
 
     public int getCreatorID() {

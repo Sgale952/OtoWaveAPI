@@ -9,6 +9,7 @@ import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsProfileRepo;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
+import github.otowave.api.routes.songlists.services.albums.AlbumDeleter;
 import github.otowave.api.routes.songlists.services.albums.AlbumsProfileMaker;
 import github.otowave.api.routes.songlists.services.albums.AlbumsUploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ public class ItemAlbum extends SonglistItem {
     AlbumsProfileMaker albumsProfileMaker;
     @Autowired
     AlbumsUploader albumsUploader;
+    @Autowired
+    AlbumDeleter albumDeleter;
 
     @Autowired
     public ItemAlbum(AlbumsProfileRepo albumsProfileRepo, AlbumsMetaRepo albumsMetaRepo) {
-        super(DefaultImageIDs.ALBUM);
+        super(DefaultImageIDs.ALBUMS);
         this.albumsProfileRepo = albumsProfileRepo;
         this.albumsMetaRepo = albumsMetaRepo;
     }
@@ -58,7 +61,7 @@ public class ItemAlbum extends SonglistItem {
 
     @Override
     public Mono<Integer> delete() {
-        return getItemProfileEntity().flatMap(entity -> albumsProfileRepo.delete(entity)).thenReturn(1);
+        return albumDeleter.delete(itemID);
     }
 
     @Override

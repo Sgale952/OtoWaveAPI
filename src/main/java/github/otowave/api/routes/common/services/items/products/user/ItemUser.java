@@ -24,7 +24,7 @@ public class ItemUser extends Item {
 
     @Autowired
     public ItemUser(UsersProfileRepo usersProfileRepo, UsersMetaRepo usersMetaRepo, UsersSecurityRepo usersSecurityRepo) {
-        super(DefaultImageIDs.USER);
+        super(DefaultImageIDs.USERS);
         this.usersProfileRepo = usersProfileRepo;
         this.usersSecurityRepo = usersSecurityRepo;
         this.usersMetaRepo = usersMetaRepo;
