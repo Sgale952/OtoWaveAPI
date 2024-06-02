@@ -34,6 +34,10 @@ public class MusicFaceMaker extends FaceMaker<MusicFaceModel, MusicMetaEntity, M
                         .flatMap(this::makeFaceModel));
     }
 
+    public Flux<MusicFaceModel> getFaceModelsFromProfile(Flux<MusicProfileEntity> profileEntity) {
+        return profileEntity.flatMap(this::makeFaceModel);
+    }
+
     @Override
     public Flux<MusicFaceModel> getFaceModelsFromMeta(Flux<MusicMetaEntity> metaEntities) {
         return metaEntities

@@ -5,7 +5,7 @@ import github.otowave.api.routes.actions.repositories.LikedPlaylistsRepo;
 import github.otowave.api.routes.songlists.models.SonglistFaceModel;
 import github.otowave.api.routes.songlists.repositories.albums.AlbumsProfileRepo;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsProfileRepo;
-import github.otowave.api.routes.songlists.services.albums.AlbumsFaceMaker;
+import github.otowave.api.routes.songlists.services.albums.faces.AlbumsFaceMaker;
 import github.otowave.api.routes.songlists.services.playlists.faces.PlaylistsFaceMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
