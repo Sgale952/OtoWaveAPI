@@ -1,8 +1,11 @@
 package github.otowave.api.routes.songlists.controllers;
 
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
+import github.otowave.api.routes.songlists.models.SonglistFaceModel;
+import github.otowave.api.routes.songlists.services.playlists.faces.PlaylistDailyFaceMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static github.otowave.api.routes.common.models.items.ItemTypes.toItemType;
@@ -11,6 +14,8 @@ import static github.otowave.api.routes.common.models.items.ItemTypes.toItemType
 @RequestMapping("/{songlistType}")
 public class SonglistController {
     private final ItemFactoryImp itemFactory;
+    @Autowired
+    PlaylistDailyFaceMaker playlistDailyFaceMaker;
 
     @Autowired
     public SonglistController(ItemFactoryImp itemFactory) {
@@ -34,5 +39,10 @@ public class SonglistController {
     private Mono<Void> removeMusic(@PathVariable String songlistType, @PathVariable int itemID, int musicID) {
         return itemFactory.makeSonglistItem(toItemType(songlistType), itemID)
                 .flatMap(item -> item.removeMusic(musicID));
+    }
+
+    @GetMapping("/daily")
+    private Flux<SonglistFaceModel> daily() {
+        return playlistDailyFaceMaker.getDailyFaceModel();
     }
 }

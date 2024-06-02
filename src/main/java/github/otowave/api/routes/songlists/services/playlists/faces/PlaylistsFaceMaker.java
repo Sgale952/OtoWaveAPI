@@ -1,4 +1,4 @@
-package github.otowave.api.routes.songlists.services.playlists;
+package github.otowave.api.routes.songlists.services.playlists.faces;
 
 import github.otowave.api.routes.common.entities.ActionsEntity;
 import github.otowave.api.routes.common.services.FaceMaker;
@@ -28,7 +28,7 @@ public class PlaylistsFaceMaker extends FaceMaker<SonglistFaceModel, PlaylistsMe
     }
 
     @Override
-    protected Flux<SonglistFaceModel> getFaceModelsFromMeta(Flux<PlaylistsMetaEntity> metaEntities) {
+    public Flux<SonglistFaceModel> getFaceModelsFromMeta(Flux<PlaylistsMetaEntity> metaEntities) {
         return metaEntities
                 .flatMap(entity -> playlistsProfileRepo.findById(entity.getItemID())
                         .flatMap(this::makeFaceModel));
