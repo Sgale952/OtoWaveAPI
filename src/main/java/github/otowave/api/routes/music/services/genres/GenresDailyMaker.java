@@ -3,8 +3,7 @@ package github.otowave.api.routes.music.services.genres;
 import github.otowave.api.routes.music.entities.GenresEntity;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.models.MusicFaceModel;
-import github.otowave.api.routes.music.models.genres.DailyGenresModel;
-import github.otowave.api.routes.music.models.genres.GenreModel;
+import github.otowave.api.routes.music.models.GenresModel;
 import github.otowave.api.routes.music.repositories.GenresRepo;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;
 import github.otowave.api.routes.music.services.faces.MusicFaceMaker;
@@ -14,7 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class DailyGenresMaker {
+public class GenresDailyMaker {
     @Autowired
     MusicFaceMaker musicFaceMaker;
     @Autowired
@@ -22,19 +21,12 @@ public class DailyGenresMaker {
     @Autowired
     MusicProfileRepo musicProfileRepo;
 
-    public Mono<DailyGenresModel> getDailyGenreModel() {
-        return getGenreModels()
-                .collectList()
-                .map(DailyGenresModel::new);
-    }
-
-
-    private Flux<GenreModel> getGenreModels() {
+    public Flux<GenresModel> getDailyGenreModel() {
         return getGenres()
                 .flatMap(genre -> getMusicByGenre(genre.getGenreID())
                         .flatMap(this::getFaceModel)
                         .collectList()
-                        .map(musicFaces -> new GenreModel(genre.getGenreID(), musicFaces))
+                        .map(musicFaces -> new GenresModel(genre.getGenreID(), musicFaces))
                 );
     }
 
