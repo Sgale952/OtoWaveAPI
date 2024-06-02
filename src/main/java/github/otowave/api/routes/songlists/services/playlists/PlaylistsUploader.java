@@ -1,5 +1,6 @@
 package github.otowave.api.routes.songlists.services.playlists;
 
+import github.otowave.api.exceptions.DuplicateMusicException;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsFillingEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsMetaEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsProfileEntity;
@@ -9,6 +10,7 @@ import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsMetaR
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsProfileRepo;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsSecurityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -39,7 +41,9 @@ public class PlaylistsUploader {
 
     @Transactional
     public Mono<Void> addMusic(PlaylistsFillingEntity fillingEntity) {
-        return playlistsFillingRepo.save(fillingEntity).then();
+        return playlistsFillingRepo.save(fillingEntity).then()
+                .onErrorResume(DuplicateKeyException.class, e ->
+                        Mono.error(new DuplicateMusicException(fillingEntity.getMusicID())));
     }
 
     @Transactional

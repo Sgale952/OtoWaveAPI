@@ -2,7 +2,6 @@ package github.otowave.api.routes.common.services.items.products.songlist;
 
 import github.otowave.api.routes.common.services.items.factory.songlist.SonglistItem;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
-import github.otowave.api.routes.songlists.entities.albums.AlbumsFillingEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsFillingEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsMetaEntity;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsProfileEntity;
@@ -10,6 +9,7 @@ import github.otowave.api.routes.songlists.entities.playlists.PlaylistsSecurityE
 import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsMetaRepo;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsProfileRepo;
+import github.otowave.api.routes.songlists.services.playlists.PlaylistDeleter;
 import github.otowave.api.routes.songlists.services.playlists.PlaylistsProfileMaker;
 import github.otowave.api.routes.songlists.services.playlists.PlaylistsUploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,12 @@ public class ItemPlaylist extends SonglistItem {
     PlaylistsProfileMaker playlistsProfileMaker;
     @Autowired
     PlaylistsUploader playlistsUploader;
+    @Autowired
+    PlaylistDeleter playlistDeleter;
 
     @Autowired
     public ItemPlaylist(PlaylistsProfileRepo playlistsProfileRepo, PlaylistsMetaRepo playlistsMetaRepo) {
-        super(DefaultImageIDs.PLAYLIST);
+        super(DefaultImageIDs.PLAYLISTS);
         this.playlistsProfileRepo = playlistsProfileRepo;
         this.playlistsMetaRepo = playlistsMetaRepo;
     }
@@ -59,7 +61,7 @@ public class ItemPlaylist extends SonglistItem {
 
     @Override
     public Mono<Integer> delete() {
-        return getItemProfileEntity().flatMap(entity -> playlistsProfileRepo.delete(entity)).thenReturn(1);
+        return playlistDeleter.delete(itemID);
     }
 
     @Override
