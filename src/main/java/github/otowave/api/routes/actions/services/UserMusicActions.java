@@ -33,7 +33,7 @@ public class UserMusicActions {
     public UserMusicActions() {
     }
 
-    public Flux<MusicFaceModel> getCreatedMusicFaces(int userID) {
+    public Flux<MusicFaceModel> getCreatedFaces(int userID) {
         return musicFaceMaker.getFaceModelsFromProfile(musicProfileRepo.findByAuthorID(userID));
     }
 
@@ -41,17 +41,17 @@ public class UserMusicActions {
         return musicFaceMaker.getFaceModelsFromActions(likedMusicRepo.findAllByUserID(Mono.just(userID)));
     }
 
-    public Mono<Void> listenMusic(int musicID, int userID) {
+    public Mono<Void> listenMusic(int userID, int musicID) {
         return listenedMusicRepo.save(new ListenedMusicEntity(userID, musicID))
                 .then(increaseListens(musicID)).then();
     }
 
-    public Mono<Void> likeMusic(int musicID, int userID) {
+    public Mono<Void> likeMusic(int userID, int musicID) {
         return likedMusicRepo.save(new LikedMusicEntity(userID, musicID))
                 .then(increaseLikes(musicID)).then();
     }
 
-    public Mono<Void> discardMusic(int musicID, int userID) {
+    public Mono<Void> discardMusic(int userID, int musicID) {
         return likedMusicRepo.deleteByUserIDAndItemID(userID, musicID)
                 .then(decriesLikes(musicID)).then();
     }

@@ -22,6 +22,11 @@ public class SonglistController {
         this.itemFactory = itemFactory;
     }
 
+    @GetMapping("/daily")
+    private Flux<SonglistFaceModel> daily() {
+        return playlistDailyFaceMaker.getDailyFaceModel();
+    }
+
     @PostMapping("/upload")
     private Mono<Integer> upload(@PathVariable String songlistType, @RequestParam int creatorID, @RequestParam String title,
                                  @RequestParam(required = false) String tale, @RequestParam boolean access) {
@@ -30,19 +35,26 @@ public class SonglistController {
     }
 
     @PostMapping("/{itemID}/add-music")
-    private Mono<Void> addMusic(@PathVariable String songlistType, @PathVariable int itemID, int musicID) {
+    private Mono<Void> addMusic(@PathVariable String songlistType, @PathVariable int itemID, @RequestParam int musicID) {
         return itemFactory.makeSonglistItem(toItemType(songlistType), itemID)
                 .flatMap(item -> item.addMusic(musicID));
     }
 
     @PostMapping("/{itemID}/remove-music")
-    private Mono<Void> removeMusic(@PathVariable String songlistType, @PathVariable int itemID, int musicID) {
+    private Mono<Void> removeMusic(@PathVariable String songlistType, @PathVariable int itemID, @RequestParam int musicID) {
         return itemFactory.makeSonglistItem(toItemType(songlistType), itemID)
                 .flatMap(item -> item.removeMusic(musicID));
     }
 
-    @GetMapping("/daily")
-    private Flux<SonglistFaceModel> daily() {
-        return playlistDailyFaceMaker.getDailyFaceModel();
+    @PostMapping("/{itemID}/like")
+    private Mono<Void> like(@PathVariable String songlistType, @PathVariable int itemID, @RequestParam int userID) {
+        return itemFactory.makeSonglistItem(toItemType(songlistType), itemID)
+                .flatMap(item -> item.like(userID));
+    }
+
+    @DeleteMapping("/{itemID}/discard")
+    private Mono<Void> discard(@PathVariable String songlistType, @PathVariable int itemID, @RequestParam int userID) {
+        return itemFactory.makeSonglistItem(toItemType(songlistType), itemID)
+                .flatMap(item -> item.discard(userID));
     }
 }

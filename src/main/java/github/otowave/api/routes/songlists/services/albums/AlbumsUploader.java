@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Service
+@Transactional
 public class AlbumsUploader {
     @Autowired
     AlbumsProfileRepo albumsProfileRepo;
@@ -29,7 +30,6 @@ public class AlbumsUploader {
     public AlbumsUploader() {
     }
 
-    @Transactional
     public Mono<Integer> upload(AlbumsProfileEntity profileEntity, AlbumsMetaEntity metaEntity, AlbumsSecurityEntity securityEntity) {
         return albumsProfileRepo.save(profileEntity).flatMap(newProfileEntity -> {
             int newAlbumID = newProfileEntity.getItemID();
@@ -39,14 +39,12 @@ public class AlbumsUploader {
         });
     }
 
-    @Transactional
     public Mono<Void> addMusic(AlbumsFillingEntity fillingEntity) {
         return albumsFillingRepo.save(fillingEntity).then()
         .onErrorResume(DuplicateKeyException.class, e ->
             Mono.error(new DuplicateMusicException(fillingEntity.getMusicID())));
     }
 
-    @Transactional
     public Mono<Void> removeMusic(int albumID, int musicID) {
         return albumsFillingRepo.deleteByItemIDAndMusicID(albumID, musicID);
     }

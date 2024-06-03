@@ -68,16 +68,16 @@ public class MusicController {
 
     @PostMapping("/{musicID}/listen")
     private Mono<Void> listen(@PathVariable int musicID, @RequestParam int userID) {
-        return userMusicActions.listenMusic(musicID, userID);
+        return userMusicActions.listenMusic(userID, musicID);
     }
 
     @PostMapping("/{musicID}/like")
     private Mono<Void> like(@PathVariable int musicID, @RequestParam int userID) {
-        return userMusicActions.likeMusic(musicID, userID);
+        return userMusicActions.likeMusic(userID, musicID);
     }
 
     @DeleteMapping("/{musicID}/discard")
     private Mono<Void> discard(@PathVariable int musicID, @RequestParam int userID) {
-        return userMusicActions.discardMusic(musicID, userID);
+        return userMusicActions.discardMusic(userID, musicID);
     }
 }

@@ -17,4 +17,8 @@ public abstract class SonglistItem extends Item {
     public abstract Mono<Void> addMusic(int musicID);
 
     public abstract Mono<Void> removeMusic(int musicID);
+
+    public abstract Mono<Void> like(int userID);
+
+    public abstract Mono<Void> discard(int userID);
 }
