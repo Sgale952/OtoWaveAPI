@@ -1,5 +1,6 @@
 package github.otowave.api.routes.common.services.items.products.songlist;
 
+import github.otowave.api.routes.actions.services.songlists.UserPlaylistsActions;
 import github.otowave.api.routes.common.services.items.factory.songlist.SonglistItem;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
 import github.otowave.api.routes.songlists.entities.playlists.PlaylistsFillingEntity;
@@ -26,6 +27,8 @@ public class ItemPlaylist extends SonglistItem {
     PlaylistsUploader playlistsUploader;
     @Autowired
     PlaylistDeleter playlistDeleter;
+    @Autowired
+    UserPlaylistsActions userPlaylistsActions;
 
     @Autowired
     public ItemPlaylist(PlaylistsProfileRepo playlistsProfileRepo, PlaylistsMetaRepo playlistsMetaRepo) {
@@ -91,6 +94,16 @@ public class ItemPlaylist extends SonglistItem {
     @Override
     public Mono<Void> removeMusic(int musicID) {
         return playlistsUploader.removeMusic(itemID, musicID);
+    }
+
+    @Override
+    public Mono<Void> like(int userID) {
+        return userPlaylistsActions.like(userID, itemID);
+    }
+
+    @Override
+    public Mono<Void> discard(int userID) {
+        return userPlaylistsActions.discard(userID, itemID);
     }
 
     @Override

@@ -1,7 +1,8 @@
 package github.otowave.api.routes.users.services;
 
 import github.otowave.api.routes.actions.services.UserMusicActions;
-import github.otowave.api.routes.actions.services.UserSonglistsActions;
+import github.otowave.api.routes.actions.services.songlists.UserAlbumsActions;
+import github.otowave.api.routes.actions.services.songlists.UserPlaylistsActions;
 import github.otowave.api.routes.common.models.FaceModel;
 import github.otowave.api.routes.common.services.ProfileMaker;
 import github.otowave.api.routes.music.models.MusicFaceModel;
@@ -25,7 +26,9 @@ public class UserProfileMaker extends ProfileMaker<UserProfileModel, UsersMetaEn
     @Autowired
     UserMusicActions userMusicActions;
     @Autowired
-    UserSonglistsActions userSonglistsActions;
+    UserPlaylistsActions userPlaylistsActions;
+    @Autowired
+    UserAlbumsActions userAlbumsActions;
     @Autowired
     UsersProfileRepo usersProfileRepo;
 
@@ -57,12 +60,12 @@ public class UserProfileMaker extends ProfileMaker<UserProfileModel, UsersMetaEn
     }
 
     private Mono<UserActionsModel> getUserActions(int userID) {
-        Mono<List<MusicFaceModel>> createdMusic = userMusicActions.getCreatedMusicFaces(userID).collectList();
+        Mono<List<MusicFaceModel>> createdMusic = userMusicActions.getCreatedFaces(userID).collectList();
         Mono<List<MusicFaceModel>> likedMusic = userMusicActions.getLikedMusicFaces(userID).collectList();
-        Mono<List<SonglistFaceModel>> createdPlaylists = userSonglistsActions.getCreatedPlaylists(userID).collectList();
-        Mono<List<SonglistFaceModel>> likedPlaylists = userSonglistsActions.getLikedPlaylists(userID).collectList();
-        Mono<List<SonglistFaceModel>> createdAlbums = userSonglistsActions.getCreatedAlbums(userID).collectList();
-        Mono<List<SonglistFaceModel>> likedAlbums = userSonglistsActions.getLikedAlbums(userID).collectList();
+        Mono<List<SonglistFaceModel>> createdPlaylists = userPlaylistsActions.getCreated(userID).collectList();
+        Mono<List<SonglistFaceModel>> likedPlaylists = userPlaylistsActions.getLiked(userID).collectList();
+        Mono<List<SonglistFaceModel>> createdAlbums = userAlbumsActions.getCreatedFaces(userID).collectList();
+        Mono<List<SonglistFaceModel>> likedAlbums = userAlbumsActions.getLikedFaces(userID).collectList();
 
         return Mono.zip(createdMusic, likedMusic, createdPlaylists, likedPlaylists, createdAlbums, likedAlbums)
                 .map(tuple -> new UserActionsModel(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), tuple.getT5(), tuple.getT6()));
