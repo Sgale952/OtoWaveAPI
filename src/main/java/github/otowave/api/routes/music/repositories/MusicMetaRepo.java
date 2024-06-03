@@ -7,7 +7,16 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MusicMetaRepo extends ReactiveCrudRepository<MusicMetaEntity, Integer> {
-    Mono<MusicMetaEntity> findAllByItemID(int itemID);
+    Mono<MusicMetaEntity> findByItemID(int itemID);
+
+    @Query("UPDATE music.meta  SET listens = listens + 1 WHERE item_id = :musicID")
+    Mono<MusicMetaEntity> increaseListens(int musicID);
+
+    @Query("UPDATE music.meta  SET likes = Likes + 1 WHERE item_id = :musicID")
+    Mono<MusicMetaEntity> increaseLikes(int musicID);
+
+    @Query("UPDATE music.meta  SET likes = Likes - 1 WHERE item_id = :musicID")
+    Mono<MusicMetaEntity> decriesLikes(int musicID);
 
     @Query("SELECT * FROM music.meta ORDER BY RANDOM() LIMIT 50")
     Flux<MusicMetaEntity> findRandomPage();

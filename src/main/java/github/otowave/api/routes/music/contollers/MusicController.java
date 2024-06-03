@@ -1,5 +1,6 @@
 package github.otowave.api.routes.music.contollers;
 
+import github.otowave.api.routes.actions.services.UserMusicActions;
 import github.otowave.api.routes.music.entities.GenresEntity;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.models.*;
@@ -30,6 +31,8 @@ public class MusicController {
     private TopRecentFaceMaker topRecentFacesMaker;
     @Autowired
     private MusicUploader musicUploader;
+    @Autowired
+    private UserMusicActions userMusicActions;
 
     @GetMapping("/genres")
     private Flux<GenresEntity> genres() {
@@ -46,11 +49,6 @@ public class MusicController {
         return genresDailyMaker.getDailyGenreModel();
     }
 
-/*    @GetMapping("/subs-new")
-    private Flux<MusicFaceModel> subsNew() {
-        return new SubsNewModel();
-    }*/
-
     @GetMapping("/top")
     private Flux<MusicFaceModel> top(@RequestParam int page, @RequestParam(required = false) String genre) {
         return topRecentFacesMaker.getTopMusicFaceModels(page, genre);
@@ -66,5 +64,20 @@ public class MusicController {
                                  @RequestParam(required = false) String tale, @RequestPart Mono<FilePart> musicFile) {
         MusicProfileEntity profileEntity = new MusicProfileEntity(MUSIC, authorID, title, genre, econtent);
         return musicUploader.upload(profileEntity, tale, musicFile);
+    }
+
+    @PostMapping("/{musicID}/listen")
+    private Mono<Void> listen(@PathVariable int musicID, @RequestParam int userID) {
+        return userMusicActions.listenMusic(musicID, userID);
+    }
+
+    @PostMapping("/{musicID}/like")
+    private Mono<Void> like(@PathVariable int musicID, @RequestParam int userID) {
+        return userMusicActions.likeMusic(musicID, userID);
+    }
+
+    @DeleteMapping("/{musicID}/discard")
+    private Mono<Void> discard(@PathVariable int musicID, @RequestParam int userID) {
+        return userMusicActions.discardMusic(musicID, userID);
     }
 }

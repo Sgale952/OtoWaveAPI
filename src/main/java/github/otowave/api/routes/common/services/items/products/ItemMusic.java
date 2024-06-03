@@ -80,6 +80,6 @@ public class ItemMusic extends Item {
 
     @Override
     public Mono<MusicMetaEntity> getItemMetaEntity() {
-        return musicMetaRepo.findAllByItemID(itemID);
+        return musicMetaRepo.findByItemID(itemID);
     }
 }

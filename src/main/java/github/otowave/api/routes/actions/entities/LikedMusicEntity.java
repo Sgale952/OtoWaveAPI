@@ -7,4 +7,9 @@ import org.springframework.data.relational.core.mapping.Table;
 public class LikedMusicEntity extends ActionsEntity {
     public LikedMusicEntity() {
     }
+
+    public LikedMusicEntity(int userID, int musicID) {
+        setUserID(userID);
+        setItemID(musicID);
+    }
 }
