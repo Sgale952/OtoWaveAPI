@@ -11,6 +11,11 @@ public class UsersProfileEntity extends ProfileEntity {
     public UsersProfileEntity() {
     }
 
+    public UsersProfileEntity(int userID, String username) {
+        setItemID(userID);
+        this.username = username;
+    }
+
     public int getHeaderID() {
         return headerID;
     }

@@ -92,6 +92,6 @@ public class ItemUser extends Item {
     }
 
     public Mono<UsersSecurityEntity> getItemSecurityEntity() {
-        return usersSecurityRepo.findAllByItemID(itemID);
+        return usersSecurityRepo.findByItemID(itemID);
     }
 }
