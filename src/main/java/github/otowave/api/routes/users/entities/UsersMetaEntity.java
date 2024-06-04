@@ -10,6 +10,10 @@ public class UsersMetaEntity extends MetaEntity {
     public UsersMetaEntity() {
     }
 
+    public UsersMetaEntity(int userID) {
+        setItemID(userID);
+    }
+
     public int getSubscribed() {
         return subscribed;
     }

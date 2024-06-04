@@ -1,15 +1,22 @@
 package github.otowave.api.routes.users.entities;
 
 import github.otowave.api.routes.common.entities.SecurityEntity;
+import github.otowave.api.routes.users.models.UserRole;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "security", schema = "users")
 public class UsersSecurityEntity extends SecurityEntity {
     private String email;
-    private String passwrd;
+    private String password;
     private String accessRole;
 
     public UsersSecurityEntity() {
+    }
+
+    public UsersSecurityEntity(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.accessRole = UserRole.AUTHOR.name();
     }
 
     public String getEmail() {
@@ -19,11 +26,11 @@ public class UsersSecurityEntity extends SecurityEntity {
         this.email = email;
     }
 
-    public String getPasswrd() {
-        return passwrd;
+    public String getPassword() {
+        return password;
     }
-    public void setPasswrd(String passwrd) {
-        this.passwrd = passwrd;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getAccessRole() {
