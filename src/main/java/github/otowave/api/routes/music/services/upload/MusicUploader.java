@@ -13,9 +13,6 @@ public class MusicUploader {
     @Autowired
     MusicConverter musicConverter;
 
-    public MusicUploader() {
-    }
-
     public Mono<Integer> upload(MusicProfileEntity profileEntity, String tale, Mono<FilePart> musicFile) {
         return musicSaver.save(profileEntity, tale, musicFile).flatMap(id -> musicConverter.prepareToHls(id).thenReturn(id));
     }

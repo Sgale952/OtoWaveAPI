@@ -8,9 +8,6 @@ public class GenresEntity {
     @Id
     private String genreID;
 
-    public GenresEntity() {
-    }
-
     public String getGenreID() {
         return genreID;
     }

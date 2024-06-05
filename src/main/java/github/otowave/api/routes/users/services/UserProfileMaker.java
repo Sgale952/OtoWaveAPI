@@ -1,5 +1,6 @@
 package github.otowave.api.routes.users.services;
 
+import github.otowave.api.routes.actions.Models.UserActionsModel;
 import github.otowave.api.routes.actions.services.UserMusicActions;
 import github.otowave.api.routes.actions.services.songlists.UserAlbumsActions;
 import github.otowave.api.routes.actions.services.songlists.UserPlaylistsActions;
@@ -9,7 +10,6 @@ import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.songlists.models.SonglistFaceModel;
 import github.otowave.api.routes.users.entities.UsersMetaEntity;
 import github.otowave.api.routes.users.entities.UsersProfileEntity;
-import github.otowave.api.routes.actions.Models.UserActionsModel;
 import github.otowave.api.routes.users.models.UserProfileModel;
 import github.otowave.api.routes.users.repositories.UsersProfileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,6 @@ public class UserProfileMaker extends ProfileMaker<UserProfileModel, UsersMetaEn
     UserAlbumsActions userAlbumsActions;
     @Autowired
     UsersProfileRepo usersProfileRepo;
-
-    public UserProfileMaker() {
-    }
 
     @Override
     public Mono<UserProfileModel> getProfile(Mono<UsersMetaEntity> metaEntity) {

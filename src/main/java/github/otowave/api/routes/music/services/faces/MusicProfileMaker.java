@@ -4,7 +4,6 @@ import github.otowave.api.routes.common.services.ProfileMaker;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.music.models.MusicProfileModel;
-import github.otowave.api.routes.music.services.faces.MusicFaceMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

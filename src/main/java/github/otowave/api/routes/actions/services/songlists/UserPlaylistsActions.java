@@ -25,9 +25,6 @@ public class UserPlaylistsActions {
     @Autowired
     LikedPlaylistsRepo likedPlaylistsRepo;
 
-    public UserPlaylistsActions() {
-    }
-
     public Flux<SonglistFaceModel> getCreated(int userID) {
         return playlistsFaceMaker.getFaceModelsFromProfile(playlistsProfileRepo.findByCreatorID(userID));
     }

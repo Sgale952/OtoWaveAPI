@@ -25,9 +25,6 @@ public class MusicSaver {
     @Autowired
     MusicMetaRepo musicMetaRepo;
 
-    public MusicSaver() {
-    }
-
     @Transactional
     public Mono<Integer> save(MusicProfileEntity profileEntity, String tale, Mono<FilePart> musicFile) {
         return saveProfileEntity(profileEntity)

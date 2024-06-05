@@ -18,9 +18,6 @@ public class AlbumsFaceMaker extends FaceMaker<SonglistFaceModel, AlbumsMetaEnti
     @Autowired
     AlbumsProfileRepo albumsProfileRepo;
 
-    public AlbumsFaceMaker() {
-    }
-
     public <T extends ActionsEntity> Flux<SonglistFaceModel> getFaceModelsFromActions(Flux<T> actionsEntity) {
         return actionsEntity
                 .flatMap(entity -> albumsProfileRepo.findById(entity.getItemID())

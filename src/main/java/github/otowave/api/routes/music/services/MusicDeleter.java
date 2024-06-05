@@ -22,9 +22,6 @@ public class MusicDeleter {
     @Autowired
     ImageApplier imageApplier;
 
-    public MusicDeleter() {
-    }
-
     public Mono<Integer> delete(int musicID) {
         return imageApplier.resetImage("music", musicID)
                 .then(musicProfileRepo.findById(musicID))

@@ -7,7 +7,6 @@ import github.otowave.api.routes.songlists.entities.playlists.PlaylistsMetaEntit
 import github.otowave.api.routes.songlists.models.SonglistFaceModel;
 import github.otowave.api.routes.songlists.models.SonglistProfileModel;
 import github.otowave.api.routes.songlists.repositories.playlists.PlaylistsFillingRepo;
-import github.otowave.api.routes.songlists.services.playlists.faces.PlaylistsFaceMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -23,9 +22,6 @@ public class PlaylistsProfileMaker extends ProfileMaker<SonglistProfileModel, Pl
     MusicFaceMaker musicFaceMaker;
     @Autowired
     PlaylistsFillingRepo playlistsFillingRepo;
-
-    public PlaylistsProfileMaker() {
-    }
 
     public Mono<SonglistProfileModel> getProfile(Mono<PlaylistsMetaEntity> metaEntity) {
         Mono<SonglistFaceModel> faceModel = playlistsFaceMaker.getFaceModelsFromMeta(metaEntity.flux()).singleOrEmpty();

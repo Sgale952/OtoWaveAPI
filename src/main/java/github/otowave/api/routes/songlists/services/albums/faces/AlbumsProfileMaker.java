@@ -23,9 +23,6 @@ public class AlbumsProfileMaker extends ProfileMaker<SonglistProfileModel, Album
     @Autowired
     AlbumsFillingRepo albumsFillingRepo;
 
-    public AlbumsProfileMaker() {
-    }
-
     @Override
     public Mono<SonglistProfileModel> getProfile(Mono<AlbumsMetaEntity> metaEntity) {
         Mono<SonglistFaceModel> faceModel = albumsFaceMaker.getFaceModelsFromMeta(metaEntity.flux()).singleOrEmpty();

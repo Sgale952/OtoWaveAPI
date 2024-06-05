@@ -2,8 +2,8 @@ package github.otowave.api.routes.music.services.genres;
 
 import github.otowave.api.routes.music.entities.GenresEntity;
 import github.otowave.api.routes.music.entities.MusicProfileEntity;
-import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.music.models.GenresModel;
+import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.music.repositories.GenresRepo;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;
 import github.otowave.api.routes.music.services.faces.MusicFaceMaker;

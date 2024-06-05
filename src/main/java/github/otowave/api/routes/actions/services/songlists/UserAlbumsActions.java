@@ -25,9 +25,6 @@ public class UserAlbumsActions {
     @Autowired
     LikedAlbumsRepo likedAlbumsRepo;
 
-    public UserAlbumsActions() {
-    }
-
     public Flux<SonglistFaceModel> getCreatedFaces(int userID) {
         return albumsFaceMaker.getFaceModelsFromProfile(albumsProfileRepo.findByCreatorID(userID));
     }

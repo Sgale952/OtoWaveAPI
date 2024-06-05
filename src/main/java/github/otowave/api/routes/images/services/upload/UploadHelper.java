@@ -11,9 +11,6 @@ import java.nio.file.Files;
 
 @Service
 public class UploadHelper {
-    public UploadHelper() {
-    }
-
     public Mono<Void> deleteImageFile(File file) {
         return Mono.fromRunnable(() -> {
             try {

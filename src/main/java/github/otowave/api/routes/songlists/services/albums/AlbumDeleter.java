@@ -13,9 +13,6 @@ public class AlbumDeleter {
     @Autowired
     ImageApplier imageApplier;
 
-    public AlbumDeleter() {
-    }
-
     public Mono<Integer> delete(int albumID) {
         return imageApplier.resetImage("albums", albumID)
                 .then(albumsProfileRepo.deleteById(albumID))
