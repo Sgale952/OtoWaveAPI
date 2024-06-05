@@ -1,5 +1,6 @@
 package github.otowave.api.routes.actions.services;
 
+import github.otowave.api.routes.actions.entities.LikedAuthorsEntity;
 import github.otowave.api.routes.actions.repositories.LikedAuthorsRepo;
 import github.otowave.api.routes.common.models.FaceModel;
 import github.otowave.api.routes.users.services.UserFaceMaker;
@@ -15,11 +16,19 @@ public class UserUserActions {
     @Autowired
     LikedAuthorsRepo likedAuthorsRepo;
 
-    public Flux<FaceModel> getSubscribers(int userID) {
-        return userFaceMaker.getModelsFromLikedAuthors(likedAuthorsRepo.findAllByItemID(Mono.just(userID)));
-    }
-
     public Flux<FaceModel> getSubscribed(int userID) {
         return userFaceMaker.getModelsFromLikedAuthors(likedAuthorsRepo.findAllByUserID(Mono.just(userID)));
+    }
+
+    public Flux<FaceModel> getSubscribers(int userID) {
+        return userFaceMaker.getModelsFromLikedAuthorsRevert(likedAuthorsRepo.findAllByItemID(Mono.just(userID)));
+    }
+
+    public Mono<Void> subscribe(int userID, int authorID) {
+        return likedAuthorsRepo.save(new LikedAuthorsEntity(userID, authorID)).then();
+    }
+
+    public Mono<Void> discard(int userID, int authorID) {
+        return likedAuthorsRepo.deleteByUserIDAndItemID(userID, authorID).then();
     }
 }

@@ -28,6 +28,11 @@ public class UserFaceMaker extends FaceMaker<FaceModel, UsersMetaEntity, UsersPr
                 .flatMap(this::makeFaceModel));
     }
 
+    public Flux<FaceModel> getModelsFromLikedAuthorsRevert(Flux<LikedAuthorsEntity> likedAuthorsEntities) {
+        return likedAuthorsEntities.flatMap(entity -> usersProfileRepo.findById(entity.getUserID())
+                .flatMap(this::makeFaceModel));
+    }
+
     @Override
     public Mono<FaceModel> makeFaceModel(UsersProfileEntity profileEntity) {
         int userID = profileEntity.getItemID();

@@ -26,13 +26,23 @@ public class UserController {
         return accessor.login(email, password);
     }
 
+    @GetMapping("/{userID}/subscribed")
+    private Flux<FaceModel> subscribed(@PathVariable int userID) {
+        return userUserActions.getSubscribed(userID);
+    }
+
     @GetMapping("/{userID}/subscribers")
     private Flux<FaceModel> subscribers(@PathVariable int userID) {
         return userUserActions.getSubscribers(userID);
     }
 
-    @GetMapping("/{userID}/subscribed")
-    private Flux<FaceModel> subscribed(@PathVariable int userID) {
-        return userUserActions.getSubscribed(userID);
+    @PostMapping("/{userID}/subscribe")
+    private Mono<Void> subscribe(@PathVariable int userID, @RequestParam int authorID) {
+        return userUserActions.subscribe(userID, authorID);
+    }
+
+    @PostMapping("/{userID}/discard")
+    private Mono<Void> discard(@PathVariable int userID, @RequestParam int authorID) {
+        return userUserActions.discard(userID, authorID);
     }
 }
