@@ -12,9 +12,6 @@ import java.nio.file.Paths;
 public class MusicConverter {
     private final String MUSIC_DIR = StaticContentDirs.MUSIC_DIR.getDir();
 
-    public MusicConverter() {
-    }
-
     public Mono<Void> prepareToHls(int musicID) {
         return Mono.fromCallable(() -> {
             String inputFile = getFilePath(musicID, "");

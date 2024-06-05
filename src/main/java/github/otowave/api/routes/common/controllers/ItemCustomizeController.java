@@ -1,8 +1,8 @@
 package github.otowave.api.routes.common.controllers;
 
 import github.otowave.api.routes.common.models.ProfileModel;
-import github.otowave.api.routes.common.services.items.factory.item.Customizable;
 import github.otowave.api.routes.common.services.items.factory.ItemFactoryImp;
+import github.otowave.api.routes.common.services.items.factory.item.Customizable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;

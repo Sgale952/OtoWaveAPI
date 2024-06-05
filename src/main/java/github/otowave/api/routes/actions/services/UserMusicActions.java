@@ -30,9 +30,6 @@ public class UserMusicActions {
     ListenedMusicRepo listenedMusicRepo;
 
 
-    public UserMusicActions() {
-    }
-
     public Flux<MusicFaceModel> getCreatedFaces(int userID) {
         return musicFaceMaker.getFaceModelsFromProfile(musicProfileRepo.findByAuthorID(userID));
     }

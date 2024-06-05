@@ -1,7 +1,5 @@
 package github.otowave.api.routes.common.entities;
 
-import org.springframework.data.annotation.Id;
-
 import java.time.LocalDateTime;
 
 public class ActionsEntity {

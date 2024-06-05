@@ -26,9 +26,6 @@ public class PlaylistsUploader {
     @Autowired
     PlaylistsFillingRepo playlistsFillingRepo;
 
-    public PlaylistsUploader() {
-    }
-
     @Transactional
     public Mono<Integer> upload(PlaylistsProfileEntity profileEntity, PlaylistsMetaEntity metaEntity, PlaylistsSecurityEntity securityEntity) {
         return playlistsProfileRepo.save(profileEntity).flatMap(newProfileEntity -> {

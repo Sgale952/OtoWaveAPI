@@ -3,8 +3,8 @@ package github.otowave.api.routes.music.services.faces;
 import github.otowave.api.routes.common.entities.ActionsEntity;
 import github.otowave.api.routes.common.entities.FillingEntity;
 import github.otowave.api.routes.common.services.FaceMaker;
-import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
+import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,6 @@ import java.util.Objects;
 public class MusicFaceMaker extends FaceMaker<MusicFaceModel, MusicMetaEntity, MusicProfileEntity> {
     @Autowired
     private MusicProfileRepo musicProfileRepo;
-
-    public MusicFaceMaker() {
-    }
 
     public <T extends FillingEntity> Flux<MusicFaceModel> getFaceModelsFromFilling(Flux<T> fillingEntity) {
         return fillingEntity

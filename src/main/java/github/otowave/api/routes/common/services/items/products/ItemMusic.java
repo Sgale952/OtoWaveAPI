@@ -2,8 +2,8 @@ package github.otowave.api.routes.common.services.items.products;
 
 import github.otowave.api.routes.common.services.items.factory.item.Item;
 import github.otowave.api.routes.images.models.DefaultImageIDs;
-import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
+import github.otowave.api.routes.music.entities.MusicProfileEntity;
 import github.otowave.api.routes.music.models.MusicProfileModel;
 import github.otowave.api.routes.music.repositories.MusicMetaRepo;
 import github.otowave.api.routes.music.repositories.MusicProfileRepo;

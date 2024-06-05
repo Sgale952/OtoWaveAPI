@@ -27,9 +27,6 @@ public class AlbumsUploader {
     @Autowired
     AlbumsFillingRepo albumsFillingRepo;
 
-    public AlbumsUploader() {
-    }
-
     public Mono<Integer> upload(AlbumsProfileEntity profileEntity, AlbumsMetaEntity metaEntity, AlbumsSecurityEntity securityEntity) {
         return albumsProfileRepo.save(profileEntity).flatMap(newProfileEntity -> {
             int newAlbumID = newProfileEntity.getItemID();

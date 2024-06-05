@@ -24,8 +24,6 @@ import static github.otowave.api.configuration.StaticContentDirs.IMAGES_DIR;
 public class ImageConverter {
     @Autowired
     UploadHelper uploadHelper;
-    public ImageConverter() {
-    }
 
     protected Mono<Void> convertImageToWebp(File inputFile) {
         return Mono.fromCallable(() -> {

@@ -4,7 +4,7 @@ import github.otowave.api.routes.common.models.items.ItemModel;
 import github.otowave.api.routes.common.models.items.ItemTypes;
 import github.otowave.api.routes.common.services.items.factory.item.Item;
 import github.otowave.api.routes.common.services.items.factory.songlist.SonglistItem;
-import github.otowave.api.routes.common.services.items.products.*;
+import github.otowave.api.routes.common.services.items.products.ItemMusic;
 import github.otowave.api.routes.common.services.items.products.songlist.ItemAlbum;
 import github.otowave.api.routes.common.services.items.products.songlist.ItemPlaylist;
 import github.otowave.api.routes.common.services.items.products.user.ItemUser;

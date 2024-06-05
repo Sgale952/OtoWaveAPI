@@ -18,8 +18,6 @@ public class ImageDeleter {
     ImagesRepo imagesRepo;
     @Autowired
     UploadHelper UploadHelper;
-    public ImageDeleter() {
-    }
 
     protected Mono<Void> deletePastImage(Mono<Item> item) {
         return item.flatMap(i -> i
@@ -34,7 +32,7 @@ public class ImageDeleter {
 
     private void isNeedDeletion(int imageID) {
         if (isDefaultImageID(imageID))
-            throw new ImageNotNeedDeletion("imageID: "+imageID);
+            throw new ImageNotNeedDeletion(imageID);
     }
 
     private boolean isDefaultImageID(int imageID) {

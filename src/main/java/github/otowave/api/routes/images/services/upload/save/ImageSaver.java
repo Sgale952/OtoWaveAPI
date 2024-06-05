@@ -24,9 +24,6 @@ public class ImageSaver {
     @Autowired
     ImageConverter imageConverter;
 
-    public ImageSaver() {
-    }
-
     @Transactional
     public Mono<ImagesEntity> saveImage(Mono<FilePart> imageFile) {
         return imageFile
