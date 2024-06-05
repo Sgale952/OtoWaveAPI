@@ -48,7 +48,7 @@ public class MusicSaver {
         return musicMetaRepo.save(metaEntity).map(MetaEntity::getItemID);
     }
 
-    public Mono<Integer> saveFile(int musicID, Mono<FilePart> musicFile) {
+    private Mono<Integer> saveFile(int musicID, Mono<FilePart> musicFile) {
         return musicFile.flatMap(file -> {
             String id = String.valueOf(musicID);
             Path path = Paths.get(MUSIC_DIR.getDir(), id);
