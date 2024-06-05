@@ -1,5 +1,6 @@
 package github.otowave.api.routes.users.services;
 
+import github.otowave.api.routes.actions.entities.LikedAuthorsEntity;
 import github.otowave.api.routes.common.models.FaceModel;
 import github.otowave.api.routes.common.services.FaceMaker;
 import github.otowave.api.routes.users.entities.UsersMetaEntity;
@@ -15,14 +16,16 @@ public class UserFaceMaker extends FaceMaker<FaceModel, UsersMetaEntity, UsersPr
     @Autowired
     UsersProfileRepo usersProfileRepo;
 
-    public UserFaceMaker() {
-    }
-
     @Override
     public Flux<FaceModel> getFaceModelsFromMeta(Flux<UsersMetaEntity> metaEntities) {
         return metaEntities
                 .flatMap(entity -> usersProfileRepo.findById(entity.getItemID())
                         .flatMap(this::makeFaceModel));
+    }
+
+    public Flux<FaceModel> getModelsFromLikedAuthors(Flux<LikedAuthorsEntity> likedAuthorsEntities) {
+        return likedAuthorsEntities.flatMap(entity -> usersProfileRepo.findById(entity.getItemID())
+                .flatMap(this::makeFaceModel));
     }
 
     @Override
