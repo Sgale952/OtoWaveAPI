@@ -1,5 +1,5 @@
 group = "github.otowave.api"
-version = "0.9.1"
+version = "0.9.2"
 
 plugins {
     id("java")
@@ -32,7 +32,7 @@ dependencies {
 tasks.jar {
     manifest {
         attributes["Project-Version"] = version
-        attributes["Main-Class"] = "github.otowave.api.application.OtoWaveApi"
+        attributes["Main-Class"] = "github.otowave.api.OtoWaveApi"
     }
 }
 
