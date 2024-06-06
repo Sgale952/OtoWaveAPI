@@ -3,9 +3,11 @@ package github.otowave.api.routes.music.repositories;
 import github.otowave.api.routes.music.entities.MusicMetaEntity;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Repository
 public interface MusicMetaRepo extends ReactiveCrudRepository<MusicMetaEntity, Integer> {
     Mono<MusicMetaEntity> findByItemID(int itemID);
 
