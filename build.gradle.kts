@@ -26,13 +26,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.postgresql:r2dbc-postgresql")
 
-    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-security:3.1.0")
+    implementation ("org.springframework.security:spring-security-web:6.0.0")
+    implementation ("org.springframework.security:spring-security-config:6.0.0")
     implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
-    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.1")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.1")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.1")
 
     implementation("com.github.gotson:webp-imageio:0.2.2")
+    compileOnly ("org.projectlombok:lombok:1.18.32")
+    annotationProcessor ("org.projectlombok:lombok:1.18.32")
+
 }
 
 tasks.jar {

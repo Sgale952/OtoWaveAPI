@@ -2,58 +2,76 @@ package github.otowave.api.security;
 
 import github.otowave.api.routes.users.repositories.UsersSecurityRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
+import reactor.core.publisher.Mono;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@Configuration
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class Authenticator {
-    @Autowired
-    private UsersSecurityRepo usersSecurityRepo;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
 
-    //TODO: Проверка токена и возвращение userID
-    // В случае неуспешной аутентификации / авторизации выбрасывай ResponseStatusException(HttpStatus.СТАТУСЫ_ПОСМОТРИ_В_HttpStatus, "сообщение об ошибке"))
-    public static int auth(String token) {
-        return tokenDecrypt(token);
+    public Authenticator(AuthenticationManager authenticationManager, SecurityContextRepository securityContextRepository) {
+        this.authenticationManager = authenticationManager;
+        this.securityContextRepository = securityContextRepository;
     }
 
-    private static int tokenDecrypt(String token) {
-        int userID = 0;
-        return userID;
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return null;
+    }
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http){
+        return http
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (swe, e) ->
+                                Mono.fromRunnable(
+                                        () -> swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED)
+                                )
+                )
+                .accessDeniedHandler(
+                        (swe, e) ->
+                                Mono.fromRunnable(
+                                        () -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN)
+                                )
+                )
+                .and()
+                .csrf().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
+                .authenticationManager(authenticationManager)
+                .securityContextRepository(securityContextRepository)
+                .authorizeExchange()
+                .pathMatchers("/","/login","/registrahion").permitAll()
+                .pathMatchers("/ban").hasRole("Admin")
+                .anyExchange().authenticated()
+                .and()
+                .build();
     }
 
-    //Скорее всего этот класс ещё будет использоваться для входа в аккаунт
-
-/*    private static final String SECRET_KEY = "h+LpvpheyFqt1Zv3JoiEmV3JsjIsCpuGDb7sjq";
-    private static final long EXPIRATION_TIME = 86400000; // 24 часа (в миллисекундах)
-
-    public static String generateToken(String userId) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
-
-        return Jwts.builder()
-                .setSubject(userId)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .compact();
 
     }
-    public static boolean checkToken(String token){
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token)
-                    .getBody();
 
 
-            String userId = claims.getSubject();
-            if (userId == null || userId.isEmpty()) {
-                return false;
-            }
 
-
-            return true;
-        } catch (SignatureException e) {
-
-            return false;
-        }
-    }*/
-}
 
