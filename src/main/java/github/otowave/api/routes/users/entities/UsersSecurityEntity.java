@@ -1,42 +1,62 @@
 package github.otowave.api.routes.users.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import github.otowave.api.routes.common.entities.SecurityEntity;
-import github.otowave.api.routes.users.models.UserRole;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
+
+@Data
 @Table(name = "security", schema = "users")
-public class UsersSecurityEntity extends SecurityEntity {
+public class UsersSecurityEntity extends SecurityEntity implements UserDetails {
+    @Id
+    private Long id;
+    private String username;
     private String email;
+    @JsonIgnore
     private String password;
-    private String accessRole;
-
-    public UsersSecurityEntity() {
+    private UserRole accessRole;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(accessRole.name()));
     }
 
-    public UsersSecurityEntity(String email, String password) {
-        this.email = email;
-        this.password = password;
-        this.accessRole = UserRole.AUTHOR.name();
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    public UserRole getRole(){return accessRole;}
+    @Override
     public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+        return null;
     }
 
-    public String getAccessRole() {
-        return accessRole;
+    @Override
+    public String getUsername() {
+        return null;
     }
-    public void setAccessRole(String accessRole) {
-        this.accessRole = accessRole;
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
 }
