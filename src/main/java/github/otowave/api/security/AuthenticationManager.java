@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Lazy
 @Component
-@RequiredArgsConstructor
 public class AuthenticationManager implements ReactiveAuthenticationManager {
     private final JwtUtil jwtUtil;
 

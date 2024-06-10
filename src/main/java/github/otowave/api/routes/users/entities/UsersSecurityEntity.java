@@ -1,9 +1,7 @@
 package github.otowave.api.routes.users.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import github.otowave.api.routes.common.entities.SecurityEntity;
-import lombok.Data;
-import org.springframework.data.annotation.Id;
+import github.otowave.api.routes.users.models.UserRole;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,30 +10,34 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Data
 @Table(name = "security", schema = "users")
 public class UsersSecurityEntity extends SecurityEntity implements UserDetails {
-    @Id
-    private Long id;
     private String username;
     private String email;
-    @JsonIgnore
     private String password;
-    private UserRole accessRole;
+    private UserRole userRole;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(accessRole.name()));
-    }
-
-    public UserRole getRole(){return accessRole;}
-    @Override
-    public String getPassword() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     @Override
@@ -57,6 +59,4 @@ public class UsersSecurityEntity extends SecurityEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }

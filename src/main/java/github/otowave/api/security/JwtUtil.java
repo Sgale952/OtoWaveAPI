@@ -5,15 +5,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+@Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
@@ -42,7 +41,7 @@ public class JwtUtil {
 
     public String generateToken (UsersSecurityEntity user){
         HashMap<String,Object> claims = new HashMap<>();
-        claims.put("role", List.of(user.getRole()));
+        claims.put("role", List.of(user.getUserRole()));
 
         long expirahiontime = Long.parseLong(expirahionTime);
         Date creationDate = new Date();
