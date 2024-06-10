@@ -1,6 +1,7 @@
 package github.otowave.api.routes.music.services.upload;
 
 import github.otowave.api.configuration.StaticContentDirs;
+import github.otowave.api.exceptions.FfmpegExecutionException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -30,7 +31,7 @@ public class MusicConverter {
         try {
             runProcessBuilder(inputFile, outputFile);
             //TODO: Maybe work fine in Linux. Uncomment deleteUnconvertedFile and runProcessBuilder
-            //deleteUnconvertedFile(inputFile);
+            deleteUnconvertedFile(inputFile);
         }
         catch (Exception e) {
             //TODO: handle exception
@@ -50,11 +51,11 @@ public class MusicConverter {
                 tsFilePattern
         );
         builder.start();
-/*        Process process = builder.start();
+        Process process = builder.start();
         int exitCode = process.waitFor();
         if (exitCode != 0) {
             throw new FfmpegExecutionException(inputFile, exitCode);
-        }*/
+        }
     }
 
     private void deleteUnconvertedFile(String file) {
