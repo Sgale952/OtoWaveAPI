@@ -12,6 +12,6 @@ public interface UsersSecurityRepo extends ReactiveCrudRepository<UsersSecurityE
 
     Mono<UsersSecurityEntity> findByEmailAndPassword(String email, String password);
 
-    @Query("INSERT INTO users.security(email, password, access_role) VALUES(:email, :password, :accessRole) RETURNING *")
-    Mono<UsersSecurityEntity> saveWithEmailAndPassword(String email, String password, String accessRole);
+    @Query("INSERT INTO users.security(item_id, email, password, access_role) VALUES(:itemID, :email, :password, :accessRole) RETURNING *")
+    Mono<UsersSecurityEntity> saveWithEmailAndPassword(int itemID, String email, String password, String accessRole);
 }

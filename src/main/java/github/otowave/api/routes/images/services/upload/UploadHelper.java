@@ -18,6 +18,7 @@ public class UploadHelper {
             }
             catch (IOException e) {
                 //TODO: need handle exception
+                e.printStackTrace();
             }
         });
     }

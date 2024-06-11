@@ -37,6 +37,7 @@ public class MusicDeleter {
         }
         catch (IOException e) {
             //TODO: handle exception
+            e.printStackTrace();
         }
     }
 

@@ -21,24 +21,28 @@ public class Accessor {
     @Autowired
     UsersSecurityRepo usersSecurityRepo;
 
-    public Mono<Integer> register(String username, String email, String password) {
-        return saveSecurityEntity(email, password)
-                .flatMap(userID -> saveProfileEntity(userID, username).then(saveMetaEntity(userID)));
-    }
-
     public Mono<Integer> login(String email, String password) {
-        return usersSecurityRepo.findByEmailAndPassword(email, password).map(UsersSecurityEntity::getItemID);
+        return usersSecurityRepo.findByEmailAndPassword(email, password)
+                .map(UsersSecurityEntity::getItemID);
     }
 
-    private Mono<Integer> saveSecurityEntity(String email, String password) {
-        return usersSecurityRepo.saveWithEmailAndPassword(email, password, "AUTHOR").map(UsersSecurityEntity::getItemID);
+    public Mono<Integer> register(String username, String email, String password) {
+        return saveProfileEntity(username)
+                .flatMap(userID -> saveSecurityEntity(userID, email, password).then(saveMetaEntity(userID)));
     }
 
-    private Mono<Integer> saveProfileEntity(int userID, String username) {
-        return usersProfileRepo.saveWithUsername(userID, username).map(UsersProfileEntity::getItemID);
+    private Mono<Integer> saveProfileEntity(String username) {
+        return usersProfileRepo.saveWithUsername(username)
+                .map(UsersProfileEntity::getItemID);
+    }
+
+    private Mono<Integer> saveSecurityEntity(int userID, String email, String password) {
+        return usersSecurityRepo.saveWithEmailAndPassword(userID, email, password, "AUTHOR")
+                .map(UsersSecurityEntity::getItemID);
     }
 
     private Mono<Integer> saveMetaEntity(int userID) {
-        return usersMetaRepo.save(new UsersMetaEntity(userID)).map(UsersMetaEntity::getItemID);
+        return usersMetaRepo.save(new UsersMetaEntity(userID))
+                .map(UsersMetaEntity::getItemID);
     }
 }

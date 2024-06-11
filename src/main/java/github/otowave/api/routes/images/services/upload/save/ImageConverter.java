@@ -48,6 +48,7 @@ public class ImageConverter {
             }
             catch (IOException e) {
                 //TODO: need handle exception
+                e.printStackTrace();
             }
             return inputFile;
         }).flatMap(uploadHelper::deleteImageFile); //delete unconverted image file

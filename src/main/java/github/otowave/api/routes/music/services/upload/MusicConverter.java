@@ -30,11 +30,11 @@ public class MusicConverter {
     private void executeFfmpeg(String inputFile, String outputFile) {
         try {
             runProcessBuilder(inputFile, outputFile);
-            //TODO: Maybe work fine in Linux. Uncomment deleteUnconvertedFile and runProcessBuilder
             deleteUnconvertedFile(inputFile);
         }
         catch (Exception e) {
             //TODO: handle exception
+            e.printStackTrace();
         }
     }
 

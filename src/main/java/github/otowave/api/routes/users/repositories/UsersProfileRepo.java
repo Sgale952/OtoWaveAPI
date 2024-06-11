@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface UsersProfileRepo extends ReactiveCrudRepository<UsersProfileEntity, Integer> {
-    @Query("INSERT INTO users.profile(item_id, username) VALUES(:userID, :username) RETURNING *")
-    Mono<UsersProfileEntity> saveWithUsername(int userID, String username);
+    @Query("INSERT INTO users.profile(username) VALUES(:username) RETURNING *")
+    Mono<UsersProfileEntity> saveWithUsername(String username);
 }
