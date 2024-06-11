@@ -43,28 +43,13 @@ public class ItemUser extends Item {
     }
 
     @Override
-    public Mono<Void> changeName(String newName) {
-        return getItemProfileEntity()
-                .flatMap(entity -> {
-                    entity.setUsername(newName);
-                    return usersProfileRepo.save(entity)
-                            .then();
-                });
+    public Mono<Integer> changeName(String newName) {
+        return usersProfileRepo.changeName(itemID, newName).map(UsersProfileEntity::getItemID);
     }
 
     @Override
-    public Mono<Void> changeTale(String newTale) {
-        return getItemMetaEntity()
-                .flatMap(entity -> {
-                    entity.setTale(newTale);
-                    return usersMetaRepo.save(entity)
-                            .then();
-                });
-    }
-
-    @Override
-    public Mono<Integer> delete() {
-        return getItemSecurityEntity().flatMap(entity -> usersSecurityRepo.delete(entity)).thenReturn(1);
+    public Mono<Integer> changeTale(String newTale) {
+        return usersMetaRepo.changeTale(itemID, newTale).map(UsersMetaEntity::getItemID);
     }
 
     @Override
@@ -74,6 +59,11 @@ public class ItemUser extends Item {
                     entity.setCoverID(newImageID);
                     return usersProfileRepo.save(entity);
                 }).then();
+    }
+
+    @Override
+    public Mono<Integer> delete() {
+        return getItemSecurityEntity().flatMap(entity -> usersSecurityRepo.delete(entity)).thenReturn(1);
     }
 
     @Override

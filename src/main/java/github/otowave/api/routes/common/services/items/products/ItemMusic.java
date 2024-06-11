@@ -35,28 +35,13 @@ public class ItemMusic extends Item {
     }
 
     @Override
-    public Mono<Void> changeName(String newName) {
-        return getItemProfileEntity()
-                .flatMap(entity -> {
-                    entity.setTitle(newName);
-                    return musicProfileRepo.save(entity)
-                            .then();
-                });
+    public Mono<Integer> changeName(String newName) {
+        return musicProfileRepo.changeName(itemID, newName).map(MusicProfileEntity::getItemID);
     }
 
     @Override
-    public Mono<Void> changeTale(String newTale) {
-        return getItemMetaEntity()
-                .flatMap(metaEntity -> {
-                    metaEntity.setTale(newTale);
-                    return musicMetaRepo.save(metaEntity)
-                            .then();
-                });
-    }
-
-    @Override
-    public Mono<Integer> delete() {
-        return musicDeleter.delete(itemID);
+    public Mono<Integer> changeTale(String newTale) {
+        return musicMetaRepo.changeTale(itemID, newTale).map(MusicMetaEntity::getItemID);
     }
 
     @Override
@@ -66,6 +51,11 @@ public class ItemMusic extends Item {
                     entity.setCoverID(newImageID);
                     return musicProfileRepo.save(entity);
                 }).then();
+    }
+
+    @Override
+    public Mono<Integer> delete() {
+        return musicDeleter.delete(itemID);
     }
 
     @Override

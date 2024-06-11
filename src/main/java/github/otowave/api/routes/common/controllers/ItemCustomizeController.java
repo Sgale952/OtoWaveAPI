@@ -26,14 +26,14 @@ public class ItemCustomizeController {
     }
 
     @PatchMapping("/change-name")
-    Mono<Void> changeName(@PathVariable String itemType, @PathVariable int itemID,
+    Mono<Integer> changeName(@PathVariable String itemType, @PathVariable int itemID,
                                  @RequestParam String newName) {
         return itemFactory.makeItem(toItemType(itemType), itemID)
                 .flatMap(item -> item.changeName(newName));
     }
 
     @PatchMapping("/change-tale")
-    Mono<Void> changeTale(@PathVariable String itemType, @PathVariable int itemID,
+    Mono<Integer> changeTale(@PathVariable String itemType, @PathVariable int itemID,
                                  @RequestParam String newTale) {
         return itemFactory.makeItem(toItemType(itemType), itemID)
                 .flatMap(item -> item.changeTale(newTale));

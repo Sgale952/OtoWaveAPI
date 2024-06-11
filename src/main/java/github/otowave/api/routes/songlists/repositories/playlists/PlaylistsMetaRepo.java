@@ -11,6 +11,9 @@ import reactor.core.publisher.Mono;
 public interface PlaylistsMetaRepo extends ReactiveCrudRepository<PlaylistsMetaEntity, Integer> {
     Mono<PlaylistsMetaEntity> findAllByItemID(int itemID);
 
+    @Query("UPDATE playlists.meta SET tale = :newTale WHERE item_id = :itemID")
+    Mono<PlaylistsMetaEntity> changeTale(int itemID, String newTale);
+
     @Query("UPDATE playlists.meta  SET likes = Likes + 1 WHERE item_id = :playlistID")
     Mono<PlaylistsMetaEntity> increaseLikes(int playlistID);
 

@@ -6,9 +6,9 @@ import reactor.core.publisher.Mono;
 public interface Customizable {
     <T extends ProfileModel> Mono<T> profile();
 
-    Mono<Void> changeName(String newName);
+    Mono<Integer> changeName(String newName);
 
-    Mono<Void> changeTale(String newTale);
+    Mono<Integer> changeTale(String newTale);
 
     Mono<Integer> delete();
 }

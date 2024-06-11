@@ -10,4 +10,7 @@ import reactor.core.publisher.Mono;
 public interface UsersProfileRepo extends ReactiveCrudRepository<UsersProfileEntity, Integer> {
     @Query("INSERT INTO users.profile(username) VALUES(:username) RETURNING *")
     Mono<UsersProfileEntity> saveWithUsername(String username);
+
+    @Query("UPDATE users.profile SET title = :newName WHERE item_id = :itemID")
+    Mono<UsersProfileEntity> changeName(int itemID, String newName);
 }
