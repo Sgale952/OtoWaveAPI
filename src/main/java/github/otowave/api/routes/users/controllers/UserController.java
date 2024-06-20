@@ -1,7 +1,9 @@
 package github.otowave.api.routes.users.controllers;
 
+import github.otowave.api.routes.actions.services.UserMusicActions;
 import github.otowave.api.routes.actions.services.UserUserActions;
 import github.otowave.api.routes.common.models.FaceModel;
+import github.otowave.api.routes.music.models.MusicFaceModel;
 import github.otowave.api.routes.users.services.Accessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ public class UserController {
     private Accessor accessor;
     @Autowired
     UserUserActions userUserActions;
+    @Autowired
+    UserMusicActions userMusicActions;
 
     @PostMapping("/register") //Temp unsafe realization
     private Mono<Integer> register(@RequestParam String nickname, @RequestParam String email, @RequestParam String password) {
@@ -24,6 +28,11 @@ public class UserController {
     @GetMapping("/login") //Temp unsafe realization
     private Mono<Integer> login(@RequestParam String email, @RequestParam String password) {
         return accessor.login(email, password);
+    }
+
+    @GetMapping("/{userID}/listened")
+    private Flux<MusicFaceModel> listenedMusic(@PathVariable int userID) {
+        return userMusicActions.getListenedMusicFaces(userID);
     }
 
     @GetMapping("/{userID}/subscribed")

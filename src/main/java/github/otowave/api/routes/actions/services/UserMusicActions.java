@@ -43,6 +43,10 @@ public class UserMusicActions {
                 .then(increaseListens(musicID)).then();
     }
 
+    public Flux<MusicFaceModel> getListenedMusicFaces(int userID) {
+        return musicFaceMaker.getFaceModelsFromActions(listenedMusicRepo.findAllByUserID(Mono.just(userID)));
+    }
+
     public Mono<Void> likeMusic(int userID, int musicID) {
         return likedMusicRepo.save(new LikedMusicEntity(userID, musicID))
                 .then(increaseLikes(musicID)).then();
