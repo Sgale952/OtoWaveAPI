@@ -11,6 +11,6 @@ public interface UsersProfileRepo extends ReactiveCrudRepository<UsersProfileEnt
     @Query("INSERT INTO users.profile(username) VALUES(:username) RETURNING *")
     Mono<UsersProfileEntity> saveWithUsername(String username);
 
-    @Query("UPDATE users.profile SET title = :newName WHERE item_id = :itemID")
+    @Query("UPDATE users.profile SET username = :newName WHERE item_id = :itemID")
     Mono<UsersProfileEntity> changeName(int itemID, String newName);
 }
