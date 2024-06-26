@@ -50,7 +50,7 @@ public class UserController {
         return userUserActions.subscribe(userID, authorID);
     }
 
-    @PostMapping("/{userID}/discard")
+    @DeleteMapping("/{userID}/discard")
     private Mono<Void> discard(@PathVariable int userID, @RequestParam int authorID) {
         return userUserActions.discard(userID, authorID);
     }
